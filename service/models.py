@@ -15,6 +15,7 @@ class ServicePost(models.Model):
     hrs_of_work = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
 
 class UserService(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
