@@ -7,6 +7,9 @@ class ServiceCategory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.id
+
 class ServicePost(models.Model):
     category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, null=False, blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
@@ -15,7 +18,9 @@ class ServicePost(models.Model):
     hrs_of_work = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+    def __str__(self):
+        return self.id
 
 class UserService(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
