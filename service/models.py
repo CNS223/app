@@ -41,3 +41,13 @@ class UserServiceRating(models.Model):
 
     def __str__(self):
         return self.id
+    
+class ServicePostComment(models.Model):
+    comment = models.TextField(null=False, blank=False)
+    interested = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.id
