@@ -63,6 +63,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'user',
+    'service'
 )
 
 APPEND_SLASH=False
@@ -103,7 +104,7 @@ WSGI_APPLICATION = 'cns.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = { 'default': env.db('DATABASE_URL', default='postgresql://postgres:adminpasspword@localhost:5432/cns'), }
+DATABASES = { 'default': env.db('DATABASE_URL', default='postgresql://postgres:java@localhost:5432/cns'), }
 
 
 
