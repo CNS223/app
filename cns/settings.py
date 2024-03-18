@@ -163,3 +163,7 @@ AWS_DEFAULT_ACL = None
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTHENTICATION_BACKENDS = [
+    'app.user.backend.MultiTableAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

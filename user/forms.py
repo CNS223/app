@@ -2,15 +2,23 @@ from django import forms
 from django.contrib.auth.forms import PasswordResetForm
 
 from user.models import User, UserAddress
-
+from service.models import Provider
 
 class UserSignupForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 
+class ProviderSignupForm(forms.ModelForm):
+    class Meta:
+        model = Provider
+        fields = ['name', 'email', 'phone', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(label='Email', widget=forms.EmailInput(

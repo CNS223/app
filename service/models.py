@@ -50,9 +50,11 @@ class UserServiceRating(models.Model):
 
 class Provider(models.Model):
     name = models.CharField(max_length=255)
-    email = models.EmailField()
+    email = models.EmailField(default="")
+
     phone = models.CharField(max_length=20)
     password = models.CharField(max_length=255)
+
 
     def __str__(self):
         return self.id
