@@ -4,6 +4,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from user.models import User, UserAddress
 from service.models import Provider
 
+
 class UserSignupForm(forms.ModelForm):
     class Meta:
         model = User

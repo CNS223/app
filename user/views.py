@@ -63,7 +63,6 @@ def user_signup(request):
         return render(request, 'register/user_signup.html')
 
 
-
 def user_signin(request):
     return render(request, 'login/login.html')
 
@@ -90,7 +89,7 @@ def user_signin(request):
     #     error_message = "Invalid email or password. Please try again."
     #     return render(request, 'login/login.html', {'error_message': error_message})
     # else:
-    #     return render(request, 'login/login.html')
+
 # Create your views here.
 # def signup(request):
 #     if request.method == 'POST':
