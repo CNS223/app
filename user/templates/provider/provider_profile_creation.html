@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-lg-3 theiaStickySidebar">
+                <div class="settings-widget">
+                    <div class="settings-header">
+                        <div class="settings-img">
+                            <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                        </div>
+                        <h6>John Smith</h6>
+                        <p>Member Since Sep 2021</p>
+                    </div>
+                    <div class="settings-menu">
+                        <ul>
+                            <li>
+                                <a href="customer-dashboard.html">
+                                    <i class="feather-grid"></i> <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-booking.html">
+                                    <i class="feather-smartphone"></i> <span>Bookings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-favourite.html">
+                                    <i class="feather-heart"></i> <span>Favorites</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-wallet.html">
+                                    <i class="feather-credit-card"></i> <span>Wallet</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-reviews.html">
+                                    <i class="feather-star"></i> <span>Reviews</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-chat.html">
+                                    <i class="feather-message-circle"></i> <span>Chat</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-profile.html" class="active">
+                                    <i class="feather-settings"></i> <span>Settings</span>
+                                </a>
+                                <ul class="setting-submenu">
+                                    <li>
+                                        <a href="customer-profile.html" class="active">Account</a>
+                                    </li>
+                                    <li>
+                                        <a href="security-settings.html">Security</a>
+                                    </li>
+                                    <li>
+                                        <a href="customer-notifications.html">Notifications</a>
+                                    </li>
+                                    <li>
+                                        <a href="connected-apps.html">Connected Apps</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#del-account">Delete Account</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="index.html">
+                                    <i class="feather-log-out"></i> <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                    <!-- General Information Section -->
+                <h6 class="user-title">General Information</h6>
+                <div class="general-info">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ user_form.as_p }}
+                        <!-- Address Form Fields -->
+                        {{ address_form.as_div }}
+
+                        <div class="acc-submit">
+                            <a href="#" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mouse Cursor -->
+<div class="mouse-cursor cursor-outer"></div>
+<div class="mouse-cursor cursor-inner"></div>
+
+{% endblock %}
