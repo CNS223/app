@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-lg-3 theiaStickySidebar">
+                <div class="settings-widget">
+                    <div class="settings-header">
+                        <div class="settings-img">
+                            <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                        </div>
+                        <h6>John Smith</h6>
+                        <p>Member Since Sep 2021</p>
+                    </div>
+                    <div class="settings-menu">
+                        <ul>
+                            <li>
+                                <a href="customer-dashboard.html">
+                                    <i class="feather-grid"></i> <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-booking.html">
+                                    <i class="feather-smartphone"></i> <span>Bookings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-favourite.html">
+                                    <i class="feather-heart"></i> <span>Favorites</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-wallet.html">
+                                    <i class="feather-credit-card"></i> <span>Wallet</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-reviews.html">
+                                    <i class="feather-star"></i> <span>Reviews</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-chat.html">
+                                    <i class="feather-message-circle"></i> <span>Chat</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="customer-profile.html" class="active">
+                                    <i class="feather-settings"></i> <span>Settings</span>
+                                </a>
+                                <ul class="setting-submenu">
+                                    <li>
+                                        <a href="customer-profile.html" class="active">Account</a>
+                                    </li>
+                                    <li>
+                                        <a href="security-settings.html">Security</a>
+                                    </li>
+                                    <li>
+                                        <a href="customer-notifications.html">Notifications</a>
+                                    </li>
+                                    <li>
+                                        <a href="connected-apps.html">Connected Apps</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#del-account">Delete Account</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="index.html">
+                                    <i class="feather-log-out"></i> <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+<div class="col-lg-9">
+<div class="widget-title">
+<h4>Account Settings</h4>
+
+
+{#</div>#}
+{#<h6 class="user-title">Profile Picture</h6>#}
+{#<div class="pro-picture">#}
+{#<div class="pro-img">#}
+{#<img src="assets/img/profiles/avatar-02.jpg" alt="user">#}
+{#</div>#}
+{#<div class="pro-info">#}
+{#<div class="d-flex">#}
+{#<div class="img-upload">#}
+{#<i class="feather-upload-cloud me-1"></i>Upload#}
+{#<input type="file">#}
+{#</div>#}
+{#<a href="#" class="btn btn-remove">Remove</a>#}
+{#</div>#}
+{#<p>*image size should be at least 320px big,and less then 500kb. Allowed files .png and .jpg.</p>#}
+{#</div>#}
+{#</div>#}
+{#<div class="pro-picture">#}
+{##}
+{##}
+{#    {{ user_form.avatar }}#}
+{##}
+{#<div class="pro-info">#}
+{#<p>*image size should be at least 320px big,and less then 500kb. Allowed files .png and .jpg.</p>#}
+{#</div>#}
+{#</div>#}
+<h6 class="user-title">General Information</h6>
+	<div class="general-info">
+{#	<div class="row">#}
+{##}
+{#	<div class="col-md-6">#}
+{#	<div class="form-group">#}
+{#	<label class="col-form-label">First name <span class="text-danger">*</span></label>#}
+{#        {{user_form.first_name}}#}
+{#	</div>#}
+{#	</div>#}
+{#        <div class="col-md-6">#}
+{#	<div class="form-group">#}
+{#	<label class="col-form-label" >Last name <span class="text-danger">*</span></label>#}
+{#        {{user_form.last_name}}#}
+{#	</div>#}
+{#	</div>#}
+{#	<div class="col-md-6">#}
+{#	<div class="form-group">#}
+{#	<label class="col-form-label">User Name<span class="text-danger">*</span></label>#}
+{#	    {{user_form.username}}#}
+{#	</div>#}
+{#	</div>#}
+{#	<div class="col-md-6">#}
+{#	<div class="form-group">#}
+{#	<label class="col-form-label" >Email </label>#}
+{#	  {{user_form.email}}#}
+{#	</div>#}
+{#	</div>#}
+{#	<div class="col-md-6">#}
+{#	<div class="form-group">#}
+{#	<label class="col-form-label">Mobile Number <span class="text-danger">*</span></label>#}
+{#	  {{user_form.phone_number}}#}
+{#	</div>#}
+{#	</div>#}
+{##}
+{#	</div>#}
+{#	</div>#}
+{#<h6 class="user-title">Address </h6>#}
+{#<div class="row">#}
+{#<div class="col-md-12">#}
+{#<div class="form-group">#}
+{#<label class="col-form-label">Address <span class="text-danger">*</span></label>#}
+{#	{{address_form.add1}}#}
+{#</div>#}
+{#</div>#}
+{#<div class="col-md-6">#}
+{#<div class="form-group">#}
+{#<label class="col-form-label">Country <span class="text-danger">*</span></label>#}
+{#{{address_form.country}}#}
+{#</div>#}
+{#</div>#}
+{#<div class="col-md-6">#}
+{#<div class="form-group">#}
+{#<label class="col-form-label">State <span class="text-danger">*</span></label>#}
+{#{{address_form.provision}}#}
+{#</div>#}
+{#</div>#}
+{#<div class="col-md-6">#}
+{#<div class="form-group">#}
+{#<label class="col-form-label">City <span class="text-danger">*</span></label>#}
+{#{{address_form.city}}#}
+{#</div>#}
+{#</div>#}
+{#<div class="col-md-6">#}
+{#<div class="form-group">#}
+{#<label class="col-form-label">Postal Code <span class="text-danger">*</span></label>#}
+{#{{address_form.postal_code}}#}
+{#</div>#}
+{#</div>#}
+
+</div>
+       <form method="post" action="{% url 'user:customer_profile_creation' %}">
+                    {% csrf_token %}
+                    {{ user_form.as_p }}
+                    {{ address_form.as_p }}
+                    <div class="acc-submit">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="#" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade custom-modal" id="del-account">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header border-bottom-0 justify-content-between">
+<h5 class="modal-title">Delete Account</h5>
+<button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i class="feather-x"></i></button>
+</div>
+<div class="modal-body pt-0">
+<div class="write-review">
+<form action="https://truelysell.dreamstechnologies.com/html/template/login.html">
+<p>Are you sure you want to delete this account? To delete your account, type your password.</p>
+<div class="form-group">
+<label class="col-form-label">Password</label>
+<div class="pass-group">
+<input type="password" class="form-control pass-input" placeholder="*************">
+<span class="toggle-password feather-eye-off"></span>
+</div>
+</div>
+<div class="modal-submit text-end">
+<a href="#" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</a>
+<button type="submit" class="btn btn-danger">Delete Account</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="mouse-cursor cursor-outer"></div>
+<div class="mouse-cursor cursor-inner"></div>
+
+</div>
+
+{% endblock %}

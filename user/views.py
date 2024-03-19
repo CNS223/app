@@ -173,3 +173,71 @@ def forgot_password(request):
 
 def reset_password(request):
     return render(request, 'login/reset_password.html')
+
+
+def provider_dashboard(request):
+    return render(request, 'provider/provider-dashboard.html')
+
+
+def customer_profile_creation(request):
+    user_form = UserProfileForm()
+    address_form = AddressForm()
+
+    if request.method == 'POST':
+        print("Request method is POST")
+        user_form = UserProfileForm(request.POST)
+        address_form = AddressForm(request.POST)
+        if user_form.is_valid() and address_form.is_valid():
+            print("Form is valid")
+            # Save user data
+            user = user_form.save()
+            # Save address data linked to the user
+            address = address_form.save(commit=False)
+            address.user = user  # Link address to the user
+            address.save()
+            return redirect('user:dashboard')  # Redirect to a success page
+        else:
+            print("Form is not valid:", user_form.errors, address_form.errors)
+    else:
+        print("Request method is not POST")
+
+    return render(request, 'customer/customer_profile_creation.html', {'user_form': user_form, 'address_form': address_form})
+
+def dashboard(request):
+    services = [
+        {
+            "link": "service-details.html",
+            "image": "../../static/assets/img/services/service-01.jpg",
+            "category": "Plumbing",
+            "provider_image": "../../static/assets/img/profiles/avatar-05.jpg",
+            "title": "Pipe Installation & Repair",
+            "location": "New York, NY, USA",
+            "rating": "4.8",
+            "price": "$30.00",
+            # "old_price": "$45.00"
+        },
+        {
+            "link": "service-details.html",
+            "image": "../../static/assets/img/services/service-02.jpg",
+            "category": "Electrical",
+            "provider_image": "../../static/assets/img/profiles/avatar-06.jpg",
+            "title": "Electrical Installation",
+            "location": "Los Angeles, CA, USA",
+            "rating": "4.9",
+            "price": "$50.00",
+            "old_price": "$60.00"
+        },
+        {
+            "link": "service-details.html",
+            "image": "../../static/assets/img/services/service-03.jpg",
+            "category": "Painting",
+            "provider_image": "../../static/assets/img/profiles/avatar-07.jpg",
+            "title": "House Painting",
+            "location": "Chicago, IL, USA",
+            "rating": "4.7",
+            "price": "$40.00",
+            # "old_price": "$55.00"
+        },
+    ]
+    return render(request, 'index.html', {'services': services})
+>>>>>>> Stashed changes
