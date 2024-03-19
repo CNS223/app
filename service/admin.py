@@ -88,3 +88,25 @@ class ServiceBookingAdmin(admin.ModelAdmin):
         return False
 
 admin.site.register(ServiceBooking, ServiceBookingAdmin)
+
+
+class ServiceRatingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'service', 'rate', 'comment', 'created_at', 'updated_at')
+    list_filter = ('rate', 'created_at', 'updated_at')
+    search_fields = ('service__id', 'comment')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('service', 'rate', 'comment')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(ServiceRating, ServiceRatingAdmin)
