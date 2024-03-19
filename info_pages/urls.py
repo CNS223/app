@@ -7,4 +7,5 @@ urlpatterns = [
 
     # Auth Routs
     path('about-us', about_us, name='about_us'),
+    path('privacy-policy', privacy_policy, name='privacy_policy'),
 ]
