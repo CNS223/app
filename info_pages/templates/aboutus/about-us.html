@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+	 <div class="breadcrumb-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-12">
+                        <h2 class="breadcrumb-title">About Us</h2>
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/user/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content p-0">
+
+            <div class="about-sec">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="about-img">
+                                <div class="about-exp">
+                                </div>
+                                <div class="abt-img">
+                                    <img src="{% static 'assets/img/about-01.jpg' %}" class="img-fluid" alt="img">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="about-content">
+                                <h6>Best Solution For Cleaning Services</h6>
+                                <h2>ABOUT OUR COMPANY</h2>
+                                <p>Welcome to Urban Service Hub, where we're dedicated to building a vibrant community by connecting local service providers with residents who need their expertise. Our platform serves as a centralized hub for neighborhood services, designed to streamline the process of finding and hiring trusted professionals in your area. With a professional team committed to excellence, we carefully vet each service provider to ensure they meet our high standards of quality and reliability. By fostering connections between residents and local businesses, we not only make it easier to access essential services but also contribute to the economic growth and prosperity of our neighborhoods.</p>
+                                <p>Together, we're making a positive impact on society by supporting local businesses and building stronger, more resilient communities. Join us in creating a brighter future, one service at a time.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <section class="work-section work-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="section-heading">
+                                <h2>How It Works</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="work-box">
+                                <div class="work-icon">
+                                    <span>
+                                        <img src="{% static 'assets/img/icons/work-icon.svg' %}" alt="img">
+                                    </span>
+                                </div>
+                                <h5>Choose What To Do</h5>
+                                <h4>01</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="work-box">
+                                <div class="work-icon">
+                                    <span>
+                                        <img src="{% static 'assets/img/icons/find-icon.svg' %}" alt="img">
+                                    </span>
+                                </div>
+                                <h5>Find What You Want</h5>
+                                <h4>02</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="work-box">
+                                <div class="work-icon">
+                                    <span>
+                                        <img src="{% static 'assets/img/icons/place-icon.svg' %}" alt="img">
+                                    </span>
+                                </div>
+                                <h5>Amazing Places</h5>
+                                <h4>03</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <div class="chooseus-sec">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="choose-content">
+                                <h2>Why Choose Us</h2>
+                                <p>Customer Satisfaction is Our Priority</p>
+                                <h3>24/7 Support:</h3>
+                                <p>Our dedicated support team is available around the clock to assist you with any queries or concerns you may have. Whether it's day or night, we're here to provide prompt and reliable assistance, ensuring a smooth experience for our customers.</p>
+                                <h3>Professional Team:</h3>
+                                <p>Our team consists of highly skilled professionals who are experts in their respective fields. With years of experience and a commitment to excellence, they work tirelessly to deliver top-notch solutions and exceed our customers' expectations.
+</p>
+                                <h3>Best Services:</h3>
+                                <p>We pride ourselves on offering the best services tailored to meet your needs. From product quality to customer support, we strive for excellence in everything we do. With us, you can expect nothing but the finest services that ensure your satisfaction and success.
+</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chooseus-img">
+                                <img src="{% static 'assets/img/about-02.png' %}" class="img-fluid" alt="img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <section class="client-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="section-heading">
+                                <div class="service-offer">
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="offer-paths about-offer">
+                            <div class="offer-path-content">
+                                <h3>Looking for the Best Service Finder & Bookings</h3>
+                                <br><br>
+                                <a href="http://127.0.0.1:8000/user/" class="btn btn-secondary btn-views">Get it started  <i class="feather-arrow-right-circle"></i></a>
+
+                            </div>
+                            <div class="offer-pathimg">
+                                <img src="{% static 'assets/img/service-img.png' %}" alt="img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+
+
+
+        </div>
+	
+{% endblock %}
