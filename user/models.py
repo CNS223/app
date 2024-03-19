@@ -12,6 +12,7 @@ from math import sin, cos, sqrt, atan2, radians
 import string
 import uuid
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 def avatar_path(instance, filename):
     return 'avatar/{}/{}'.format(
@@ -190,7 +191,6 @@ class EmailVerification(models.Model):
 
 class Feedback(models.Model):
     from service.models import ServiceBooking
-
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     service = models.ForeignKey(ServiceBooking, on_delete=models.CASCADE, null=False, blank=False)
     feedback = models.TextField(null=False, blank=False)

@@ -6,6 +6,9 @@ from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse_lazy, reverse
 from pyexpat.errors import messages
+from django.views.generic import FormView
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
 
 from cns import settings
 from service.models import *
@@ -142,3 +145,22 @@ def dashboard(request):
         },
     ]
     return render(request, 'index.html', {'services': services})
+
+def feedback(request):
+    context = {"base_template":"base.html"}
+    return render(request, 'feeedback.html', context=context)
+
+
+class FeedbackCreateView(CreateView):
+    model = Feedback
+    form_class = FeedbackForm
+    template_name = 'feeedback.html'
+    success_url = reverse_lazy('user:feedback_success')
+
+    def form_valid(self, form):
+        form.instance.user_id = 8  # Set user_id to 8
+        form.instance.service_id = 2  # Set service_id to 2
+        return super().form_valid(form)
+
+def feedback_success(request):
+    return render(request, 'feedback_success.html')

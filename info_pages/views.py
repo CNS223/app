@@ -12,3 +12,4 @@ def privacy_policy(request):
 def terms_n_conditions(request):
     context = {"base_template":"base.html"}
     return render(request, 'termsncondition/terms-and-condition.html', context=context)
+
