@@ -171,5 +171,20 @@ class User(AbstractBaseUser):
         random_string = ''.join(random.choice(characters) for _ in range(length))
         return random_string
 
+class EmailVerification(models.Model):
+    email_to = models.ForeignKey(User, on_delete=models.CASCADE, null = False, blank = False)
+    verification_token = models.CharField(max_length=255, blank=False, null=False, )
+    validity = models.DateTimeField(blank=True, null=True, )
 
+    def validate_email(self, email_to, verification_token):
+        # Checking if the email and verification token match the instance
+        valid = (self.email_to == email_to and 
+                self.verification_token == verification_token and 
+                self.validity >= timezone.now())
+
+        # Deleting the instance if validation is successful
+        if valid:
+            self.delete()
+
+        return valid
 

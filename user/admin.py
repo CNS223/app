@@ -122,3 +122,23 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+
+
+class EmailVerificationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email_to', 'verification_token', 'validity')  # Fields to display in the list view
+    list_filter = ('validity',)  # Add filter for the validity field
+    search_fields = ('email_to__username', 'verification_token')  # Enable search by user username and verification token
+    readonly_fields = ('id', 'validity')  # Make certain fields read-only
+    fieldsets = (
+        (None, {
+            'fields': ('email_to', 'verification_token')
+        }),
+        ('Validity', {
+            'fields': ('validity',),
+            'classes': ('collapse',)  # Make the validity field collapsible
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False 
+admin.site.register(EmailVerification, EmailVerificationAdmin)
