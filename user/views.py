@@ -8,9 +8,9 @@ from django.urls import reverse_lazy, reverse
 from pyexpat.errors import messages
 
 from cns import settings
-from service.models import Provider
+from service.models import *
 from user.forms import *
-from user.models import User, UserSignup, Login_main
+from user.models import *
 
 from django.http import HttpResponseRedirect
 

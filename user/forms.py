@@ -12,13 +12,13 @@ class UserSignupForm(forms.ModelForm):
             'password': forms.PasswordInput(),
         }
 
-class ProviderSignupForm(forms.ModelForm):
-    class Meta:
-        model = Provider
-        fields = ['name', 'email', 'phone', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
+# class ProviderSignupForm(forms.ModelForm):
+#     class Meta:
+#         model = Provider
+#         fields = ['name', 'email', 'phone', 'password']
+#         widgets = {
+#             'password': forms.PasswordInput(),
+#         }
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(label='Email', widget=forms.EmailInput(
@@ -51,7 +51,7 @@ class UserProfileForm(forms.ModelForm):
 
 class AddressForm(forms.ModelForm):
     class Meta:
-        model = UserAddress
+        model = Address
         fields = ['add1', 'add2', 'city', 'provision', 'country', 'postal_code']
         widgets = {
             field_name: forms.TextInput(

@@ -1,5 +1,5 @@
 from django import forms
-from .models import ServicePost, ServiceCategory
+from .models import *
 
 
 class ServicePostForm(forms.ModelForm):
@@ -11,8 +11,8 @@ class ServicePostForm(forms.ModelForm):
         self.fields['city'].empty_label = "Select city"
 
     class Meta:
-        model = ServicePost
-        fields = ['title', 'category', 'desc', 'price', 'duration', 'address', 'country', 'state', 'city', 'pincode', 'picture']
+        model = ProviderService
+        fields = ['title', ]#'category', 'desc', 'price', 'duration', 'address', 'country', 'state', 'city', 'pincode', 'picture']
         labels = {
             'title': 'Title',
             'category': 'Category',

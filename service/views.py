@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from service.models import Provider
+from service.models import *
 from django.shortcuts import render, redirect
 from .forms import ServicePostForm
 
