@@ -1,14 +1,17 @@
-from datetime import timezone
-
-from django.db import models
-
+import pytz
+import random
+from datetime import datetime, timedelta
+from django.conf import settings
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-from django.shortcuts import redirect, render
-
-from service.models import Provider
-
+from django.core.validators import ValidationError
+from django.db import models
+from rest_framework_simplejwt.tokens import RefreshToken
+from math import sin, cos, sqrt, atan2, radians
+import string
+import uuid
+from django.utils import timezone
 
 def avatar_path(instance, filename):
     return 'avatar/{}/{}'.format(
@@ -42,6 +45,8 @@ class UserManager(BaseUserManager):
             username=username,
             password=password,
         )
+        user.is_admin = True
+        user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
