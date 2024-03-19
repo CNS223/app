@@ -8,3 +8,7 @@ def about_us(request):
 def privacy_policy(request):
     context = {"base_template":"base.html"}
     return render(request, 'privacypolicy/privacy-policy.html', context=context)
+
+def terms_n_conditions(request):
+    context = {"base_template":"base.html"}
+    return render(request, 'termsncondition/terms-and-condition.html', context=context)
