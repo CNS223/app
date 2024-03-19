@@ -63,6 +63,28 @@ class UserType(models.Model):
     def __str__(self):
         return self.get_user_type_display()
 
+class Address(models.Model):
+    ADDRESS_TYPE_CHOICES = (
+        ('user', 'User'),
+        ('serviceprovider', 'ServiceProvider'),
+        ('servicebooking', 'ServiceBooking')
+    )
+    add1 = models.CharField(max_length=255, null=False, blank=False)
+    add2 = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=50, null=False, blank=False)
+    address_type = models.CharField(choices=ADDRESS_TYPE_CHOICES, default="user", max_length=50, null=False, blank=False)
+    provision = models.CharField(max_length=50, null=False, blank=False)
+    country = models.CharField(max_length=50, null=False, blank=False)
+    postal_code = models.CharField(max_length=20, null=False, blank=False)
+    latitude = models.CharField(max_length=20, null=False, blank=False)
+    longitude = models.CharField(max_length=20, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.id}"
+
+
 
 class User(AbstractBaseUser):
     user_type = models.ForeignKey(UserType, on_delete=models.CASCADE, null=False, blank=False)
