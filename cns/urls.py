@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('service/', include('service.urls')),
+    path('info/', include('info_pages.urls')),
 ]
 
 # Add static files serving during development
