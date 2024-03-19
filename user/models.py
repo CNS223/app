@@ -53,10 +53,10 @@ class UserManager(BaseUserManager):
 
 class UserType(models.Model):
     USER_TYPE_CHOICES = (
-        ('user', 'User'),
-        ('service_provider', 'Service Provider')
+        ('customer', 'Customer'),
+        ('provider', 'Provider')
     )
-    user_type = models.CharField(max_length=100, choices=USER_TYPE_CHOICES, default='user', null=False, blank=False)
+    user_type = models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default='user', null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
