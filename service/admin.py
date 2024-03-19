@@ -41,3 +41,72 @@ class ProviderServiceAdmin(admin.ModelAdmin):
         return False
 
 admin.site.register(ProviderService, ProviderServiceAdmin)
+
+class ProviderAvailabilityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'day', 'available', 'start_time', 'end_time', 'service', 'created_at', 'updated_at')
+    list_filter = ('day', 'available', 'service')
+    search_fields = ('day', 'service__title')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('day', 'available', 'start_time', 'end_time', 'service')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(ProviderAvailability, ProviderAvailabilityAdmin)
+
+
+class ServiceBookingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
+    list_filter = ('status', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'service__title', 'appointment_time')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'service', 'status', 'appointment_time', 'address', 'price')
+        }),
+        ('Additional Information', {
+            'fields': ('desc',),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(ServiceBooking, ServiceBookingAdmin)
+
+
+class ServiceRatingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'service', 'rate', 'comment', 'created_at', 'updated_at')
+    list_filter = ('rate', 'created_at', 'updated_at')
+    search_fields = ('service__id', 'comment')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('service', 'rate', 'comment')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(ServiceRating, ServiceRatingAdmin)
