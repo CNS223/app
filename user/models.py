@@ -56,7 +56,7 @@ class UserType(models.Model):
         ('customer', 'Customer'),
         ('provider', 'Provider')
     )
-    user_type = models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default='user', null=False, blank=False)
+    user_type = models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default='customer', null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
