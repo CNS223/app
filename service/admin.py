@@ -41,3 +41,24 @@ class ProviderServiceAdmin(admin.ModelAdmin):
         return False
 
 admin.site.register(ProviderService, ProviderServiceAdmin)
+
+class ProviderAvailabilityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'day', 'available', 'start_time', 'end_time', 'service', 'created_at', 'updated_at')
+    list_filter = ('day', 'available', 'service')
+    search_fields = ('day', 'service__title')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        (None, {
+            'fields': ('day', 'available', 'start_time', 'end_time', 'service')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(ProviderAvailability, ProviderAvailabilityAdmin)

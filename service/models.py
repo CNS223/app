@@ -30,3 +30,15 @@ class ProviderService(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+class ProviderAvailability(models.Model):
+    day = models.CharField(max_length=20)
+    available = models.BooleanField(default=False)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    service = models.ForeignKey(ProviderService, on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def _str_(self):
+        return f"{self.user.username}'s availability on {self.day}"
