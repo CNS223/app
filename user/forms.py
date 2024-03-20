@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import PasswordResetForm
 
-from service.models import Provider
-from user.models import User
-
-
+from service.models import *
+from user.models import *
 
 class UserSignupForm(forms.ModelForm):
     class Meta:
@@ -14,21 +12,17 @@ class UserSignupForm(forms.ModelForm):
             'password': forms.PasswordInput(),
         }
 
-class ProviderSignupForm(forms.ModelForm):
-    class Meta:
-        model = Provider
-        fields = ['name', 'email', 'phone', 'password']
-        widgets = {
-            'password': forms.PasswordInput(),
-        }
+# class ProviderSignupForm(forms.ModelForm):
+#     class Meta:
+#         model = Provider
+#         fields = ['name', 'email', 'phone', 'password']
+#         widgets = {
+#             'password': forms.PasswordInput(),
+#         }
 
 class ForgotPasswordForm(forms.Form):
-<<<<<<< Updated upstream
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
-=======
     email = forms.EmailField(label='Email', widget=forms.EmailInput(
         attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
-
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -52,7 +46,6 @@ class AddressForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': f'Enter {field_name.capitalize()}'})
             for field_name in fields
         }
-
 
 #
 # class AddressForm(forms.ModelForm):
@@ -103,3 +96,5 @@ class AddressForm(forms.ModelForm):
 #             except Exception as e:
 #                 print(e)  # Handle exception appropriately
 >>>>>>> Stashed changes
+=======
+>>>>>>> f626cddad2e97bc8b65ae306634e1bc52782f52e
