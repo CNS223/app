@@ -67,7 +67,7 @@ LOCAL_APPS = (
     'user',
     'service',
     'info_pages',
-
+    'notifications'
 )
 
 APPEND_SLASH=False
@@ -97,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },
@@ -195,3 +196,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     'app.user.backend.MultiTableAuthBackend',
 #     'django.contrib.auth.backends.ModelBackend',
 # ]
+
+
+#Email Config
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

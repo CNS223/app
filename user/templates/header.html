@@ -27,31 +27,42 @@
                <a id="menu_close" class="menu-close" href="javascript:void(0);"> <i class="fas fa-times"></i></a>
             </div>
             <ul class="main-nav">
+               <li class="megamenu {% if active_header == 'home' %}active{% endif %}">
 
-               <li class="megamenu active"><a href="javascript:void(0);">Home</a></li>
-               <li class="has-submenu">
+               <a href="http://127.0.0.1:8000/user/">Home</a></li>
+               <li class="has-submenu {% if active_header == 'services' %}active{% endif %}">
                   <a href="javascript:void(0);">Services <i class="fas fa-chevron-down"></i></a>
                   <ul class="submenu">
-                     <li><a href="service-list.html">Service List</a></li>
-
-
-                     <li><a href="create-service.html">Create Service</a></li>
+                     <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
+                     <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li>
                   </ul>
                </li>
-               <li class="has-submenu">
+               {% if user_type == 'customer' %}
+               <li class="has-submenu {% if active_header == 'customers' %}active{% endif %}">
+                            <a href="javascript:void(0);">Customers <i class="fas fa-chevron-down"></i></a>
+                            <ul class="submenu">
+                                <li><a href="http://127.0.0.1:8000/user/customer-booking">Dashboard</a></li>
+                                <li class="active"><a href="http://127.0.0.1:8000/user/customer-booking">Booking</a></li>
+                                <li><a href="http://127.0.0.1:8000/user/provider-list">Providers List</a></li>
+                                <li><a href="customer-profile.html">Settings</a></li>
+                            </ul>
+                        </li>
+               {% else %}
+               <li class="has-submenu {% if active_header == 'providers' %}active{% endif %}">
                   <a href="javascript:void(0);">Providers <i class="fas fa-chevron-down"></i></a>
                   <ul class="submenu">
                      <!-- <li><a href="provider-dashboard.html">Dashboard</a></li> -->
-                     <li><a href="provider-services.html">My Services</a></li>
-                     <li><a href="provider-booking.html">Booking</a></li>
+                     <li><a href="http://127.0.0.1:8000/user/provider-services">My Services</a></li>
+                     <li><a href="http://127.0.0.1:8000/user/provider-booking">Booking</a></li>
 
 
                   </ul>
                </li>
-               <li><a href="customer-profile.html">Settings</a></li>
+               {% endif %}
 
-               <li><a href="http://127.0.0.1:8000/info/about-us">About</a></li>
-               <li><a href="http://127.0.0.1:8000/info/contact-us">Contact Us</a></li>
+
+               <li class="megamenu {% if active_header == 'about' %}active{% endif %}"><a href="http://127.0.0.1:8000/info/about-us">About</a></li>
+               <li class="megamenu {% if active_header == 'contactus' %}active{% endif %}"><a href="http://127.0.0.1:8000/info/contact-us">Contact Us</a></li>
 
                <li class="login-link">
                   <a href="http://127.0.0.1:8000/user/choose_register">Register</a>
