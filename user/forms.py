@@ -60,3 +60,12 @@ class AddressForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': f'Enter {field_name.capitalize()}'})
             for field_name in fields
         }
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['feedback']
+        widgets = {
+            'user': forms.HiddenInput(attrs={'value': 8}),  # Set user_id to 8
+            'service': forms.HiddenInput(attrs={'value': 2}),  # Set service_id to 2
+        }

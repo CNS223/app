@@ -110,3 +110,20 @@ class ServiceRatingAdmin(admin.ModelAdmin):
         return False
 
 admin.site.register(ServiceRating, ServiceRatingAdmin)
+
+
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user','service', 'created_at', 'updated_at')  # Fields to display in the list view
+    list_filter = ('created_at', 'updated_at')  # Add filters for created_at and updated_at fields
+    search_fields = ('user__username', 'feedback')  # Enable search by user username and feedback content
+    readonly_fields = ('id', 'created_at', 'updated_at')  # Make certain fields read-only
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'feedback', 'service')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)  # Make the timestamps collapsible
+        }),
+    )
+admin.site.register(Feedback, FeedbackAdmin)
