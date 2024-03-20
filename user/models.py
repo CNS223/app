@@ -189,13 +189,4 @@ class EmailVerification(models.Model):
 
         return valid
 
-class Feedback(models.Model):
-    from service.models import ServiceBooking
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    service = models.ForeignKey(ServiceBooking, on_delete=models.CASCADE, null=False, blank=False)
-    feedback = models.TextField(null=False, blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.id} - {self.user.username}"
