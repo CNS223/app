@@ -13,27 +13,36 @@
 
                     <form method="post" action="{% url 'user:user_signup' %}">
                         {% csrf_token %}
+                        {{ form.non_field_errors }}
                         <div class="form-group">
-                            <label class="col-form-label">Name</label>
-                            <input type="text" class="form-control" placeholder="Enter your name" name="name">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
                         </div>
                         <div class="form-group">
-                            <label class="col-form-label">Email</label>
-                            <input type="email" class="form-control" placeholder="johndoe@example.com" name="email">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                            {{ form.email.errors }}
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <label class="col-form-label">Phone Number</label>
+                                {{ form.phone.label_tag }}
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg group_formcontrol" id="phone" name="phone" placeholder="(256) 789-6253">
+                                    {{ form.phone }}
+                                    {{ form.phone.errors }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-form-label d-block">Password<span class="brief-bio float-end">Must
-                                    be 8 Characters at Least</span></label>
+                            {{ form.password.label_tag }}
                             <div class="pass-group">
-                                <input type="password" class="form-control pass-input" placeholder="*************" name="password">
+                                {{ form.password }}
+                                {{ form.password.errors }}
                                 <span class="toggle-password feather-eye-off"></span>
                             </div>
                         </div>
@@ -42,7 +51,7 @@
                             <span class="or-line"></span>
                             <span class="span-or">Or, log in with your email</span>
                         </div>
-                        
+
                         <p class="no-acc">Already have an account ? <a href="{% url 'user:user_signin' %}"> Sign In</a></p>
                     </form>
 

@@ -1,71 +1,194 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse_lazy, reverse
 from pyexpat.errors import messages
-
 from cns import settings
 from service.models import *
 from user.forms import *
 from user.models import *
-
+from django.views import View
 from django.http import HttpResponseRedirect
+from django.contrib import messages
+from user.templatetags import *
+from user.scripts import *
+from notifications.scripts import *
 
 
 def index(request):
-    return render(request, 'base.html')
+    context = {"base_template": "base.html"}
+    return render(request, 'base.html', context=context)
 
 
-def choose_register(request):
-    return render(request, 'register/choose_signup.html')
+class ChooseRegisterView(View):
+    template_name = 'register/choose_signup.html'
+    base_template = 'base.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {'base_template': self.base_template}
+        return render(request, self.template_name, context=context)
 
 
-def provider_signup(request):
-    if request.method == 'POST':
-        form = ProviderSignupForm(request.POST)
+class ProviderSignupView(View):
+    template_name = 'register/provider-signup.html'
+    base_template = 'base.html'
+    form_class = ProviderSignupForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {'base_template': self.base_template, 'form': form}
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        context = {'base_template': self.base_template, 'form': form}
         if form.is_valid():
             # Process the data in form.cleaned_data
-            names = form.cleaned_data['name']
-            emails = form.cleaned_data['email']
-            phones = form.cleaned_data['phone']
-            passwords = form.cleaned_data['password']
-
-            # Save the data to the database
-            provider = Provider(name=names, email=emails, phone=phones, password=passwords)
-            provider.save()
-
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            password = form.cleaned_data['password']
+            user = User.objects.filter(email=email)
+            if user:
+                if not user.last().email_verified:
+                    messages.error(request, "Please verify your email.")
+                    return redirect(reverse('user:verify_email'))
+            user_type = UserType.objects.get(user_type='provider')
+            user = User.objects.create(email=email, user_type=user_type, first_name=first_name, last_name=last_name,
+                                       phone_number=phone)
+            user.set_password(password)
+            user.email_verified = False
+            user.save()
+            verification_token = generate_verification_token()
+            verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
+            EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
+            send_account_verification_mail("Verify your email to create your USH Account", first_name,
+                                           verification_link, email)
             # Redirect to a success page or return a success message
-            return redirect('user:index')  # Redirect to the index page
-    else:
-        form = ProviderSignupForm()
+            context['success_message'] = "Signup successful!"
+            return redirect('user:verify_email')  # Redirect to the index page
 
-    return render(request, 'register/provider_signup.html', {'form': form})
-
-
-def user_signup(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        password = request.POST.get('password')
-
-        # Create a new User_s object and save it to the database
-
-        user = UserSignup(name=name, email=email, phone=phone, password=password)
-        user.save()
-
-        # Redirect the user to a different page after signup
-        return redirect('user:index')
-    else:
-        return render(request, 'register/user_signup.html')
+        return render(request, self.template_name, context=context)
 
 
+class VerifyEmailView(View):
+    template_name = 'register/verify_email.html'
+    base_template = 'base.html'
 
-def user_signin(request):
-    return render(request, 'login/login.html')
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": self.base_template}
+        return render(request, self.template_name, context=context)
+
+
+class VerifyEmailSuccessView(View):
+    template_name = 'login/login.html'
+    base_template = 'base.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": self.base_template}
+        verification_token = request.GET.get('token', None)
+
+        if not verification_token:
+            context['verification_token'] = False
+            return render(request, self.template_name, context=context)
+
+        email_verification = get_object_or_404(EmailVerification, verification_token=verification_token)
+        user = email_verification.email_to
+        if user and email_verification.validate_email(user, verification_token):
+            if not user.email_verified:
+                user.email_verified = True
+                user.save()
+                context['verification_token'] = True
+        else:
+            context['verification_token'] = False
+
+        return render(request, self.template_name, context=context)
+
+
+class UserSignupView(View):
+    template_name = 'register/user_signup.html'
+    base_template = "base.html"
+    form_class = UserSignupForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {"base_template": self.base_template, "form": form}
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        context = {'base_template': self.base_template, 'form': form}
+        if form.is_valid():
+            # Process form data and redirect after successful form submission
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            password = form.cleaned_data['password']
+            user = User.objects.filter(email=email)
+            if user:
+                if not user.last().email_verified:
+                    messages.error(request, "Please verify your email.")
+                    return redirect(reverse('user:verify_email'))
+            user = User.objects.create(email=email, first_name=first_name, last_name=last_name, phone_number=phone)
+            user.set_password(password)
+            user.email_verified = False
+            user.save()
+            verification_token = generate_verification_token()
+            verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
+            EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
+            send_account_verification_mail("Verify your email to create your USH Account", first_name,
+                                           verification_link, email)
+            # Redirect to a success page or return a success message
+            context['success_message'] = "Signup successful!"
+            # Perform actions with form data (e.g., save to database)
+            return redirect('user:verify_email')  # Change this to your desired success URL
+        else:
+            context = {"base_template": "base.html", "form": form}
+            return render(request, self.template_name, context=context)
+
+
+class UserSigninView(View):
+    template_name = 'login/login.html'
+    base_template = "base.html"
+    form_class = LoginForm
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": self.base_template, "form": self.form_class}
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        context = {'base_template': self.base_template, 'form': form}
+        if form.is_valid():
+            # Process form data and redirect after successful form submission
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            remember_me = form.cleaned_data['remember_me']
+            email = email.lower()
+            user = User.objects.filter(email=email).first()
+            if user:
+                if user.email_verified == False:
+                    context = {"base_template": "base.html", "form": form, "alert":"Please Verify Your Email"}
+                    return render(request, self.template_name, context=context)
+            else:
+                context = {"base_template": "base.html", "form": form, "alert":"Email Does Not Exist, Please Make Sign up."}
+                return render(request, self.template_name, context=context)
+            if user.check_password(password):
+                token = user.get_tokens_for_user()
+                print("179----", token)
+                context['success_message'] = "SignIn successful!"
+                return redirect('info_pages:about_us')
+            else:
+                context = {"base_template": "base.html", "form": form, "alert":"User does not exist with this credentials."}
+                return render(request, self.template_name, context=context)
+        else:
+            context = {"base_template": "base.html", "form": form}
+            return render(request, self.template_name, context=context)
 
 
 def forgot_password(request):
