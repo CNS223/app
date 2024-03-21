@@ -270,10 +270,13 @@ def dashboard(request):
             # "old_price": "$55.00"
         },
     ]
-    return render(request, 'index.html', {'services': services})
+    context = {"base_template": "base.html", 'services': services}
+    return render(request, 'index.html', context=context)
+    # return render(request, 'index.html', {'services': services})
 
 def feedback(request):
-    context = {"base_template":"base.html"}
+    # context = {"base_template":"base.html"}
+    context = {"base_template": "base.html"}
     return render(request, 'feeedback.html', context=context)
 
 
@@ -288,5 +291,12 @@ class FeedbackCreateView(CreateView):
         form.instance.service_id = 2  # Set service_id to 2
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['base_template'] = "base.html"
+        return context
+
 def feedback_success(request):
-    return render(request, 'feedback_success.html')
+    context = {"base_template": "base.html"}
+    return render(request, 'feedback_success.html', context=context)
