@@ -14,6 +14,7 @@ import uuid
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+
 def avatar_path(instance, filename):
     return 'avatar/{}/{}'.format(
         instance.id,

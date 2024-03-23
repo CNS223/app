@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
+from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
@@ -109,6 +110,7 @@ def customer_profile_creation(request):
 
 
 def dashboard(request):
+    # topService = ProviderService.objects.all()
     services = [
         {
             "link": "service-details.html",
@@ -162,5 +164,15 @@ class FeedbackCreateView(CreateView):
         form.instance.service_id = 2  # Set service_id to 2
         return super().form_valid(form)
 
+# def feedback_success(request):
+#     return render(request, 'feedback_success.html')
 def feedback_success(request):
-    return render(request, 'feedback_success.html')
+    user_id = 8 # Get the ID of the current user
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT COUNT(id) AS submission_count
+            FROM service_feedback
+            WHERE user_id = %s
+        """, [user_id])
+        submission_count = cursor.fetchone()[0]  # Fetch the count from the result
+    return render(request, 'feedback_success.html', {'submission_count': submission_count})
