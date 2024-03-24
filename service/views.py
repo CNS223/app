@@ -29,7 +29,7 @@ def provider_signup(request):
         # You might want to redirect the user to a different page after signup
         return redirect('user:index')
 
-    return render(request, 'user/provider_signup.html')
+    return render(request, 'user/provider-signup.html')
 
 
 #def create_service(request):
