@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <br>
+            <h2>Thank you for Contacting Us!!!</h2>
+            <p>You won't be ignored.</p>
+            <p>You have {{ feedback_count }} feedback submission{{ feedback_count|pluralize }}.</p>
+            <a href="{% url 'info_pages:contact_us' %}" class="btn btn-primary">Go back to Contact us</a>
+            <br><br>
+        </div>
+    </div>
+</div>
+{% endblock %}

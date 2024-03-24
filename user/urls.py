@@ -14,14 +14,23 @@ urlpatterns = [
     path('reset_password', reset_password, name='reset_password'),
     path('user_signin', UserSigninView.as_view(), name='user_signin'),
 
-    # # Provider Routes
+    # Provider Routes
+    path('provider-profile', ProviderProfileView.as_view(), name='provider_rofile'),
     # path('provider-services', provider_services, name='provider_services'),
     # path('provider-booking', provider_booking, name='provider_booking'),
     # path('provider-list', provider_list, name='provider_list'),
     # path('provider-details', provider_details, name='provider_details'),
     #
-    # # customer Routes
+    # customer Routes
+    path('customer-profile', CustomerProfileView.as_view(), name='customer_rofile'),
     # # customer Routes
     # path('customer-booking', customer_booking, name='customer_booking'),
     path('customer_profile_creation', customer_profile_creation, name='customer_profile_creation'),
+
+    # path('feedback', feedback, name='feedback'),
+    path('feedback/', FeedbackCreateView.as_view(), name='feedback'),
+    path('feedback/success/', feedback_success, name='feedback_success'),
+    # Provider Routs
+    path('provider_dashboard', provider_dashboard, name='provider_dashboard'),
+    path('', dashboard, name='dashboard')
 ]

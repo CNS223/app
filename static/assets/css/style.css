@@ -5378,6 +5378,34 @@ img.bgimg2 {
 	align-items: center;
 }
 
+.feed-img {
+	position: relative;
+	margin-right: 25px;
+}
+.feed-img img {
+	border-radius: 10px;
+}
+.feed-img:before {
+	position: absolute;
+	content: "";
+	background: url("../img/bg/contact-bg.png") no-repeat;
+	left: -15px;
+    top: -15px;
+	width: 113px;
+    height: 113px;
+    z-index: -1;
+}
+.feed-img:after {
+	position: absolute;
+	content: "";
+	background: url("../img/bg/contact-bg.png") no-repeat;
+	right: -6px;
+    bottom: 120px;
+    width: 113px;
+    height: 113px;
+    z-index: -1;
+}
+
 /*-----------------
 	16. Contact Us
 -----------------------*/
