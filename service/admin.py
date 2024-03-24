@@ -1,5 +1,7 @@
 from django.contrib import admin
 from service.models import *
+
+
 # Register your models here.
 class ServiceCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_at', 'updated_at')  # Fields to display in the list view
@@ -15,11 +17,12 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
         }),
     )
 
-
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
+
 
 class ProviderServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'category', 'provider', 'price', 'active', 'created_at', 'updated_at')
@@ -40,7 +43,9 @@ class ProviderServiceAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 admin.site.register(ProviderService, ProviderServiceAdmin)
+
 
 class ProviderAvailabilityAdmin(admin.ModelAdmin):
     list_display = ('id', 'day', 'available', 'start_time', 'end_time', 'service', 'created_at', 'updated_at')
@@ -61,11 +66,13 @@ class ProviderAvailabilityAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 admin.site.register(ProviderAvailability, ProviderAvailabilityAdmin)
 
 
 class ServiceBookingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
+    list_display = (
+    'id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
     list_filter = ('status', 'created_at', 'updated_at')
     search_fields = ('user__username', 'service__title', 'appointment_time')
     readonly_fields = ('id', 'created_at', 'updated_at')
@@ -86,6 +93,7 @@ class ServiceBookingAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
 
 admin.site.register(ServiceBooking, ServiceBookingAdmin)
 
@@ -109,11 +117,12 @@ class ServiceRatingAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 admin.site.register(ServiceRating, ServiceRatingAdmin)
 
 
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user','service', 'created_at', 'updated_at')  # Fields to display in the list view
+    list_display = ('id', 'user', 'service', 'created_at', 'updated_at')  # Fields to display in the list view
     list_filter = ('created_at', 'updated_at')  # Add filters for created_at and updated_at fields
     search_fields = ('user__username', 'feedback')  # Enable search by user username and feedback content
     readonly_fields = ('id', 'created_at', 'updated_at')  # Make certain fields read-only
@@ -126,4 +135,6 @@ class FeedbackAdmin(admin.ModelAdmin):
             'classes': ('collapse',)  # Make the timestamps collapsible
         }),
     )
+
+
 admin.site.register(Feedback, FeedbackAdmin)

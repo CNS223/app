@@ -21,12 +21,12 @@ class ServiceCategory(models.Model):
 
 class ProviderService(models.Model):
     title = models.CharField(max_length=255, null=False, blank=False)
-    category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, null=False, blank=False)
-    provider = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, null=True, blank=True)
+    provider = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     price = models.FloatField(default=0)
     active = models.BooleanField(default=True)
     desc = models.TextField(null=True, blank=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=False, blank=False)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
     picture = models.ImageField(upload_to=service_path, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

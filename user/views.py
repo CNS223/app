@@ -271,7 +271,7 @@ class CustomerProfileView(View):
             'city': user.address.city if user.address is not None else '',
             'postal_code': user.address.postal_code if user.address is not None else '',
             'currency_code': user.currency_code,
-            # 'profile_picture_upload': user.profile_picture_upload,  # Uncomment if you have this field in your model
+            # 'profile_picture_upload': user.profile_picture_upload
         }
         return initial_data
 
@@ -283,25 +283,26 @@ class CustomerProfileView(View):
             context = {
                 "base_template": "base.html",
                 "active_menu": "settings",
-                "user_name": "John Smith1",
-                "member_since": "Sep 2021",
-                "user_type": "customer",
+                "user_name": user.username,
+                "member_since": user.created_at,
+                "user_type": user.user_type.user_type,
                 "active_header": "customers",
                 "form": form,
             }
+            context['user'] = user
             return render(request, self.template_name, context=context)
         except Exception as e:
-            context = {"base_template": "base.html", "form": LoginForm}
-            return render(request, 'login/login.html', context=context)
+            return HttpResponseRedirect(reverse('user:user_signin'))
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
+        user = User.objects.get(pk=self.request.user_id)
         context = {
             "base_template": "base.html",
             "active_menu": "settings",
             "user_name": "John Smith1",
             "member_since": "Sep 2021",
-            "user_type": "customer",
+            "user_type": user.user_type.user_type,
             "active_header": "customers",
             "form": form,
         }
@@ -317,8 +318,9 @@ class CustomerProfileView(View):
             city = form.cleaned_data["city"]
             postal_code = form.cleaned_data["postal_code"]
             currency_code = form.cleaned_data["currency_code"]
-            profile_picture_upload = form.cleaned_data["profile_picture_upload"]
-            user = User.objects.get(pk=self.request.user_id)
+            profile_picture = request.FILES.get('profile_picture_upload')
+            if profile_picture:
+                user.avatar = profile_picture
             user.first_name = first_name
             user.last_name = last_name
             user.username = username
@@ -334,10 +336,9 @@ class CustomerProfileView(View):
             address.city = city
             address.postal_code = postal_code
             address.save()
-            # Process the form data here if needed
             context['message'] = 'Information Updated Successfully.'
-            return render(request, self.template_name,
-                          context=context)  # Replace 'success_url' with your actual success URL
+            context['user'] = user
+            return render(request, self.template_name, context=context)
         return render(request, self.template_name, context=context)
 
 
@@ -366,7 +367,7 @@ class ProviderProfileView(View):
             'city': user.address.city if user.address is not None else '',
             'postal_code': user.address.postal_code if user.address is not None else '',
             'currency_code': user.currency_code,
-            # 'profile_picture_upload': user.profile_picture_upload,  # Uncomment if you have this field in your model
+            # 'profile_picture_upload': user.profile_picture_upload,
         }
         return initial_data
 
@@ -376,16 +377,19 @@ class ProviderProfileView(View):
             user = User.objects.get(pk=user_id)
             form = self.form_class(initial=self.get_initial_data())
             context = {"base_template": "base.html", "active_menu": "settings", "user_name": "John Smith1",
-                       "member_since": "Sep 2021", 'user_type': 'provider', "active_header": "providers", "form": form}
+                       "member_since": "Sep 2021", 'user_type': user.user_type.user_type, "active_header": "customers",
+                       "form": form}
+            context['user'] = user
             return render(request, self.template_name, context=context)
         except Exception as e:
             context = {"base_template": "base.html", "form": LoginForm}
             return render(request, 'login/login.html', context=context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         context = {"base_template": "base.html", "active_menu": "settings", "user_name": "John Smith1",
-                   "member_since": "Sep 2021", 'user_type': 'provider', "active_header": "providers", "form": form}
+                   "member_since": "Sep 2021", 'user_type': user.user_type.user_type, "active_header": "customers",
+                   "form": form}
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
@@ -399,7 +403,8 @@ class ProviderProfileView(View):
             city = form.cleaned_data["city"]
             postal_code = form.cleaned_data["postal_code"]
             currency_code = form.cleaned_data["currency_code"]
-            profile_picture_upload = form.cleaned_data["profile_picture_upload"]
+            profile_picture = request.FILES.get('profile_picture_upload')
+
             user = User.objects.get(pk=self.request.user_id)
             user.first_name = first_name
             user.last_name = last_name
@@ -407,6 +412,8 @@ class ProviderProfileView(View):
             user.gender = gender
             user.bio = bio
             user.currency_code = currency_code
+            if profile_picture:
+                user.avatar = profile_picture
             user.save()
             address = user.address
             address.add1 = add1
@@ -416,48 +423,79 @@ class ProviderProfileView(View):
             address.city = city
             address.postal_code = postal_code
             address.save()
-            # Process the form data here if needed
             context['message'] = 'Information Updated Successfully.'
-            return render(request, self.template_name,
-                          context=context)  # Replace 'success_url' with your actual success URL
+            context['user'] = user
+            return render(request, self.template_name, context=context)
+        return render(request, self.template_name, context=context)
+
+class ForgotPasswordView(View):
+    template_name = 'login/forgot-password.html'
+    form_class = ForgotPasswordForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {"base_template": "base.html", "form": form}
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        context = {"base_template": "base.html", "form": form}
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            verification_token = generate_verification_token()
+            verification_link = generate_user_account_verification_link(verification_token, "user/reset-password?token=")
+            user = User.objects.get(email = email)
+            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+            send_account_verification_mail("Reset your password to login in your USH Account", user.first_name, verification_link, email)
+            # Redirect to a success page or return a success message
+            context['success_message'] = "Verify your Email to Reset the Passowrd!"
+            context["alert"] = "Verify your Email to Reset the Passowrd!"
+            return redirect('user:user_signin')
         return render(request, self.template_name, context=context)
 
 
-def forgot_password(request):
-    if request.method == 'POST':
-        form = ForgotPasswordForm(request.POST)
+class ResetPasswordView(View):
+    template_name = 'login/reset-password.html'
+    form_class = ReSetPasswordForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        context = {"base_template": "base.html", "form": form}
+        verification_token = request.GET.get('token', None)
+        alert = request.GET.get('alert', None)
+        if not verification_token:
+            return redirect('user:user_signin')
+        try:
+            if alert == "password_does_not_match":
+                context['alert'] = "Password Does not Match."
+                return render(request, self.template_name, context=context)
+        except Exception as e:
+            return redirect('user:user_signin')
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        verification_token = request.POST.get('token')
+        context = {"base_template": "base.html", "form": form}
         if form.is_valid():
-            email = form.cleaned_data['email']
-            return redirect('user:reset_password')  # Redirect to password reset page or any other page
-    else:
-        form = ForgotPasswordForm()
-
-    return render(request, 'login/forgot_password.html', {'form': form})
-
-
-def reset_password(request):
-    return render(request, 'login/reset_password.html')
+            password = form.cleaned_data['password1']
+            confirm_password = form.cleaned_data['password2']
+            if password!=confirm_password:
+                context['alert'] = "Password Does not Match."
+                return redirect('http://127.0.0.1:8000/user/reset-password?alert=password_does_not_match&token='+verification_token)
+            email_verification = get_object_or_404(EmailVerification, verification_token=verification_token)
+            user = email_verification.email_to
+            if user and email_verification.validate_email(user, verification_token):
+                user.set_password(password)
+                user.save()
+                return redirect('user:user_signin')
+            else:
+                return redirect('user:user_signin')
+        return render(request, self.template_name, context=context)
 
 
 def provider_dashboard(request):
     return render(request, 'provider/provider-dashboard.html')
-
-
-def customer_profile_creation(request):
-    if request.method == 'POST':
-        user_form = UserProfileForm(request.POST)
-        address_form = AddressForm(request.POST)
-        if user_form.is_valid() and address_form.is_valid():
-            user = user_form.save(commit=False)
-            address = address_form.save(commit=False)
-            user.save()
-            address.user = user
-            address.save()
-            return redirect('success_page')
-    else:
-        user_form = UserProfileForm()
-        address_form = AddressForm()
-    return render(request, 'customer/customer_profile_creation.html', {'user_form': user_form, 'address_form': address_form})
 
 
 def dashboard(request):

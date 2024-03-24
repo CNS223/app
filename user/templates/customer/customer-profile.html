@@ -11,24 +11,29 @@
                  {% if message %}
             <p>{{message}}</p>
         {% endif %}
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h6 class="user-title">Profile Picture</h6>
-            <!-- Profile picture upload section (not part of Django form) -->
-            <!-- Replace this with your actual profile picture upload functionality -->
             <div class="pro-picture">
                 <div class="pro-img">
-                    <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                     {% if user %}
+                    {% if user.avatar %}
+                        <img src="{{user.avatar.url}}" alt="user">
+                    {% else %}
+                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                    {% endif %}
+                {% else %}
+                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                {% endif %}
                 </div>
                 <div class="pro-info">
                     <div class="d-flex">
                         <div class="img-upload">
                             <i class="feather-upload-cloud me-1"></i>Upload
-                            <input type="file">
+                            <input type="file" name="profile_picture_upload" accept="image/*" class="form-control">
                         </div>
-                        <a href="#" class="btn btn-remove">Remove</a>
+
                     </div>
-                    <p>*image size should be at least 320px big, and less than 500kb. Allowed files .png and .jpg.</p>
                 </div>
             </div>
             <!-- General Information section -->
@@ -67,7 +72,6 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- Address section -->
             <br>
             <br>
             <h6 class="user-title">Address</h6>
@@ -102,7 +106,6 @@
                 </div>
 
             </div>
-            <!-- Submit button -->
             <div class="acc-submit">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
