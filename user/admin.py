@@ -123,6 +123,22 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('id', 'add1', 'city', 'address_type', 'provision', 'country', 'postal_code','created_at', 'updated_at')
+    list_filter = ('address_type', 'provision', 'country', 'created_at', 'updated_at')
+    search_fields = ('add1', 'city', 'postal_code',)
+    readonly_fields = ('id', 'created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('add1', 'add2', 'city', 'address_type', 'provision', 'country', 'postal_code')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+admin.site.register(Address, AddressAdmin)
 
 class EmailVerificationAdmin(admin.ModelAdmin):
     list_display = ('id', 'email_to', 'verification_token', 'validity')  # Fields to display in the list view

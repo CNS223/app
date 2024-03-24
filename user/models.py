@@ -76,14 +76,11 @@ class Address(models.Model):
     provision = models.CharField(max_length=50, null=False, blank=False)
     country = models.CharField(max_length=50, null=False, blank=False)
     postal_code = models.CharField(max_length=20, null=False, blank=False)
-    latitude = models.CharField(max_length=20, null=False, blank=False)
-    longitude = models.CharField(max_length=20, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.id}"
-
 
 class User(AbstractBaseUser):
     def save(self, *args, **kwargs):
