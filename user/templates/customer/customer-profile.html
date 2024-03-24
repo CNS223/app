@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<div class="row">
+    {% include 'customer/customer-sidebar.html' %}
+    <div class="col-lg-9">
+        <br>
+        <div class="widget-title">
+            <h4>Account Settings</h4>
+        </div>
+                 {% if message %}
+            <p>{{message}}</p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <h6 class="user-title">Profile Picture</h6>
+            <!-- Profile picture upload section (not part of Django form) -->
+            <!-- Replace this with your actual profile picture upload functionality -->
+            <div class="pro-picture">
+                <div class="pro-img">
+                    <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                </div>
+                <div class="pro-info">
+                    <div class="d-flex">
+                        <div class="img-upload">
+                            <i class="feather-upload-cloud me-1"></i>Upload
+                            <input type="file">
+                        </div>
+                        <a href="#" class="btn btn-remove">Remove</a>
+                    </div>
+                    <p>*image size should be at least 320px big, and less than 500kb. Allowed files .png and .jpg.</p>
+                </div>
+            </div>
+            <!-- General Information section -->
+            <h6 class="user-title">General Information</h6>
+            <div class="general-info">
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.phone_number.label_tag }}
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.gender.label_tag }}
+                        {{ form.gender }}
+                    </div>
+                    {% if user_type == 'provider' %}
+                        <div class="col-md-12">
+                            {{ form.bio.label_tag }}
+                            {{ form.bio }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Address section -->
+            <br>
+            <br>
+            <h6 class="user-title">Address</h6>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form.add1.label_tag }}
+                    {{ form.add1 }}
+                </div>
+                <div class="col-md-12">
+                    {{ form.add2.label_tag }}
+                    {{ form.add2 }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.country.label_tag }}
+                    {{ form.country }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.provision.label_tag }}
+                    {{ form.provision }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.city.label_tag }}
+                    {{ form.city }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.postal_code.label_tag }}
+                    {{ form.postal_code }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.currency_code.label_tag }}
+                    {{ form.currency_code }}
+                </div>
+
+            </div>
+            <!-- Submit button -->
+            <div class="acc-submit">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+        <br>
+        <br>
+    </div>
+</div>
+{% endblock %}

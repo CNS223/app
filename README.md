@@ -36,10 +36,17 @@ source bin/activate
 Install required packages from requirements/base.txt
 pip install -r requirements.txt
 
+
+Create .env file in the root path
+- Add require configuration in .env file
+
+
 Create admin creds
 python manage.py createsupeuser
 
+
 Run the Project
 python manage.py runserver
+
 All done 🤟
 ```
