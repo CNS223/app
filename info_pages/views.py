@@ -18,9 +18,9 @@ def terms_n_conditions(request):
     context = {"base_template":"base.html"}
     return render(request, 'termsncondition/terms-and-condition.html', context=context)
 
-def contact_us(request):
-    context = {"base_template":"base.html"}
-    return render(request, 'contactus/contact-us.html', context=context)
+# def contact_us(request):
+#     context = {"base_template":"base.html"}
+#     return render(request, 'contactus/contact-us.html', context=context)
 
 def contact_us(request):
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def contact_us(request):
             return redirect('info_pages:contact_success')
     else:
         form = contactForm()
-    context = {'form': form}
+    context = {'form': form, "base_template": "base.html"}
     return render(request, 'contactus/contact-us.html', context)
 
 def contact_success(request):
@@ -38,4 +38,4 @@ def contact_success(request):
         cursor.execute("SELECT COUNT(id) FROM info_pages_contactus")
         feedback_count = cursor.fetchone()[0]
     # feedback_count = Feedback.objects.count()
-    return render(request, 'contactus/contact-success.html',  {'feedback_count': feedback_count})
+    return render(request, 'contactus/contact-success.html',  {'feedback_count': feedback_count, "base_template": "base.html"})

@@ -496,10 +496,10 @@ def dashboard(request):
     return render(request, 'index.html', context=context)
     # return render(request, 'index.html', {'services': services})
 
-def feedback(request):
-    # context = {"base_template":"base.html"}
-    context = {"base_template": "base.html"}
-    return render(request, 'feeedback.html', context=context)
+# def feedback(request):
+#     # context = {"base_template":"base.html"}
+#     context = {"base_template": "base.html"}
+#     return render(request, 'feeedback.html', context=context)
 
 
 class FeedbackCreateView(CreateView):
@@ -513,6 +513,12 @@ class FeedbackCreateView(CreateView):
         form.instance.service_id = 2  # Set service_id to 2
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['base_template'] = "base.html"
+        return context
+
 
 # def feedback_success(request):
 #     return render(request, 'feedback_success.html')
@@ -525,4 +531,4 @@ def feedback_success(request):
             WHERE user_id = %s
         """, [user_id])
         submission_count = cursor.fetchone()[0]  # Fetch the count from the result
-    return render(request, 'feedback_success.html', {'submission_count': submission_count})
+    return render(request, 'feedback_success.html', {'submission_count': submission_count, "base_template": "base.html"})
