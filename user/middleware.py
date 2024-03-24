@@ -2,6 +2,7 @@ import jwt
 from django.conf import settings
 from django.http import JsonResponse
 
+
 class TokenValidationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
