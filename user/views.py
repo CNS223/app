@@ -13,9 +13,13 @@ from user.models import *
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from user.templatetags import *
+from user.templatetags.custom_message import custom_message
 from user.scripts import *
 from notifications.scripts import *
+from user.utils import *
+from django.views.generic import TemplateView
+from service.models import *
+
 
 
 def index(request):
@@ -28,8 +32,15 @@ class ChooseRegisterView(View):
     base_template = 'base.html'
 
     def get(self, request, *args, **kwargs):
-        context = {'base_template': self.base_template}
-        return render(request, self.template_name, context=context)
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
+        except Exception as e:
+            context = {'base_template': self.base_template}
+            return render(request, self.template_name, context=context)
 
 
 class ProviderSignupView(View):
@@ -38,9 +49,16 @@ class ProviderSignupView(View):
     form_class = ProviderSignupForm
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        context = {'base_template': self.base_template, 'form': form}
-        return render(request, self.template_name, context=context)
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk=user_id)
+            if user.user_type.user_type == "provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
+        except Exception as e:
+            form = self.form_class()
+            context = {'base_template': self.base_template, 'form': form}
+            return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -56,7 +74,7 @@ class ProviderSignupView(View):
             if user:
                 if not user.last().email_verified:
                     messages.error(request, "Please verify your email.")
-                    return redirect(reverse('user:verify_email'))
+                    return HttpResponseRedirect(reverse('user:verify_email'))
             user_type = UserType.objects.get(user_type='provider')
             user = User.objects.create(email=email, user_type=user_type, first_name=first_name, last_name=last_name,
                                        phone_number=phone)
@@ -68,12 +86,11 @@ class ProviderSignupView(View):
             EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
             send_account_verification_mail("Verify your email to create your USH Account", first_name,
                                            verification_link, email)
-            # Redirect to a success page or return a success message
             context['success_message'] = "Signup successful!"
-            return redirect('user:verify_email')  # Redirect to the index page
+            context['user'] = user
+            return HttpResponseRedirect(reverse('user:verify_email'))  # Redirect to the index page
 
         return render(request, self.template_name, context=context)
-
 
 class VerifyEmailView(View):
     template_name = 'register/verify_email.html'
@@ -115,15 +132,21 @@ class UserSignupView(View):
     form_class = UserSignupForm
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        context = {"base_template": self.base_template, "form": form}
-        return render(request, self.template_name, context=context)
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk=user_id)
+            if user.user_type.user_type == "provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
+        except Exception as e:
+            form = self.form_class()
+            context = {"base_template": self.base_template, "form": form}
+            return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         context = {'base_template': self.base_template, 'form': form}
         if form.is_valid():
-            # Process form data and redirect after successful form submission
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
@@ -133,7 +156,7 @@ class UserSignupView(View):
             if user:
                 if not user.last().email_verified:
                     messages.error(request, "Please verify your email.")
-                    return redirect(reverse('user:verify_email'))
+                    return HttpResponseRedirect(reverse('user:verify_email'))
             user = User.objects.create(email=email, first_name=first_name, last_name=last_name, phone_number=phone)
             user.set_password(password)
             user.email_verified = False
@@ -143,10 +166,9 @@ class UserSignupView(View):
             EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
             send_account_verification_mail("Verify your email to create your USH Account", first_name,
                                            verification_link, email)
-            # Redirect to a success page or return a success message
             context['success_message'] = "Signup successful!"
-            # Perform actions with form data (e.g., save to database)
-            return redirect('user:verify_email')  # Change this to your desired success URL
+            context['user'] = user
+            return HttpResponseRedirect(reverse('user:verify_email'))
         else:
             context = {"base_template": "base.html", "form": form}
             return render(request, self.template_name, context=context)
@@ -158,14 +180,20 @@ class UserSigninView(View):
     form_class = LoginForm
 
     def get(self, request, *args, **kwargs):
-        context = {"base_template": self.base_template, "form": self.form_class}
-        return render(request, self.template_name, context=context)
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk=user_id)
+            if user.user_type.user_type == "provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
+        except Exception as e:
+            context = {"base_template": self.base_template, "form": self.form_class}
+            return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         context = {'base_template': self.base_template, 'form': form}
         if form.is_valid():
-            # Process form data and redirect after successful form submission
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             remember_me = form.cleaned_data['remember_me']
@@ -173,18 +201,25 @@ class UserSigninView(View):
             user = User.objects.filter(email=email).first()
             if user:
                 if user.email_verified == False:
-                    context = {"base_template": "base.html", "form": form, "alert":"Please Verify Your Email"}
+                    context = {"base_template": "base.html", "form": form, "alert": "Please Verify Your Email"}
                     return render(request, self.template_name, context=context)
             else:
-                context = {"base_template": "base.html", "form": form, "alert":"Email Does Not Exist, Please Make Sign up."}
+                context = {"base_template": "base.html", "form": form,
+                           "alert": "Email Does Not Exist, Please Make Sign up."}
                 return render(request, self.template_name, context=context)
             if user.check_password(password):
                 token = user.get_tokens_for_user()
-                print("179----", token)
+                store_in_session(request, 'refresh_token', token['refresh'])
+                store_in_session(request, 'access_token', token['access'])
                 context['success_message'] = "SignIn successful!"
-                return redirect('info_pages:about_us')
+                context['user'] = user
+                if user.user_type.user_type == "provider":
+                    return HttpResponseRedirect(reverse('user:provider_booking'))
+                return HttpResponseRedirect(reverse('user:customer_booking'))
             else:
-                context = {"base_template": "base.html", "form": form, "alert":"User does not exist with this credentials."}
+                context = {"base_template": "base.html", "form": form,
+                           "alert": "User does not exist with this credentials."}
+                context['user'] = user
                 return render(request, self.template_name, context=context)
         else:
             context = {"base_template": "base.html", "form": form}

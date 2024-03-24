@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body_block %}
+
 <div class="content">
     <div class="container">
         <div class="row">
@@ -9,10 +10,7 @@
                     {% if verification_token %}
                         <p>Email Verified Successfully.</p>
                     {% endif %}
-                    {% if alert %}
-                        <p>{{alert}}</p>
-                    {% endif %}
-                    <div class="login-header">
+                          <div class="login-header">
                         <h3>Login</h3>
                         <p>Please enter your details</p>
                     </div>
@@ -38,13 +36,17 @@
                                         <label for="id_password" class="col-form-label">Password</label>
                                     </div>
                                     <div class="col-auto">
-                                        <a class="forgot-link" href="http://127.0.0.1:8000/user/forgot_password">
+                                        <a class="forgot-link" href="http://127.0.0.1:8000/user/forgot-password">
                                             Forgot password?
                                         </a>
                                     </div>
                                 </div>
                                <div class="form-group">
-                                    {{ form.password }}
+
+                                    <div class="password-wrapper">
+                                        <input type="password" class="form-control" id="password-field" placeholder="*************" name="password">
+                                        <span class="eye-icon" onclick="togglePasswordVisibility(this)">&#x1F441;</span>
+                                    </div>
                                     {% if form.errors.password %}
                                         <small class="text-danger">{{ form.errors.password }}</small>
                                     {% endif %}
