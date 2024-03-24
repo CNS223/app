@@ -1,6 +1,8 @@
 from django import forms
 from .models import *
 
+class SearchForm(forms.Form):
+    search_input = forms.CharField(label='What are you looking for?', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car Repair Services'}), max_length=255)
 
 class ServicePostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

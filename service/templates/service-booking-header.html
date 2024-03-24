@@ -1,0 +1,32 @@
+
+{% load static %}
+
+<ul class="step-register row" id="multi-step-register">
+    <li {% if active_step == 'appointment' %}class="active col-md-4"{% else %}class="col-md-4"{% endif %} data-step="appointment">
+        <div class="multi-step-icon">
+            <img src="{% static 'assets/img/icons/calendar-icon.svg' %}" alt="img">
+        </div>
+        <div class="multi-step-info">
+            <h6>Appointment</h6>
+            <p>Choose time & date for the service</p>
+        </div>
+    </li>
+    <li {% if active_step == 'payment' %}class="active col-md-4"{% else %}class="col-md-4"{% endif %} data-step="payment">
+        <div class="multi-step-icon">
+            <img src="{% static 'assets/img/icons/wallet-icon.svg' %}" alt="img">
+        </div>
+        <div class="multi-step-info">
+            <h6>Payment</h6>
+            <p>Select Payment Gateway</p>
+        </div>
+    </li>
+    <li {% if active_step == 'done' %}class="active col-md-4"{% else %}class="col-md-4"{% endif %} data-step="done">
+        <div class="multi-step-icon">
+            <img src="{% static 'assets/img/icons/book-done.svg' %}" alt="img">
+        </div>
+        <div class="multi-step-info">
+            <h6>Done</h6>
+            <p>Completion of Booking</p>
+        </div>
+    </li>
+</ul>

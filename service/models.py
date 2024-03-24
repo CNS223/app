@@ -70,13 +70,14 @@ class ServiceBooking(models.Model):
 
 class ServiceRating(models.Model):
     service = models.ForeignKey(ServiceBooking, on_delete=models.CASCADE, null=False, blank=False)
-    rate = models.FloatField(default=0.0, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    rate = models.IntegerField(default=0, null=False, blank=False)
     comment = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return f"{self.id}"
 
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
