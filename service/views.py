@@ -14,9 +14,23 @@ from django.urls import reverse_lazy, reverse
 def serviceindex(request):
     return render(request, 'servicebase.html')
 
-def servicedetail(request):
-    return render(request, 'servicedetail.html')
+class ServiceDetailView(View):
+    template_name = 'services/service-detail.html'
+    base_template = 'base.html'
 
+    def get(self, request, provider_service):
+        context = {'base_template': self.base_template}
+        try:
+            user = User.objects.get(pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            provider_service = ProviderService.objects.get(pk = provider_service)
+            service_availability = ProviderAvailability.objects.filter(service = provider_service)
+            context['provider_service'] = provider_service
+            context['service_availability'] = service_availability
+        except Exception as e:
+            pass
+        return render(request, self.template_name, context=context)
 
 def provider_signup(request):
     if request.method == 'POST':

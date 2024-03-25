@@ -9,14 +9,14 @@ def service_path(instance, filename):
         filename
     )
 
-
+# Create your models here.
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return str(self.name)
 
 
 class ProviderService(models.Model):
@@ -58,7 +58,7 @@ class ServiceBooking(models.Model):
     service = models.ForeignKey(ProviderService, on_delete=models.CASCADE, null=False, blank=False)
     desc = models.TextField(null=True, blank=True)
     status = models.CharField(choices = BOOKING_STATUS, default = "pending", max_length=50, null=False, blank=False)
-    appointment_time = models.CharField(max_length=128, null=False, blank=False)
+    appointment_time = models.DateTimeField(null=False, blank=False)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=False, blank=False)
     price = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,7 +66,7 @@ class ServiceBooking(models.Model):
 
 
     def __str__(self):
-        return str(self.id)
+        return f"{self.id}"
 
 class ServiceRating(models.Model):
     service = models.ForeignKey(ServiceBooking, on_delete=models.CASCADE, null=False, blank=False)

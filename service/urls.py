@@ -9,7 +9,7 @@ urlpatterns = [
     path('service-create', ServiceCreateView.as_view(), name='service_create'),
     path('serviceindex', serviceindex, name='service-index'),
     path('provider_signup', views.provider_signup, name='provider_signup'),
-    path('servicedetail', views.servicedetail, name='servicedetail'),
+    path('service-detail/<int:provider_service>', ServiceDetailView.as_view(), name='service_detail'),
     path('service-list', ServiceListView.as_view(), name='service_list'),
 
     # path('generate_otp', views.GenerateOTP.as_view(), name='generate-otp'),

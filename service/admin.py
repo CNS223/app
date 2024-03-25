@@ -20,7 +20,6 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 
 
@@ -69,10 +68,8 @@ class ProviderAvailabilityAdmin(admin.ModelAdmin):
 
 admin.site.register(ProviderAvailability, ProviderAvailabilityAdmin)
 
-
 class ServiceBookingAdmin(admin.ModelAdmin):
-    list_display = (
-    'id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
+    list_display = ('id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
     list_filter = ('status', 'created_at', 'updated_at')
     search_fields = ('user__username', 'service__title', 'appointment_time')
     readonly_fields = ('id', 'created_at', 'updated_at')
@@ -93,7 +90,6 @@ class ServiceBookingAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
 
 admin.site.register(ServiceBooking, ServiceBookingAdmin)
 

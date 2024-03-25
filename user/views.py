@@ -615,3 +615,127 @@ class ProviderBookingView(View):
             context = {"base_template": 'base.html', "form": LoginForm}
             return HttpResponseRedirect(reverse('user:user_signin'))
         return render(request, self.template_name, context=context)
+
+class ProviderListView(View):
+    template_name = 'provider/provider-list.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "services"}
+        try:
+            user = get_object_or_404(User, pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            provider_services = ProviderService.objects.all()
+            context['provider_services'] = provider_services
+
+        except Exception as e:
+            print("611----", e)
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return HttpResponseRedirect(reverse('user:user_signin'))
+        return render(request, self.template_name, context=context)
+
+class ProviderDetailsView(View):
+    template_name = 'provider/provider-details.html'
+    base_template = "provider-base.html"
+    form = ProviderContactForm
+
+    def get(self, request, *args, **kwargs):
+        try:
+            context = {"base_template": self.base_template, "active_header": "providers", "provider_id": kwargs['provider_id']}
+            user = User.objects.get(pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            try:
+                provider = User.objects.get(pk=kwargs['provider_id'], user_type__user_type='provider')
+                context['user'] = provider
+                provider_service = ProviderService.objects.filter(provider=provider)
+                if provider_service:
+                    context['provider_service'] = provider_service
+                    context['is_provider_service'] = "yes"
+                else:
+                    context['provider_service'] = "No Data"
+                    context['is_provider_service'] = "no"
+                context['form'] = self.form
+            except Exception as e:
+                print("638----", e)
+                return HttpResponseRedirect(reverse('user:user_signin'))
+        except Exception as e:
+            print("638----", e)
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return HttpResponseRedirect(reverse('user:user_signin'))
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = ProviderContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            phone_number = form.cleaned_data['phone_number']
+            message = form.cleaned_data['message']
+            try:
+                user_id = request.user_id
+                user = User.objects.get(pk=user_id)
+            except Exception as e:
+                print("657----", e)
+                return HttpResponseRedirect(reverse('user:user_signin'))
+            provider = User.objects.get(pk=kwargs['provider_id'], user_type__user_type='provider')
+            provider_touch, created = ProviderGetInTouch.objects.get_or_create(user = user, provider = provider)
+            provider_touch.full_name = name
+            provider_touch.email = email
+            provider_touch.phone_number = phone_number
+            provider_touch.message = message
+            provider_touch.save()
+            context = {"base_template": self.base_template, "active_header": "providers", "provider_id": kwargs.get('provider_id'), 'alert':"Provider will contact you soon","form": form}
+            context['user'] = provider
+            return render(request, self.template_name, context=context)
+        else:
+            context = {"base_template": self.base_template, "active_header": "providers", "provider_id": kwargs.get('provider_id'), "form": form}
+            return render(request, self.template_name, context=context)
+
+
+class CustomerBookingView(View):
+    template_name = 'customer/customer-booking.html'
+    base_template = 'base.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk=user_id)
+            context = {"base_template": self.base_template, "active_menu": "bookings",
+                       "active_header": "customers", "user_name": user.username, "member_since": user.created_at,
+                       "user_type": user.user_type.user_type, }
+
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            customer_bookings = ServiceBooking.objects.filter(user=user).order_by('-appointment_time')
+            context['customer_bookings'] = customer_bookings
+            context['provider_id'] = ""
+            service_ratings = {}
+            for customer_booking in customer_bookings:
+                if customer_booking.status == "completed":
+                    service_rating = ServiceRating.objects.filter(service=customer_booking)
+                    if service_rating:
+                        service_ratings[customer_booking.id] = generate_string(service_rating.last().rate)
+            context['service_ratings'] = service_ratings
+
+        except Exception as e:
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return HttpResponseRedirect(reverse('user:user_signin'))
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            user_id = request.user_id
+            user = User.objects.get(pk=user_id)
+            customer_booking_id = request.POST.get('customer_booking_id')
+            service_booking = ServiceBooking.objects.get(pk=customer_booking_id)
+            rating = form.cleaned_data['rating']
+            comment = form.cleaned_data['comment']
+            context['provider_id'] = ""
+            rating = ServiceRating.objects.get_or_create(user=user, service=service_booking, rate=float(rating),
+                                                         comment=comment)
+            return HttpResponseRedirect(reverse('user:customer_booking'))
+
+        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "providers"}
+        context['review_form'] = form
+        return render(request, self.template_name, context=context)

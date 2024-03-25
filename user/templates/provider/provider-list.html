@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+	 <div class="breadcrumb-bar">
+            <div class="container">
+            	<br>
+            	<br>
+            	<br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="breadcrumb-title mb-0">Providers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                	 {% for provider_service in provider_services %}
+	                    <div class="col-lg-3 col-sm-6">
+	                    	{% if provider_service.provider.id %}
+	                    	{% with provider_id=provider_service.provider.id %}
+	                        <div class="providerset">
+
+
+					                    <div class="providerset-img">
+					                        <a href="{% url 'user:provider_details' provider_id=provider_id %}">
+					                            {% if provider_service.picture %}
+					                                <img src="{{ provider_service.picture.url }}" alt="img">
+
+					                            {% else %}
+					                                <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
+					                            {% endif %}
+					                        </a>
+					                    </div>
+
+	                            <div class="providerset-content">
+	                                <div class="providerset-price">
+	                                    <div class="providerset-name">
+	                                        <h4><a href="{% url 'user:provider_details' provider_id=provider_id %}">{{provider_service.provider.first_name}}</a><i class="fa fa-check-circle"
+	                                                aria-hidden="true"></i></h4>
+	                                        <span>{{provider_service.category.name}}</span>
+	                                    </div>
+	                                    <div class="providerset-prices">
+	                                        <h6>${{provider_service.price}}<span>/hr</span></h6>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        {% endwith %}
+					            {% endif %}
+	                    </div>
+	                 {% endfor %}
+                </div>
+            </div>
+        </div>
+{% endblock %}

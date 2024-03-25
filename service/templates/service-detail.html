@@ -1,0 +1,150 @@
+{% load static %}
+
+{% if base_template == 'base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="base-body">
+{% elif base_template == 'provider-base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="provider-body">
+{% endif %}
+    <div class="breadcrumb-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 col-12">
+              <h2 class="breadcrumb-title">Service Details</h2>
+              <nav aria-label="breadcrumb" class="page-breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Service Details
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="serv-profile">
+                <h2>{{provider_service.title}}</h2>
+                <ul>
+                  <li>
+                    <span class="badge">{{provider_service.category.name}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="service-gal">
+                <div class="row gx-2">
+                  <div class="col-md-12">
+                    <div class="service-images big-gallery">
+                        <img class="img-fluid" src="{{provider_service.picture.url}}" alt="image">
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="service-wrap">
+                <h5>Service Details</h5>
+                <p>
+                  {{provider_service.desc}}
+                </p>
+              </div>
+              <div class="service-wrap provide-service">
+                <h5>Service Provider</h5>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="provide-box">
+                      <span><i class="feather-user"></i></span>
+                      <div class="provide-info">
+                        <h6>Member Since</h6>
+                        <p>{{user.created_at}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="provide-box">
+                      <span><i class="feather-map-pin"></i></span>
+                      <div class="provide-info">
+                        <h6>Address</h6>
+                        <p>{{user.address.city}}, {{user.address.provision}}, {{user.address.country}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="provide-box">
+                      <span><i class="feather-mail"></i></span>
+                      <div class="provide-info">
+                        <h6>Email</h6>
+                        <p>
+                            {{user.email}}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="provide-box">
+                      <span><i class="feather-phone"></i></span>
+                      <div class="provide-info">
+                        <h6>Phone</h6>
+                        <p>{{user.phone_number}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 theiaStickySidebar">
+              <div class="card card-provide mb-0">
+                <div class="card-body">
+                  <div class="provide-widget">
+                    <div class="service-amount">
+                      <h5>${{provider_service.price}}</h5>
+                      <p class="serv-review">
+                        <i class="fa-solid fa-star"></i> <span>4.9 </span>
+                      </p>
+                    </div>
+                    <div class="serv-proimg">
+                        <img src="{{user.avatar.url}}" alt="image">
+                      <span><i class="fa-solid fa-circle-check"></i></span>
+                    </div>
+                  </div>
+                  <div class="card card-available">
+                    <div class="card-body">
+                      <div class="available-widget">
+                        <div class="available-info">
+                          <h5>Service Availability</h5>
+                          <ul>
+                            {% for avail in service_availability %}
+                            <li>{{avail.day}} <span>{{avail.start_time}} - {{avail.end_time}}</span></li>
+                            
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% if user.user_type.user_type == "provider" %}
+                    <a href="http://127.0.0.1:8000/service/service-create?provider_service_id={{provider_service.id}}" class="btn btn-primary">Edit Service<i class="feather-arrow-right-circle ms-1"></i></a>
+                  {% else %}
+                    <a href="http://127.0.0.1:8000/service/service-booking" class="btn btn-primary">Book Service<i class="feather-arrow-right-circle ms-1"></i></a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% include 'footer.html' %}

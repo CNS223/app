@@ -110,6 +110,30 @@ class ReSetPasswordForm(forms.Form):
                'required': True}))
 
 
+class RatingForm(forms.Form):
+    RATING_CHOICES = (
+        ('5', '😊 Highest'),
+        ('4', '😐 Good'),
+        ('3', '😃 Moderate'),
+        ('2', '😄 Limited'),
+        ('1', '😠 Lowest'),
+    )
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'hidden-radio'}))
+    comment = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Please write your review'}))
+
+
+class ProviderContactForm(forms.Form):
+    name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Your Full Name'}))
+    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Email Address'}))
+    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Phone Number'}))
+    message = forms.CharField(label='Message', widget=forms.Textarea(
+        attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter your Comments'}))
+
+
 class UserProfileForm(forms.ModelForm):
     GENDER_CHOICES = (
         ('Male', 'Male'),
