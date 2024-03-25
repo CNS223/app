@@ -22,6 +22,9 @@ urlpatterns = [
     # path('provider-details', provider_details, name='provider_details'),
     #
 
+    # Provider Routes
+    path('provider-services', ProviderServicesView.as_view(), name='provider_services'),
+    path('provider-booking', ProviderBookingView.as_view(), name='provider_booking'),
 
     # path('feedback', feedback, name='feedback'),
     path('feedback/', FeedbackCreateView.as_view(), name='feedback'),

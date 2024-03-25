@@ -575,3 +575,43 @@ def feedback_success(request):
         """, [user_id])
         submission_count = cursor.fetchone()[0]  # Fetch the count from the result
     return render(request, 'feedback_success.html', {'submission_count': submission_count, "base_template": "base.html"})
+
+
+class ProviderServicesView(View):
+    template_name = 'provider/provider-services.html'
+    base_template = "provider-base.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": self.base_template, 'active_menu': 'services', "active_header": "providers"}
+        try:
+            user = get_object_or_404(User, pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+        except Exception as e:
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return render(request, 'login/login.html', context=context)
+        return render(request, self.template_name, context=context)
+
+
+class ProviderBookingView(View):
+    template_name = 'provider/provider-booking.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "providers", }
+        try:
+            user = get_object_or_404(User, pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            provider_bookings = ServiceBooking.objects.filter(service__provider=user).order_by('appointment_time')
+            context['provider_bookings'] = provider_bookings
+            context['provider_id'] = user.id
+            service_ratings = {}
+            for booking in provider_bookings:
+                ratings = ServiceRating.objects.filter(service=booking)
+                if ratings:
+                    service_ratings[booking.id] = generate_string(ratings.last().rate)
+            context['service_ratings'] = service_ratings
+        except Exception as e:
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return HttpResponseRedirect(reverse('user:user_signin'))
+        return render(request, self.template_name, context=context)
