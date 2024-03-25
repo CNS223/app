@@ -1,0 +1,116 @@
+{% load static %}
+
+{% if base_template == 'base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="base-body">
+{% elif base_template == 'provider-base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="provider-body">
+{% endif %}
+    <div class="main-wrapper">
+        <div class="bg-img">
+            <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg1">
+            <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg2">
+            <img src="{% static 'assets/img/bg/feature-bg-03.png' %}" alt="img" class="bgimg3">
+                    </div>
+        <div class="content book-content">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-10 mx-auto">
+
+                       {% include 'services/service-booking-header.html' %}
+
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h5 class="pay-title">Payment Methods</h5>
+                                
+                                <div class="payment-card">
+                                    <div class="payment-head">
+                                        <div class="payment-title">
+                                            <label class="custom_radio">
+                                                <input type="radio" name="payment" class="card-payment">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <h6>Cash On Delivery</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="col-lg-6">
+                                <h5 class="pay-title">Booking Summary</h5>
+                                <div class="summary-box">
+                                    <div class="booking-info">
+                                        <div class="service-book">
+                                            <div class="service-book-img">
+                                                <img src="{% static 'assets/img/booking.jpg' %}" alt="img">
+                                            </div>
+                                            <div class="serv-profile">
+                                                <span class="badge">Car Wash</span>
+                                                <h2>Car Repair Services</h2>
+                                                <ul>
+                                                    <li class="serv-pro">
+                                                        <img src="{% static 'assets/img/profiles/avatar-01.jpg' %}" alt="img">
+                                                    </li>
+                                                    <li class="serv-review"><i class="fa-solid fa-star"></i> <span>4.9
+                                                        </span>(255 reviews)</li>
+                                                    <li class="service-map"><i class="feather-map-pin"></i> Alabama, USA
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="booking-summary">
+                                        <ul class="booking-date">
+                                            <li>Date <span>07/09/2023</span></li>
+                                            <li>Time <span>12.30 Pm - 01. 00 PM</span></li>
+                                            <li>Service Provider <span>Thomas Herzberg</span></li>
+                                        </ul>
+                                        <ul class="booking-date">
+                                            <li>Subtotal <span>$150.00</span></li>
+                                            <li>Coupoun Discount <span>$5.00</span></li>
+                                            <li>Services Charges <span>$3.00</span></li>
+                                        </ul>
+                                        <div class="booking-total">
+                                            <ul class="booking-total-list">
+                                                <li>
+                                                    <span>Total</span>
+                                                    <span class="total-cost">$148.00</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="booking-coupon">
+                                    <div class="form-group w-100">
+                                        <div class="coupon-icon">
+                                            <input type="text" class="form-control" placeholder="Coupon Code">
+                                            <span><img src="{% static 'assets/img/icons/coupon-icon.svg' %}" alt="image"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary apply-btn">Apply</button>
+                                    </div>
+                                </div>
+                                <div class="save-offer">
+                                    <p><i class="fa-solid fa-circle-check"></i> Your total saving on this order $5.00
+                                    </p>
+                                </div>
+                                <div class="booking-pay">
+                                    <a href="http://127.0.0.1:8000/service/service-booking-done" class="btn btn-primary btn-pay w-100">Proceed</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% include 'footer.html' %}

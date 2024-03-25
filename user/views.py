@@ -1,13 +1,10 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
-from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.urls import reverse_lazy, reverse
-from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
 from pyexpat.errors import messages
 from cns import settings
 from service.models import *
@@ -24,11 +21,68 @@ from django.views.generic import TemplateView
 from service.models import *
 
 
+class DashboardView(View):
+    template_name = 'index.html'
+    base_template = 'base.html'
 
-def index(request):
-    context = {"base_template": "base.html"}
-    return render(request, 'base.html', context=context)
-
+    def get(self, request, *args, **kwargs):
+        action = request.GET.get('action', None)
+        if action=='logout':
+            request.session.pop('access_token', None)
+            return HttpResponseRedirect(reverse('dashboard'))
+        context = {}
+        try:
+            services = [
+            {
+                "link": "service-details.html",
+                "image": "../../static/assets/img/services/service-01.jpg",
+                "category": "Plumbing",
+                "provider_image": "../../static/assets/img/profiles/avatar-05.jpg",
+                "title": "Pipe Installation & Repair",
+                "location": "New York, NY, USA",
+                "rating": "4.8",
+                "price": "$30.00",
+                # "old_price": "$45.00"
+            },
+            {
+                "link": "service-details.html",
+                "image": "../../static/assets/img/services/service-02.jpg",
+                "category": "Electrical",
+                "provider_image": "../../static/assets/img/profiles/avatar-06.jpg",
+                "title": "Electrical Installation",
+                "location": "Los Angeles, CA, USA",
+                "rating": "4.9",
+                "price": "$50.00",
+                "old_price": "$60.00"
+            },
+            {
+                "link": "service-details.html",
+                "image": "../../static/assets/img/services/service-03.jpg",
+                "category": "Painting",
+                "provider_image": "../../static/assets/img/profiles/avatar-07.jpg",
+                "title": "House Painting",
+                "location": "Chicago, IL, USA",
+                "rating": "4.7",
+                "price": "$40.00",
+                    # "old_price": "$55.00"
+                },
+            ]
+            context['services'] = services
+            context['base_template'] = 'base.html'
+            context['active_header'] = 'home'
+            try:
+                user = User.objects.get(pk=request.user_id)
+                context['user_type'] = user.user_type.user_type
+                context['user'] = user
+                if user.user_type.user_type=="provider":
+                    return HttpResponseRedirect(reverse('user:provider_booking'))
+                return HttpResponseRedirect(reverse('user:customer_booking'))
+            except Exception as e:
+                pass
+            return render(request, self.template_name, context=context)
+        except Exception as e:
+            context = {'base_template': self.base_template}
+            return render(request, self.template_name, context=context)
 
 class ChooseRegisterView(View):
     template_name = 'register/choose_signup.html'
@@ -41,7 +95,6 @@ class ChooseRegisterView(View):
             if user.user_type.user_type=="provider":
                 return HttpResponseRedirect(reverse('user:provider_booking'))
             return HttpResponseRedirect(reverse('user:customer_booking'))
-
         except Exception as e:
             context = {'base_template': self.base_template}
             return render(request, self.template_name, context=context)
@@ -55,15 +108,15 @@ class ProviderSignupView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
-            if user.user_type.user_type == "provider":
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
                 return HttpResponseRedirect(reverse('user:provider_booking'))
             return HttpResponseRedirect(reverse('user:customer_booking'))
-
         except Exception as e:
             form = self.form_class()
             context = {'base_template': self.base_template, 'form': form}
             return render(request, self.template_name, context=context)
+
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -75,26 +128,25 @@ class ProviderSignupView(View):
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
-            user = User.objects.filter(email=email)
+            user = User.objects.filter(email = email)
             if user:
                 if not user.last().email_verified:
                     messages.error(request, "Please verify your email.")
                     return HttpResponseRedirect(reverse('user:verify_email'))
-            user_type = UserType.objects.get(user_type='provider')
-            user = User.objects.create(email=email, user_type=user_type, first_name=first_name, last_name=last_name,
-                                       phone_number=phone)
+            user_type = UserType.objects.get(user_type = 'provider')
+            user = User.objects.create(email = email, user_type = user_type, first_name = first_name, last_name = last_name, phone_number=phone)
             user.set_password(password)
             user.email_verified = False
             user.save()
             verification_token = generate_verification_token()
             verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
-            EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
-            send_account_verification_mail("Verify your email to create your USH Account", first_name,
-                                           verification_link, email)
+            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+            send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
             context['success_message'] = "Signup successful!"
             context['user'] = user
             return HttpResponseRedirect(reverse('user:verify_email'))  # Redirect to the index page
 
+        
         return render(request, self.template_name, context=context)
 
 class VerifyEmailView(View):
@@ -104,10 +156,10 @@ class VerifyEmailView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
-            if user.user_type.user_type == "provider":
-                return redirect('user:provider_booking')
-            return redirect('user:customer_booking')
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
         except Exception as e:
             context = {"base_template": self.base_template}
             return render(request, self.template_name, context=context)
@@ -120,10 +172,10 @@ class VerifyEmailSuccessView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
-            if user.user_type.user_type == "provider":
-                return redirect('user:provider_booking')
-            return redirect('user:customer_booking')
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
+                return HttpResponseRedirect(reverse('user:provider_booking'))
+            return HttpResponseRedirect(reverse('user:customer_booking'))
         except Exception as e:
             context = {"base_template": self.base_template}
             verification_token = request.GET.get('token', None)
@@ -143,7 +195,6 @@ class VerifyEmailSuccessView(View):
 
             return render(request, self.template_name, context=context)
 
-
 class UserSignupView(View):
     template_name = 'register/user_signup.html'
     base_template = "base.html"
@@ -152,11 +203,10 @@ class UserSignupView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
-            if user.user_type.user_type == "provider":
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
                 return HttpResponseRedirect(reverse('user:provider_booking'))
             return HttpResponseRedirect(reverse('user:customer_booking'))
-
         except Exception as e:
             form = self.form_class()
             context = {"base_template": self.base_template, "form": form}
@@ -171,20 +221,19 @@ class UserSignupView(View):
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
-            user = User.objects.filter(email=email)
+            user = User.objects.filter(email = email)
             if user:
                 if not user.last().email_verified:
                     messages.error(request, "Please verify your email.")
                     return HttpResponseRedirect(reverse('user:verify_email'))
-            user = User.objects.create(email=email, first_name=first_name, last_name=last_name, phone_number=phone)
+            user = User.objects.create(email = email, first_name = first_name, last_name = last_name, phone_number=phone)
             user.set_password(password)
             user.email_verified = False
             user.save()
             verification_token = generate_verification_token()
             verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
-            EmailVerification.objects.get_or_create(email_to=user, verification_token=verification_token)
-            send_account_verification_mail("Verify your email to create your USH Account", first_name,
-                                           verification_link, email)
+            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+            send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
             context['success_message'] = "Signup successful!"
             context['user'] = user
             return HttpResponseRedirect(reverse('user:verify_email'))
@@ -201,14 +250,14 @@ class UserSigninView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
-            if user.user_type.user_type == "provider":
+            user = User.objects.get(pk = user_id)
+            if user.user_type.user_type=="provider":
                 return HttpResponseRedirect(reverse('user:provider_booking'))
             return HttpResponseRedirect(reverse('user:customer_booking'))
-
         except Exception as e:
             context = {"base_template": self.base_template, "form": self.form_class}
             return render(request, self.template_name, context=context)
+        
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -216,16 +265,14 @@ class UserSigninView(View):
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            remember_me = form.cleaned_data['remember_me']
             email = email.lower()
             user = User.objects.filter(email=email).first()
             if user:
                 if user.email_verified == False:
-                    context = {"base_template": "base.html", "form": form, "alert": "Please Verify Your Email"}
+                    context = {"base_template": "base.html", "form": form, "alert":"Please Verify Your Email"}
                     return render(request, self.template_name, context=context)
             else:
-                context = {"base_template": "base.html", "form": form,
-                           "alert": "Email Does Not Exist, Please Make Sign up."}
+                context = {"base_template": "base.html", "form": form, "alert":"Email Does Not Exist, Please Make Sign up."}
                 return render(request, self.template_name, context=context)
             if user.check_password(password):
                 token = user.get_tokens_for_user()
@@ -233,12 +280,11 @@ class UserSigninView(View):
                 store_in_session(request, 'access_token', token['access'])
                 context['success_message'] = "SignIn successful!"
                 context['user'] = user
-                if user.user_type.user_type == "provider":
+                if user.user_type.user_type=="provider":
                     return HttpResponseRedirect(reverse('user:provider_booking'))
                 return HttpResponseRedirect(reverse('user:customer_booking'))
             else:
-                context = {"base_template": "base.html", "form": form,
-                           "alert": "User does not exist with this credentials."}
+                context = {"base_template": "base.html", "form": form, "alert":"Credentials does not match."}
                 context['user'] = user
                 return render(request, self.template_name, context=context)
         else:
@@ -290,6 +336,8 @@ class CustomerProfileView(View):
                 "form": form,
             }
             context['user'] = user
+            visits = UserSystemVisit.objects.last()
+            context['today_visits'] = visits.daily_count
             return render(request, self.template_name, context=context)
         except Exception as e:
             return HttpResponseRedirect(reverse('user:user_signin'))
@@ -374,11 +422,9 @@ class ProviderProfileView(View):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user_id
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk = user_id)
             form = self.form_class(initial=self.get_initial_data())
-            context = {"base_template": "base.html", "active_menu": "settings", "user_name": "John Smith1",
-                       "member_since": "Sep 2021", 'user_type': user.user_type.user_type, "active_header": "customers",
-                       "form": form}
+            context = {"base_template":"base.html",  "active_menu": "settings","user_name": "John Smith1","member_since": "Sep 2021",'user_type':user.user_type.user_type, "active_header":"customers", "form":form}
             context['user'] = user
             return render(request, self.template_name, context=context)
         except Exception as e:
@@ -387,9 +433,7 @@ class ProviderProfileView(View):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
-        context = {"base_template": "base.html", "active_menu": "settings", "user_name": "John Smith1",
-                   "member_since": "Sep 2021", 'user_type': user.user_type.user_type, "active_header": "customers",
-                   "form": form}
+        context = {"base_template":"base.html",  "active_menu": "settings","user_name": "John Smith1","member_since": "Sep 2021",'user_type':user.user_type.user_type, "active_header":"customers", "form":form}
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
@@ -404,7 +448,7 @@ class ProviderProfileView(View):
             postal_code = form.cleaned_data["postal_code"]
             currency_code = form.cleaned_data["currency_code"]
             profile_picture = request.FILES.get('profile_picture_upload')
-
+            
             user = User.objects.get(pk=self.request.user_id)
             user.first_name = first_name
             user.last_name = last_name
@@ -468,9 +512,9 @@ class ResetPasswordView(View):
         try:
             if alert == "password_does_not_match":
                 context['alert'] = "Password Does not Match."
-                return render(request, self.template_name, context=context)
+                return render(request, self.template_name, context=context)    
         except Exception as e:
-            return redirect('user:user_signin')
+            return redirect('user:user_signin') 
         return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
@@ -490,92 +534,8 @@ class ResetPasswordView(View):
                 user.save()
                 return redirect('user:user_signin')
             else:
-                return redirect('user:user_signin')
+                return redirect('user:user_signin') 
         return render(request, self.template_name, context=context)
-
-
-def provider_dashboard(request):
-    return render(request, 'provider/provider-dashboard.html')
-
-
-def dashboard(request):
-    # topService = ProviderService.objects.all()
-    services = [
-        {
-            "link": "service-details.html",
-            "image": "../../static/assets/img/services/service-01.jpg",
-            "category": "Plumbing",
-            "provider_image": "../../static/assets/img/profiles/avatar-05.jpg",
-            "title": "Pipe Installation & Repair",
-            "location": "New York, NY, USA",
-            "rating": "4.8",
-            "price": "$30.00",
-            # "old_price": "$45.00"
-        },
-        {
-            "link": "service-details.html",
-            "image": "../../static/assets/img/services/service-02.jpg",
-            "category": "Electrical",
-            "provider_image": "../../static/assets/img/profiles/avatar-06.jpg",
-            "title": "Electrical Installation",
-            "location": "Los Angeles, CA, USA",
-            "rating": "4.9",
-            "price": "$50.00",
-            "old_price": "$60.00"
-        },
-        {
-            "link": "service-details.html",
-            "image": "../../static/assets/img/services/service-03.jpg",
-            "category": "Painting",
-            "provider_image": "../../static/assets/img/profiles/avatar-07.jpg",
-            "title": "House Painting",
-            "location": "Chicago, IL, USA",
-            "rating": "4.7",
-            "price": "$40.00",
-            # "old_price": "$55.00"
-        },
-    ]
-    context = {"base_template": "base.html", 'services': services}
-    return render(request, 'index.html', context=context)
-    # return render(request, 'index.html', {'services': services})
-
-# def feedback(request):
-#     # context = {"base_template":"base.html"}
-#     context = {"base_template": "base.html"}
-#     return render(request, 'feeedback.html', context=context)
-
-
-class FeedbackCreateView(CreateView):
-    model = Feedback
-    form_class = FeedbackForm
-    template_name = 'feeedback.html'
-    success_url = reverse_lazy('user:feedback_success')
-
-    def form_valid(self, form):
-        form.instance.user_id = 8  # Set user_id to 8
-        form.instance.service_id = 2  # Set service_id to 2
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Add additional context data here
-        context['base_template'] = "base.html"
-        return context
-
-
-# def feedback_success(request):
-#     return render(request, 'feedback_success.html')
-def feedback_success(request):
-    user_id = 8 # Get the ID of the current user
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT COUNT(id) AS submission_count
-            FROM service_feedback
-            WHERE user_id = %s
-        """, [user_id])
-        submission_count = cursor.fetchone()[0]  # Fetch the count from the result
-    return render(request, 'feedback_success.html', {'submission_count': submission_count, "base_template": "base.html"})
-
 
 class ProviderServicesView(View):
     template_name = 'provider/provider-services.html'
@@ -591,7 +551,6 @@ class ProviderServicesView(View):
             context = {"base_template": 'base.html', "form": LoginForm}
             return render(request, 'login/login.html', context=context)
         return render(request, self.template_name, context=context)
-
 
 class ProviderBookingView(View):
     template_name = 'provider/provider-booking.html'
@@ -615,6 +574,39 @@ class ProviderBookingView(View):
             context = {"base_template": 'base.html', "form": LoginForm}
             return HttpResponseRedirect(reverse('user:user_signin'))
         return render(request, self.template_name, context=context)
+
+class ServiceCompleteView(View):
+    template_name = 'provider/provider-booking.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "providers", }
+        try:
+
+            user = get_object_or_404(User, pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            service_id = kwargs.get('service_id')
+            service = ServiceBooking.objects.get(pk=service_id)
+            service.status = "completed"
+            service.save()
+            provider_bookings = ServiceBooking.objects.filter(service__provider=user).order_by('appointment_time')
+            context['provider_bookings'] = provider_bookings
+            context['provider_id'] = user.id
+            service_ratings = {}
+            for booking in provider_bookings:
+                ratings = ServiceRating.objects.filter(service=booking)
+                if ratings:
+                    service_ratings[booking.id] = generate_string(ratings.last().rate)
+            context['service_ratings'] = service_ratings
+        except Exception as e:
+            print("602------",e)
+            context = {"base_template": 'base.html', "form": LoginForm}
+            return HttpResponseRedirect(reverse('user:user_signin'))
+        return render(request, self.template_name, context=context)
+
+
+    
+
 
 class ProviderListView(View):
     template_name = 'provider/provider-list.html'
@@ -701,18 +693,17 @@ class CustomerBookingView(View):
             user_id = request.user_id
             user = User.objects.get(pk=user_id)
             context = {"base_template": self.base_template, "active_menu": "bookings",
-                       "active_header": "customers", "user_name": user.username, "member_since": user.created_at,
-                       "user_type": user.user_type.user_type, }
-
+                   "active_header": "customers", "user_name": user.username, "member_since": user.created_at, "user_type": user.user_type.user_type,}
+        
             context['user_type'] = user.user_type.user_type
             context['user'] = user
-            customer_bookings = ServiceBooking.objects.filter(user=user).order_by('-appointment_time')
+            customer_bookings = ServiceBooking.objects.filter(user = user).order_by('-appointment_time')
             context['customer_bookings'] = customer_bookings
             context['provider_id'] = ""
             service_ratings = {}
             for customer_booking in customer_bookings:
                 if customer_booking.status == "completed":
-                    service_rating = ServiceRating.objects.filter(service=customer_booking)
+                    service_rating = ServiceRating.objects.filter(service = customer_booking)
                     if service_rating:
                         service_ratings[customer_booking.id] = generate_string(service_rating.last().rate)
             context['service_ratings'] = service_ratings
@@ -724,6 +715,7 @@ class CustomerBookingView(View):
 
     def post(self, request, *args, **kwargs):
         form = RatingForm(request.POST)
+        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "providers"}
         if form.is_valid():
             user_id = request.user_id
             user = User.objects.get(pk=user_id)
@@ -732,10 +724,7 @@ class CustomerBookingView(View):
             rating = form.cleaned_data['rating']
             comment = form.cleaned_data['comment']
             context['provider_id'] = ""
-            rating = ServiceRating.objects.get_or_create(user=user, service=service_booking, rate=float(rating),
-                                                         comment=comment)
+            rating = ServiceRating.objects.get_or_create(user=user, service = service_booking, rate=float(rating), comment=comment)
             return HttpResponseRedirect(reverse('user:customer_booking'))
-
-        context = {"base_template": "provider-base.html", 'active_menu': 'bookings', "active_header": "providers"}
-        context['review_form'] = form
+        context['review_form'] = form 
         return render(request, self.template_name, context=context)

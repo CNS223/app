@@ -1,0 +1,52 @@
+{% load static %}
+
+{% if base_template == 'base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="base-body">
+{% elif base_template == 'provider-base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+    <body class="provider-body">
+{% endif %}
+    <div class="main-wrapper">
+        <div class="bg-img">
+            <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg1">
+            <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg2">
+            <img src="{% static 'assets/img/bg/feature-bg-03.png' %}" alt="img" class="bgimg3">
+        </div>
+        <div class="content book-content">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-10 mx-auto">
+
+                        {% include 'services/service-booking-header.html' %}
+
+
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="booking-done">
+                                    <h6>Successfully Completed Payment</h6>
+                                    <p>Your Booking has been Successfully Competed</p>
+                                    <div class="book-submit">
+                                        <a href="http://127.0.0.1:8000/" class="btn btn-primary"><i
+                                                class="feather-arrow-left-circle"></i> Go to Home</a>
+                               
+                                        <a href="http://127.0.0.1:8000/user/customer-booking" class="btn btn-secondary">Booking History</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="booking-done">
+                                    <img src="{% static 'assets/img/booking-done.png' %}" class="img-fluid" alt="image">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+{% include 'footer.html' %}

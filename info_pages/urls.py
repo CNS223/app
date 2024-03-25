@@ -4,11 +4,8 @@ from info_pages.views import *
 app_name = 'info_pages'
 
 urlpatterns = [
-
-    # Auth Routs
-    path('about-us', about_us, name='about_us'),
-    path('privacy-policy', privacy_policy, name='privacy_policy'),
-    path('terms-and-conditions', terms_n_conditions, name='terms_n_conditions'),
+    path('about-us', AboutUsView.as_view(), name='about_us'),
     path('contact-us', ContactUsView.as_view(), name='contact_us'),
-    
+    path('privacy-policy', PrivacyPolicyView.as_view(), name='privacy_policy'),
+    path('terms-and-conditions', TermsAndConditionsView.as_view(), name='terms_n_conditions'),
 ]

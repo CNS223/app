@@ -3,7 +3,7 @@
 {% block body_block %}
 {% load custom_filters %}
 <div class="row">
-               {% include 'customer/customer-sidebar.html' %}
+               {% include 'customer/customer-sidebar.html' %}     
                     <div class="col-lg-9">
                         <br>
                         <div class="row align-items-center">
@@ -16,12 +16,18 @@
 
 
                         {% for customer_booking in customer_bookings %}
-
+                            
                             <div class="booking-list">
                                 <div class="booking-widget">
                                     <div class="booking-img">
                                         <a href="{% url 'service:service_detail' customer_booking.service.id %}">
-                                            <img src="{{customer_booking.service.picture.url}}" alt="User Image">
+                                            {% if customer_booking.service.picture %}
+                                                <img src="{{customer_booking.service.picture.url}}" alt="User Image">
+                                            {% else %}
+                                            <img src="{% static 'assets/img/services/service-04.jpg' %}"
+                                                            alt="img">
+
+                                            {% endif %}
                                         </a>
 
                                     </div>
@@ -92,14 +98,18 @@
                                     <label for="modal-toggle" class="close-btn">×</label>
                                     <div class="modal-content">
                                         <h2>Write A Review</h2>
-
+                                       
                                         <form method="post">
                                             {% csrf_token %}
                                             <input type="hidden" id="customer_booking_id" name="customer_booking_id" value="{{ customer_booking.id }}">
                                             <div class="write-review">
                                                 <div class="review-add">
                                                     <div class="rev-img">
-                                                        <img src="{{customer_booking.service.picture.url}}" alt="image">
+                                                        {% if customer_booking.service.picture %}
+                                                            <img src="{{customer_booking.service.picture.url}}" alt="image">
+                                                        {% else %}
+                                                           <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
+                                                        {% endif %}
                                                     </div>
                                                     <div class="rev-info">
                                                         <h6>{{customer_booking.service.title|capfirst}}</h6>
@@ -147,7 +157,7 @@
                         {% endfor %}
 
 
-
+                        
 
                     </div>
                 </div>

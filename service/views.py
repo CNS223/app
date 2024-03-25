@@ -9,10 +9,60 @@ from service.forms import *
 from service.scripts import *
 from django.urls import reverse_lazy, reverse
 
+class ServiceBookingView(View):
+    template_name = 'services/service-booking.html'
+    base_template = 'base.html'
+    active_step = 'appointment'
 
-# Create your views here.
-def serviceindex(request):
-    return render(request, 'servicebase.html')
+    def get_context_data(self):
+        context = {
+            'base_template': self.base_template,
+            'user_name': 'John Smith1',
+            'member_since': 'Sep 2021',
+            'active_step': self.active_step,
+        }
+        try:
+            user = User.objects.get(pk=self.request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+        except User.DoesNotExist:
+            return redirect('user:user_signin')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        provider_service_id = kwargs.get('provider_service')
+        provider_service = ProviderService.objects.get(pk=provider_service_id)
+        context['provider_service'] = provider_service
+        service_availability = ProviderAvailability.objects.filter(service = provider_service)
+        context['service_availabilities'] = service_availability
+        form = ServiceBookingForm()
+        form.fields['appointment'].choices = [(str(avail.pk), f"{avail.start_time} - {avail.end_time}") for avail in service_availability]
+        context['form'] = form
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        provider_service_id = kwargs.get('provider_service')
+        appointment_time = request.POST.get('appointment')
+        provider_service = ProviderService.objects.get(pk = provider_service_id)
+        form = ServiceBookingForm(request.POST)  # Pass POST data and service_availabilities to the form
+        if form.is_valid():
+            add1 = form.cleaned_data['add1']
+            add2 = form.cleaned_data['add2']
+            city = form.cleaned_data['city']
+            provision = form.cleaned_data['provision']
+            country = form.cleaned_data['country']
+            pincode = form.cleaned_data['pincode']
+            appointment = form.cleaned_data['appointment']
+            address = Address.objects.create(add1=add1, add2=add2, city=city, provision=provision, country=country, postal_code=pincode)
+            service_booking = ServiceBooking.objects.create(user = context['user'], service=provider_service, address=address, appointment_time=appointment)
+            return HttpResponseRedirect(reverse('service:service_boooking_done'))
+        else:
+            print("Form is not valid")
+            print("Errors:", form.errors)
+        context['form'] = form  # Include the form in the context
+        return render(request, self.template_name, context=context)
 
 class ServiceDetailView(View):
     template_name = 'services/service-detail.html'
@@ -32,21 +82,39 @@ class ServiceDetailView(View):
             pass
         return render(request, self.template_name, context=context)
 
-def provider_signup(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        password = request.POST.get('password')
+def service_payment(request):
+    context = {"base_template":"base.html", "active_step":"payment", "active_header":"providers"}
+    try:
+        user = User.objects.get(pk=request.user_id)
+        context['user_type'] = user.user_type.user_type
+        context['user'] = user
+    except Exception as e:
+        pass
+    return render(request, 'services/service-booking-payment.html', context=context)
 
-        # Create a new Provider object and save it to the database
-        provider = Provider(name=name, email=email, phone=phone, password=password)
-        provider.save()
+class ServiceBookingDoneView(View):
+    template_name = 'services/service-booking-done.html'
+    base_template = 'base.html'
+    active_step = 'done'
+    active_header = 'providers'
 
-        # You might want to redirect the user to a different page after signup
-        return redirect('user:index')
+    def get_context_data(self):
+        context = {
+            'base_template': self.base_template,
+            'active_step': self.active_step,
+            'active_header': self.active_header,
+        }
+        try:
+            user = User.objects.get(pk=self.request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+        except User.DoesNotExist:
+            return redirect('user:user_signin')
+        return context
 
-    return render(request, 'user/provider-signup.html')
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context=context)
 
 class ServiceListView(View):
     template_name = 'services/service-list.html'
@@ -123,7 +191,6 @@ class ServiceListView(View):
         else:
             return render(request, self.template_name, context=context)
 
-
 class ServiceCreateView(View):
     template_name = 'services/service-create.html'
     base_template = 'base.html'
@@ -147,6 +214,7 @@ class ServiceCreateView(View):
                 'image': provider_service.picture
             }
             initial_data = set_availability_initial_data(initial_data, provider_service)
+
 
         return initial_data
 
@@ -173,9 +241,10 @@ class ServiceCreateView(View):
                 context['alert'] = "Updated Service Successfully."
             return render(request, self.template_name, context=context)
         except Exception as e:
-            print("187----", e)
-            print("Exception:", e)  # Print any exceptions for debugging
+            print("187----",e)
+            print("Exception:", e) # Print any exceptions for debugging
             return redirect('user:user_signin')
+            
 
     def post(self, request, *args, **kwargs):
         provider_service_id = request.GET.get('provider_service_id', None)
@@ -184,7 +253,7 @@ class ServiceCreateView(View):
         context['form'] = form
         provider_service_id = request.GET.get('provider_service_id', None)
         if provider_service_id is not None:
-            provider_service = ProviderService.objects.get(pk=provider_service_id)
+            provider_service = ProviderService.objects.get(pk = provider_service_id)
         else:
             provider_service = None
         user = User.objects.get(pk=request.user_id)
@@ -217,12 +286,12 @@ class ServiceCreateView(View):
             if provider_service:
                 pass
             else:
-                provider_service, created = ProviderService.objects.get_or_create(title=title, provider=user)
+                provider_service, created = ProviderService.objects.get_or_create(title = title, provider = user)
             if provider_service.address:
                 address = provider_service.address
             else:
-                address = Address.objects.create(address_type='serviceprovider')
-            category = ServiceCategory.objects.get(name=category)
+                address = Address.objects.create(address_type = 'serviceprovider')
+            category = ServiceCategory.objects.get(name = category)
             provider_service.category = category
             provider_service.title = title
             provider_service.price = price
@@ -232,21 +301,14 @@ class ServiceCreateView(View):
             if image:
                 provider_service.picture = image
             provider_service.save()
-            monday_avail, created = create_or_update_availability(provider_service, "Monday", True, monday_from_time,
-                                                                  monday_to_time)
-            tuesday_avail, created = create_or_update_availability(provider_service, "Tuesday", True, tuesday_from_time,
-                                                                   tuesday_to_time)
-            wed_avail, created = create_or_update_availability(provider_service, "Wednesday", True, wednesday_from_time,
-                                                               wednesday_to_time)
-            thurs_avail, created = create_or_update_availability(provider_service, "Thursday", True, thursday_from_time,
-                                                                 thursday_to_time)
-            friday_avail, created = create_or_update_availability(provider_service, "Friday", True, friday_from_time,
-                                                                  friday_to_time)
-            saturday_avail, created = create_or_update_availability(provider_service, "Saturday", True,
-                                                                    saturday_from_time, saturday_to_time)
-            sunday_avail, created = create_or_update_availability(provider_service, "Sunday", True, sunday_from_time,
-                                                                  sunday_to_time)
-
+            monday_avail, created = create_or_update_availability(provider_service, "Monday", True, monday_from_time, monday_to_time)
+            tuesday_avail, created = create_or_update_availability(provider_service, "Tuesday", True, tuesday_from_time, tuesday_to_time)
+            wed_avail, created = create_or_update_availability(provider_service, "Wednesday", True, wednesday_from_time, wednesday_to_time)
+            thurs_avail, created = create_or_update_availability(provider_service, "Thursday", True, thursday_from_time, thursday_to_time)
+            friday_avail, created = create_or_update_availability(provider_service, "Friday", True, friday_from_time, friday_to_time)
+            saturday_avail, created = create_or_update_availability(provider_service, "Saturday", True, saturday_from_time, saturday_to_time)
+            sunday_avail, created = create_or_update_availability(provider_service, "Sunday", True, sunday_from_time, sunday_to_time)
+        
             address.add1 = add1
             address.add2 = add2
             address.city = city
@@ -257,28 +319,47 @@ class ServiceCreateView(View):
         else:
             print("Form is not valid")
             print("Errors:", form.errors)
-            return HttpResponseRedirect(
-                reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
+            return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
 
         # Process POST request data here
-        return HttpResponseRedirect(
-            reverse('service:service_create') + f'?provider_service_id={provider_service.id}&updated=true')
+        return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}&updated=true')
 
+class AboutUsView(View):
+    template_name = 'aboutus/about-us.html'
+    base_template = 'base.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template":self.base_template, "active_header":"about"}
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk = user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+        except Exception as e:
+            pass
+        return render(request, self.template_name, context=context)
 
 class FeedbackCreateView(View):
     template_name = 'services/feedback.html'
 
     def get(self, request, *args, **kwargs):
         form = FeedbackForm()
-        context = {'form': form, 'base_template': 'base.html'}
-        return render(request, self.template_name, context)
+        context = {'form': form, 'active_header':'feedback', 'base_template': 'base.html'}
+        try:
+            user_id = request.user_id
+            user = User.objects.get(pk = user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+        except Exception as e:
+            pass
+        return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
+        context = {'base_template': 'base.html', 'active_header':'feedback', }
         form = FeedbackForm(request.POST)
         if form.is_valid():
-            user = request.user_id
             feedback = form.cleaned_data['feedback']
             Feedback.objects.create(feedback=feedback)
             return HttpResponseRedirect(reverse('service:feedback'))
-        context = {'form': form, 'base_template': 'base.html'}
+        context['form']=form
         return render(request, self.template_name, context=context)

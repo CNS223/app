@@ -14,7 +14,6 @@ import uuid
 from django.utils import timezone
 from django.core.validators import MinValueValidator
 
-
 def avatar_path(instance, filename):
     return 'avatar/{}/{}'.format(
         instance.id,
@@ -54,17 +53,19 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class UserType(models.Model):
     USER_TYPE_CHOICES = (
         ('customer', 'Customer'),
         ('provider', 'Provider')
     )
-    user_type = models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default='customer', null=False, blank=False)
+    user_type = models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default='user', null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.get_user_type_display()
+
 
 class Address(models.Model):
     ADDRESS_TYPE_CHOICES = (
@@ -167,13 +168,14 @@ class User(AbstractBaseUser):
         data = {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-        }
+        }   
         return data
 
     def generate_random_string(length):
         characters = string.ascii_letters + string.digits  # include both letters and digits
         random_string = ''.join(random.choice(characters) for _ in range(length))
         return random_string
+
 
 class EmailVerification(models.Model):
     email_to = models.ForeignKey(User, on_delete=models.CASCADE, null = False, blank = False)
@@ -192,6 +194,22 @@ class EmailVerification(models.Model):
 
         return valid
 
+from service.models import ServiceBooking
+
+
+class ProviderGetInTouch(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender_contacts', null=False, blank=False)
+    provider = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='recipient_contacts', blank=False)
+    full_name = models.CharField(max_length=80, blank=False, null=False, )
+    email = models.EmailField(blank=True, null=True, db_index=True)
+    phone_number = models.CharField(max_length=20, null=False, blank=False)
+    message = models.TextField(blank = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.user.username)
+
 class UserSystemVisit(models.Model):
     created_at = models.DateTimeField(timezone.now)
     daily_count = models.IntegerField(default=0)
@@ -200,3 +218,4 @@ class UserSystemVisit(models.Model):
     def __str__(self):
         return str(self.created_at)
 
+        

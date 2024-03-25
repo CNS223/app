@@ -11,76 +11,137 @@
                   <span></span>
                </span>
             </a>
-            <a href="index.html" class="navbar-brand logo">
+            <a href="http://127.0.0.1:8000/user/user_signin" class="navbar-brand logo">
 
-               <img src="{% static 'assets/img/logo.svg' %}" class="img-fluid" alt="Logo">
+               <img src="{% static 'assets/img/logo-main2.jpeg' %}" class="img-fluid" alt="Logo">
             </a>
-            <a href="index.html" class="navbar-brand logo-small">
-               <img src="{% static 'assets/img/logo-small.png' %}" class="img-fluid" alt="Logo">
+            <a href="http://127.0.0.1:8000/user/user_signin" class="navbar-brand logo-small">
+               <img src="{% static 'assets/img/logo-color.png' %}" class="img-fluid" alt="Logo">
             </a>
          </div>
          <div class="main-menu-wrapper">
             <div class="menu-header">
-               <a href="index.html" class="menu-logo">
+               <a href="http://127.0.0.1:8000/user/user_signin" class="menu-logo">
                   <img src="{% static 'assets/img/logo.svg' %}" class="img-fluid" alt="Logo">
                </a>
                <a id="menu_close" class="menu-close" href="javascript:void(0);"> <i class="fas fa-times"></i></a>
             </div>
+
             <ul class="main-nav">
                <li class="megamenu {% if active_header == 'home' %}active{% endif %}">
 
-               <a href="http://127.0.0.1:8000/user/">Home</a></li>
-               <li class="has-submenu {% if active_header == 'services' %}active{% endif %}">
-                  <a href="javascript:void(0);">Services <i class="fas fa-chevron-down"></i></a>
-                  <ul class="submenu">
-                     <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
-                     <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li>
-                  </ul>
-               </li>
+
+
+               
                {% if user_type == 'customer' %}
-               <li class="has-submenu {% if active_header == 'customers' %}active{% endif %}">
-                            <a href="javascript:void(0);">Customers <i class="fas fa-chevron-down"></i></a>
-                            <ul class="submenu">
-                                <li><a href="http://127.0.0.1:8000/user/customer-booking">Dashboard</a></li>
-                                <li class="active"><a href="http://127.0.0.1:8000/user/customer-booking">Booking</a></li>
-                                <li><a href="http://127.0.0.1:8000/user/provider-list">Providers List</a></li>
-                                <li><a href="customer-profile.html">Settings</a></li>
-                            </ul>
-                        </li>
-               {% else %}
+               <a href="http://127.0.0.1:8000/user/user_signin">Home</a></li>
+                  <li class="has-submenu {% if active_header == 'services' %}active{% endif %}">
+                     <a href="javascript:void(0);">Services <i class="fas fa-chevron-down"></i></a>
+                     <ul class="submenu">
+                        <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
+                        <li><a href="http://127.0.0.1:8000/user/provider-list">Provider List</a></li>
+                        <!-- <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li> -->
+                     </ul>
+                  </li>
+                  <li class="has-submenu {% if active_header == 'customers' %}active{% endif %}">
+                      <a href="javascript:void(0);">Customers <i class="fas fa-chevron-down"></i></a>
+                      <ul class="submenu">
+                          <li class="active"><a href="http://127.0.0.1:8000/user/customer-booking">Booking</a></li>
+                          <li><a href="http://127.0.0.1:8000/user/customer-profile">Settings</a></li>
+                      </ul>
+                  </li>
+               {% elif user_type == 'provider' %}
+               <a href="http://127.0.0.1:8000/user/user_signin">Home</a></li>
                <li class="has-submenu {% if active_header == 'providers' %}active{% endif %}">
                   <a href="javascript:void(0);">Providers <i class="fas fa-chevron-down"></i></a>
                   <ul class="submenu">
                      <!-- <li><a href="provider-dashboard.html">Dashboard</a></li> -->
-                     <li><a href="http://127.0.0.1:8000/user/provider-services">My Services</a></li>
-                     <li><a href="http://127.0.0.1:8000/user/provider-booking">Booking</a></li>
-
-
+                     <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li>
+                     <li><a href="http://127.0.0.1:8000/user/provider-booking">My Bookings</a></li>
+                     <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
+                     {% if user %}
+                        <li><a href="{% url 'user:provider_details' provider_id=user.id %}">My Details</a></li>
+                     {% endif %}
+                     <li><a href="http://127.0.0.1:8000/user/customer-profile">Settings</a></li>
                   </ul>
                </li>
+               {% else %}
+                  <a href="http://127.0.0.1:8000">Home</a></li>
+                  <li class="has-submenu {% if active_header == 'services' %}active{% endif %}">
+                     <a href="javascript:void(0);">Services<i class="fas fa-chevron-down"></i></a>
+                     <ul class="submenu">
+                        <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
+                        <li><a href="http://127.0.0.1:8000/user/provider-list">Provider List</a></li>
+                        <!-- <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li> -->
+                     </ul>
+                  </li>
+                  <li class="has-submenu {% if active_header == 'customers' %}active{% endif %}">
+                      <a href="javascript:void(0);">Customers <i class="fas fa-chevron-down"></i></a>
+                      <ul class="submenu">
+                          <li class="active"><a href="http://127.0.0.1:8000/user/customer-booking">Booking</a></li>
+                          <li><a href="http://127.0.0.1:8000/user/customer-profile">Settings</a></li>
+                      </ul>
+                  </li>
+                  <li class="has-submenu {% if active_header == 'providers' %}active{% endif %}">
+                     <a href="javascript:void(0);">Providers <i class="fas fa-chevron-down"></i></a>
+                     <ul class="submenu">
+                        <!-- <li><a href="provider-dashboard.html">Dashboard</a></li> -->
+                        <li><a href="http://127.0.0.1:8000/service/service-create">Create Service</a></li>
+                        <li><a href="http://127.0.0.1:8000/user/provider-booking">My Bookings</a></li>
+                        <li><a href="http://127.0.0.1:8000/service/service-list">Service List</a></li>
+                        {% if user.id %}
+                           <li><li><a href="{% url 'user:provider_details' provider_id=user.id %}">My Details</a>
+                        {% endif %}
+                        
+                         <li><a href="http://127.0.0.1:8000/user/customer-profile">Settings</a></li>
+                     </ul>
+                  </li>
                {% endif %}
-
 
                <li class="megamenu {% if active_header == 'about' %}active{% endif %}"><a href="http://127.0.0.1:8000/info/about-us">About</a></li>
                <li class="megamenu {% if active_header == 'contactus' %}active{% endif %}"><a href="http://127.0.0.1:8000/info/contact-us">Contact Us</a></li>
-                <li class="megamenu {% if active_header == 'feedback' %}active{% endif %}"><a href="http://127.0.0.1:8000/service/feedback">Feedback</a></li>
+               <li class="megamenu {% if active_header == 'feedback' %}active{% endif %}"><a href="http://127.0.0.1:8000/service/feedback">Feedback</a></li>
 
-               <li class="login-link">
-                  <a href="http://127.0.0.1:8000/user/choose_register">Register</a>
-               </li>
-               <li class="login-link">
-                  <a href="http://127.0.0.1:8000/user/user_signin">Login</a>
-               </li>
+
+
+
             </ul>
          </div>
          <ul class="nav header-navbar-rht">
-            <li class="nav-item">
-               <a class="nav-link header-reg" href="http://127.0.0.1:8000/user/choose_register">Register</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link header-login" href="http://127.0.0.1:8000/user/user_signin"><i
-                     class="fa-regular fa-circle-user me-2"></i>Login</a>
-            </li>
+            {% if user_type %}
+               <li class="nav-item dropdown has-arrow account-item">
+                            <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                                <div class="user-infos">
+                                 {% if user.avatar %}
+                                    <span class="user-img">
+
+                                        <img src="{{user.avatar.url}}" class="rounded-circle"
+                                            alt="User Image">
+                                    </span>
+                                 {% else %}
+                                  <span class="user-img">
+
+                                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" class="rounded-circle"
+                                            alt="User Image">
+                                    </span>
+                                 {% endif %}
+                                    <div class="user-info">
+                                        <h6>{{user.username}}</h6>
+                                        <p>{{user.email}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                        </li>
+               {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link header-reg" href="http://127.0.0.1:8000/user/choose_register">Register</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link header-login" href="http://127.0.0.1:8000/user/user_signin"><i
+                              class="fa-regular fa-circle-user me-2"></i>Login</a>
+                  </li>
+               {% endif %}
          </ul>
       </nav>
    </div>

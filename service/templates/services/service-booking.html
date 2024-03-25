@@ -1,0 +1,261 @@
+{% load static %}
+
+{% if base_template == 'base.html' %}
+{% include 'head.html' %}
+{% include 'header.html' %}
+
+<body class="base-body">
+    {% elif base_template == 'provider-base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+
+    <body class="provider-body">
+        {% endif %}
+        <div class="main-wrapper">
+            <div class="bg-img">
+                <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg1">
+                <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg2">
+                <img src="{% static 'assets/img/bg/feature-bg-03.png' %}" alt="img" class="bgimg3">
+            </div>
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-lg-10 mx-auto">
+
+                            {% include 'services/service-booking-header.html' %}
+
+                            <div class="booking-service">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-6">
+                                        <div class="service-book">
+                                            <div class="service-book-img">
+                                                {% if provider_service.picture %}
+                                                    <img src="{{provider_service.picture.url}}" alt="img">
+                                                {% else %}
+                                                <img src="{% static 'assets/img/booking.jpg' %}" alt="img">
+                                                {% endif %}
+                                            </div>
+                                            <div class="serv-profile">
+                                                <span class="badge">{{provider_service.category.name}}</span>
+                                                <h2>{{provider_service.title}}</h2>
+                                                <ul>
+                                                    <li class="serv-pro">
+                                                        <img src="{% static 'assets/img/profiles/avatar-01.jpg' %}"
+                                                            alt="img">
+                                                        <div class="serv-pro-info">
+                                                            <h6>{{provider_service.provider.first_name}}
+                                                                {{provider_service.provider.last_name}}</h6>
+                                                            <p class="serv-review">
+                                                                <span></span>({{provider_service.provider.user_type.user_type}})
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-7 col-sm-6">
+                                                <div class="provide-box">
+                                                    <span><i class="feather-phone"></i></span>
+                                                    <div class="provide-info">
+                                                        <h6>Phone</h6>
+                                                        <p>{{provider_service.provider.phone_number}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="provide-box">
+                                                    <span><i class="feather-mail"></i></span>
+                                                    <div class="provide-info">
+                                                        <h6>Email</h6>
+                                                        <p>{{provider_service.provider.email}}</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 col-sm-6">
+                                                <div class="provide-box">
+                                                    <span><i class="feather-map-pin"></i></span>
+                                                    <div class="provide-info">
+                                                        <h6>Address</h6>
+                                                        <p>{{provider_service.address.add1}}
+                                                            {{provider_service.address.add2}},
+                                                            {{provider_service.address.city}},
+                                                            {{provider_service.address.provision}},
+                                                            {{provider_service.address.country}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="provide-box">
+                                                    <span><img src="{% static 'assets/img/icons/service-icon.svg' %}"
+                                                            alt="img"></span>
+                                                    <div class="provide-info">
+                                                        <h6>Service Amount</h6>
+                                                        <h5>${{provider_service.price}}</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card add-service">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="sub-title">
+                                                <h6>Your Location</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Address 1</label>
+                                                <input type="text" class="form-control" name="add1"
+                                                    placeholder="Enter Your Address 1">
+                                                {% if form.add1.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.add1.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Address 2</label>
+                                                <input type="text" class="form-control" name="add2"
+                                                    placeholder="Enter Your Address 2">
+                                                {% if form.add2.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.add2.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">City</label>
+                                                <input type="text" class="form-control" name="city"
+                                                    placeholder="Enter Your City">
+                                                {% if form.city.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.city.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Provision</label>
+                                                <input type="text" class="form-control" name="provision"
+                                                    placeholder="Enter Your State">
+                                                {% if form.provision.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.provision.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Country</label>
+                                                <input type="text" class="form-control" name="country"
+                                                    placeholder="Enter Country">
+                                                {% if form.country.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.country.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Pincode</label>
+                                                <input type="text" class="form-control" name="pincode"
+                                                    placeholder="Enter Your Pincode">
+                                                {% if form.pincode.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.pincode.errors %}
+                                                    {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <div class="map-grid">
+                                                <iframe
+                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6509170.989457427!2d-123.80081967108484!3d37.192957227641294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb9fe5f285e3d%3A0x8b5109a227086f55!2sCalifornia%2C%20USA!5e0!3m2!1sen!2sin!4v1669181581381!5m2!1sen!2sin"
+                                                    allowfullscreen aria-hidden="false" tabindex="0"
+                                                    class="contact-map"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="book-title">
+                                            <h5>Appointment Time (You can select only one, Provider will contact you)</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                 <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <select name="appointment" class="select">
+                                                            {% for service_availability in service_availabilities %}
+                                                                <option>{{ service_availability.day }} - From {{service_availability.start_time}} To {{service_availability.end_time}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        {% if form.category.errors %}
+                                                            <div class="text-danger">
+                                                                {% for error in form.category.errors %}
+                                                                    {{ error }}
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+
+
+
+
+                                <br>
+                                <br>
+                                <div class="col-lg-6">
+                                <h5 class="pay-title">Payment Methods</h5>
+                                
+                                <div class="payment-card">
+                                    <div class="payment-head">
+                                        <div class="payment-title">
+                                            
+                                            <h6>Cash On Delivery</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="book-submit text-end">
+                                    <a href="http://127.0.0.1:8000/user/customer-booking" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Book Appointment</a>
+                                </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            {% include 'footer.html' %}

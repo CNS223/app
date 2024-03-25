@@ -20,8 +20,12 @@
                 <div class="row align-items-center">
                     <div class="col-md-5">
                         <div class="provider-img">
-                            <img src="{% static 'assets/img/provider/provider.png' %}" class="img-fluid" alt="img">
-                            <span>{{user.experience}} Years Experience</span>
+                            {% if user.avatar %}
+                                <img src="{{user.avatar.url}}" class="img-fluid" alt="img">
+                            {% else %}
+                                <img src="{% static 'assets/img/provider/provider.png' %}" class="img-fluid" alt="img">
+                            {% endif %}
+                           
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -76,7 +80,7 @@
                         </div>
                         <div class="provider-details provide-area">
                             <h5>Areas of Expertise</h5>
-
+                            
                             {% if is_provider_service == 'no' %}
                                 <p>Not Listed Any Service By Provider.</p>
                             {% else %}
@@ -89,11 +93,11 @@
                                     </div>
                                 </div>
                                 {% endfor %}
-
+                                
                             </div>
                             {% endif %}
                         </div>
-
+                        
 
                         <div class="contact-queries">
                             <h2>Get In Touch With {{user.first_name}} {{user.last_name}}</h2>

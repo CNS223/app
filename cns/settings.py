@@ -20,7 +20,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = environ.Path(__file__) - 2
-print(ROOT_DIR)
+
 APPS_DIR = ROOT_DIR.path('cns')
 env = environ.Env()
 env_file = str(ROOT_DIR.path('.env'))
@@ -83,6 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user.middleware.VisitCountMiddleware',
 
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -180,10 +181,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
-
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# DEFAULT_FILE_STORAGE = 'config.storage_backends.MediaStorage'
 
 
 

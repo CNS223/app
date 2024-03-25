@@ -21,19 +21,19 @@
 	                    	{% if provider_service.provider.id %}
 	                    	{% with provider_id=provider_service.provider.id %}
 	                        <div class="providerset">
-
-
+	                            
+					                
 					                    <div class="providerset-img">
 					                        <a href="{% url 'user:provider_details' provider_id=provider_id %}">
 					                            {% if provider_service.picture %}
 					                                <img src="{{ provider_service.picture.url }}" alt="img">
-
+					                            
 					                            {% else %}
 					                                <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
 					                            {% endif %}
 					                        </a>
 					                    </div>
-
+					                
 	                            <div class="providerset-content">
 	                                <div class="providerset-price">
 	                                    <div class="providerset-name">

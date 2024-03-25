@@ -7,8 +7,6 @@ from django.contrib.auth.models import Permission
 from user.models import *
 
 
-
-# Register your models here.
 class UserTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_type', 'created_at', 'updated_at')  # Fields to display in the list view
     search_fields = ('user_type',)  # Enable search by user type
@@ -125,6 +123,45 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(User, UserAdmin)
 
 
+
+class ProviderGetInTouchAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'provider', 'full_name', 'email', 'phone_number', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('user__username', 'provider__username', 'full_name', 'email', 'phone_number')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'provider', 'full_name', 'email', 'phone_number', 'message')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)  # Make the timestamps collapsible
+        }),
+    )
+
+admin.site.register(ProviderGetInTouch, ProviderGetInTouchAdmin)
+
+class EmailVerificationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email_to', 'verification_token', 'validity')
+    list_filter = ('validity',)
+    search_fields = ('email_to__username',)
+    readonly_fields = ('id', 'validity')
+    fieldsets = (
+        (None, {
+            'fields': ('email_to', 'verification_token')
+        }),
+        ('Validity', {
+            'fields': ('validity',),
+            'classes': ('collapse',)  # Make the validity field collapsible
+        }),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False 
+admin.site.register(EmailVerification, EmailVerificationAdmin)
+
+
+
 class AddressAdmin(admin.ModelAdmin):
     list_display = ('id', 'add1', 'city', 'address_type', 'provision', 'country', 'postal_code','created_at', 'updated_at')
     list_filter = ('address_type', 'provision', 'country', 'created_at', 'updated_at')
@@ -142,25 +179,10 @@ class AddressAdmin(admin.ModelAdmin):
 
 admin.site.register(Address, AddressAdmin)
 
-class EmailVerificationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'email_to', 'verification_token', 'validity')  # Fields to display in the list view
-    list_filter = ('validity',)  # Add filter for the validity field
-    search_fields = ('email_to__username', 'verification_token')  # Enable search by user username and verification token
-    readonly_fields = ('id', 'validity')  # Make certain fields read-only
-    fieldsets = (
-        (None, {
-            'fields': ('email_to', 'verification_token')
-        }),
-        ('Validity', {
-            'fields': ('validity',),
-            'classes': ('collapse',)  # Make the validity field collapsible
-        }),
-    )
+class UserSystemVisitAdmin(admin.ModelAdmin):
+    list_display = ('created_at', 'daily_count', 'total_count')
+    readonly_fields = ('created_at', 'daily_count', 'total_count')
+    search_fields = ('created_at',)
+    date_hierarchy = 'created_at'
 
-    def has_delete_permission(self, request, obj=None):
-        return False 
-admin.site.register(EmailVerification, EmailVerificationAdmin)
-
-
-
-
+admin.site.register(UserSystemVisit, UserSystemVisitAdmin)

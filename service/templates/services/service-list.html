@@ -1,0 +1,121 @@
+{% load static %}
+
+{% if base_template == 'base.html' %}
+{% include 'head.html' %}
+{% include 'header.html' %}
+{% load custom_filters %}
+<body class="base-body">
+    {% elif base_template == 'provider-base.html' %}
+    {% include 'head.html' %}
+    {% include 'header.html' %}
+
+    <body class="provider-body">
+        {% endif %}
+        <div class="main-wrapper">
+            <div class="bg-img">
+                <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg1">
+                <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg2">
+                <img src="{% static 'assets/img/bg/feature-bg-03.png' %}" alt="img" class="bgimg3">
+            </div>
+            <div class="breadcrumb-bar">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <h2 class="breadcrumb-title">Services</h2>
+                            <nav aria-label="breadcrumb" class="page-breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Service List</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12col-sm-12">
+                            <div class="row">
+                                <div class="search-box">
+                                      <form action="{% url 'service:service_list' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="search-input line">
+                                        </div>
+                                        <div class="search-input">
+                                          <div class="search-group-icon search-icon">
+                                            <i class="feather-search"></i>
+                                          </div>
+                                          <div class="form-group mb-0">
+                                            <label>What are you looking for?</label>
+                                            {% if search_input %}
+                                                <input type="text" class="form-control" name="search_input" value="{{ search_input }}">
+                                            {% else %}
+                                                {{form.search_input}}
+                                            {% endif %}
+                                          </div>
+                                        </div>
+                                        <div class="search-btn">
+                                          <button class="btn btn-primary" type="submit"><i class="feather-search me-2"></i>Search</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                <div class="col-md-12">
+                                <br>
+                                <br>
+                                    {% for provider_service in provider_services %}
+                                        {% if provider_service.id %}
+                                            {% with provider_service_id=provider_service.id %}
+                                                <div class="service-list">
+                                                    <div class="service-cont">
+                                                        <div class="service-cont-img">
+                                                            <a href="{% url 'service:service_detail' provider_service.id %}">
+                                                                {% if provider_service.picture %}
+                                                                    <img class="img-fluid serv-img" alt="Service Image" src="{{ provider_service.picture.url }}">
+                                                                {% else %}
+                                                                    <img class="img-fluid serv-img" alt="Default Service Image" src="{% static 'assets/img/services/service-ban-01.jpg' %}">
+                                                                {% endif %}
+                                                            </a>
+                                                        </div>
+                                                        <div class="service-cont-info">
+                                                            <span class="item-cat">{{provider_service.category.name}}</span>
+                                                            <h3 class="title">
+                                                                <a
+                                                                    href="http://127.0.0.1:8000/service/service-detail">{{provider_service.title}}</a>
+                                                            </h3>
+                                                            <p><i class="feather-map-pin"></i>{{provider_service.address.city}},
+                                                                {{provider_service.address.provision}},
+                                                                {{provider_service.address.country}}</p>
+                                                            <div class="service-pro-img">
+                                                                {% if user.avatr %}
+                                                                <img src="{{user.avatar.url}}"
+                                                                    alt="user">
+                                                                {% else %}
+                                                                <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                                                                {% endif %}
+                                                                 <span><i class="fas fa-star filled"></i>{{service_ratings|get_by_key:provider_service.id}}</span>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="service-action">
+                                                        <h6>${{provider_service.price}}</h6>
+                                                        {% if user %}
+                                                            {% if user.user_type.user_type == "customer" %}
+                                                                <a href="{% url 'service:service_booking'  provider_service=provider_service_id %}"
+                                                                    class="btn btn-secondary">Book Now</a>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'footer.html' %}

@@ -45,5 +45,5 @@ class VisitCountMiddleware:
             visit.daily_count += 1
             visit.total_count = UserSystemVisit.objects.last().total_count+1
             visit.save()
-        print("daily_count", visit.daily_count)
-        print("total_count", visit.total_count)
+        # print("daily_count", visit.daily_count)
+        # print("total_count", visit.total_count)

@@ -3,7 +3,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>Urban Service Hub</title>
+    <style>
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 350px;
+            overflow: hidden;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: .25rem;
+            box-shadow: 0 .25rem .75rem rgba(0,0,0,.1);
+        }
 
+        .toast-header {
+            background-color: rgba(255,255,255,.85);
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            padding: .5rem .75rem;
+        }
+
+        .toast-body {
+            padding: .75rem;
+        }
+    </style>
     <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}">
 
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
@@ -20,4 +43,5 @@
     <link rel="stylesheet" href="{% static 'assets/plugins/aos/aos.css' %}">
 
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    
 </head>

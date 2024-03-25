@@ -45,7 +45,11 @@
                 <div class="row gx-2">
                   <div class="col-md-12">
                     <div class="service-images big-gallery">
-                        <img class="img-fluid" src="{{provider_service.picture.url}}" alt="image">
+                        {% if provider_service.pricture %}
+                          <img class="img-fluid" src="{{provider_service.picture.url}}" alt="image">
+                        {% else %}
+                          <img src="{% static 'assets/img/services/service-04.jpg' %}" alt="image">
+                        {% endif %}
                     </div>
                   </div>
                   
@@ -112,12 +116,15 @@
                   <div class="provide-widget">
                     <div class="service-amount">
                       <h5>${{provider_service.price}}</h5>
-                      <p class="serv-review">
-                        <i class="fa-solid fa-star"></i> <span>4.9 </span>
-                      </p>
+                      
                     </div>
                     <div class="serv-proimg">
-                        <img src="{{user.avatar.url}}" alt="image">
+                        {% if user.avatr %}
+                                                                <img src="{{user.avatar.url}}"
+                                                                    alt="user">
+                                                                {% else %}
+                                                                <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                                                                {% endif %}
                       <span><i class="fa-solid fa-circle-check"></i></span>
                     </div>
                   </div>
@@ -139,7 +146,8 @@
                   {% if user.user_type.user_type == "provider" %}
                     <a href="http://127.0.0.1:8000/service/service-create?provider_service_id={{provider_service.id}}" class="btn btn-primary">Edit Service<i class="feather-arrow-right-circle ms-1"></i></a>
                   {% else %}
-                    <a href="http://127.0.0.1:8000/service/service-booking" class="btn btn-primary">Book Service<i class="feather-arrow-right-circle ms-1"></i></a>
+
+                    <a href="{% url 'service:service_booking'  provider_service=provider_service.id %}" class="btn btn-primary">Book Service<i class="feather-arrow-right-circle ms-1"></i></a>
                   {% endif %}
                 </div>
               </div>

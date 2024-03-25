@@ -13,10 +13,7 @@ class ContactUsAdmin(admin.ModelAdmin):
         ('Message', {
             'fields': ('message',)
         }),
-        ('Additional Information', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        })
+       
     )
 
     def has_delete_permission(self, request, obj=None):

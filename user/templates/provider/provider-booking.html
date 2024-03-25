@@ -13,7 +13,7 @@
                         <h6>Booking List</h6>
                     </div>
                 </div>
-
+                
             </div>
         </div>
         <div class="row">
@@ -86,6 +86,14 @@
                             {% endfor %}
                         {% endfor %}
                     </div>
+                    {% else %}
+                    {% if user.user_type.user_type == 'provider' %}
+                    {% if provider_booking %}
+                        {% with provider_service_id=provider_booking.id %}
+                            <a href="{% url 'user:service_complete' provider_booking.id %}" class="btn btn-primary add-set"><i class="feather-plus me-2"></i>Completed</a>
+                        {% endwith %}
+                    {% endif %}
+                    {% endif %}
                     {% endif %}
                 </div>
                 {% endfor %}

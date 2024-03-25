@@ -2,7 +2,6 @@ from django.contrib import admin
 from service.models import *
 
 
-# Register your models here.
 class ServiceCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_at', 'updated_at')  # Fields to display in the list view
     search_fields = ('name',)  # Enable search by name
@@ -23,6 +22,7 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 admin.site.register(ServiceCategory, ServiceCategoryAdmin)
 
 
+
 class ProviderServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'category', 'provider', 'price', 'active', 'created_at', 'updated_at')
     list_filter = ('category', 'provider', 'active')
@@ -41,7 +41,6 @@ class ProviderServiceAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
 
 admin.site.register(ProviderService, ProviderServiceAdmin)
 
@@ -65,8 +64,10 @@ class ProviderAvailabilityAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-
 admin.site.register(ProviderAvailability, ProviderAvailabilityAdmin)
+
+
+
 
 class ServiceBookingAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'service', 'status', 'appointment_time', 'address', 'price', 'created_at', 'updated_at')
@@ -94,6 +95,8 @@ class ServiceBookingAdmin(admin.ModelAdmin):
 admin.site.register(ServiceBooking, ServiceBookingAdmin)
 
 
+
+
 class ServiceRatingAdmin(admin.ModelAdmin):
     list_display = ('id', 'service', 'rate', 'comment', 'created_at', 'updated_at')
     list_filter = ('rate', 'created_at', 'updated_at')
@@ -113,26 +116,20 @@ class ServiceRatingAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-
 admin.site.register(ServiceRating, ServiceRatingAdmin)
 
-
 class FeedbackAdmin(admin.ModelAdmin):
-    # list_display = ('id', 'user', 'service', 'created_at', 'updated_at')  # Fields to display in the list view
-    list_display = ('id', 'user', 'created_at', 'updated_at')
-    list_filter = ('created_at', 'updated_at')  # Add filters for created_at and updated_at fields
-    search_fields = ('user__username', 'feedback')  # Enable search by user username and feedback content
-    readonly_fields = ('id', 'created_at', 'updated_at')  # Make certain fields read-only
+    list_display = ('id', 'user','created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('user__username', 'feedback')
+    readonly_fields = ('id', 'created_at', 'updated_at')
     fieldsets = (
         (None, {
-            # 'fields': ('user', 'feedback', 'service')
-            'fields': ('user', 'feedback')
+            'fields': ('user','feedback')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)  # Make the timestamps collapsible
+            'classes': ('collapse',)
         }),
     )
-
-
 admin.site.register(Feedback, FeedbackAdmin)
