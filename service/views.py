@@ -109,12 +109,145 @@ class ServiceListView(View):
         else:
             return render(request, self.template_name, context=context)
 
-def create_service(request):
-    if request.method == 'POST':
-        form = ServicePostForm(request.POST)
+
+class ServiceCreateView(View):
+    template_name = 'services/service-create.html'
+    base_template = 'base.html'
+    active_header = 'providers'
+    form_class = ServiceCreateForm
+
+    def get_initial_data(self, provider_service=None, service_avalibilities=None):
+        initial_data = {}
+        if provider_service:
+            initial_data = {
+                'title': provider_service.title,
+                'category': provider_service.category.name,
+                'price': provider_service.price,
+                'description': provider_service.desc,
+                'add1': provider_service.address.add1,
+                'add2': provider_service.address.add2,
+                'country': provider_service.address.country,
+                'city': provider_service.address.city,
+                'provision': provider_service.address.provision,
+                'pincode': provider_service.address.postal_code,
+                'image': provider_service.picture
+            }
+            initial_data = set_availability_initial_data(initial_data, provider_service)
+
+        return initial_data
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template": self.base_template, "active_header": self.active_header}
+        provider_service_id = request.GET.get('provider_service_id', None)
+        try:
+            user = User.objects.get(pk=request.user_id)
+            context['user_type'] = user.user_type.user_type
+            context['user'] = user
+            if provider_service_id is not None:
+                provider_service = ProviderService.objects.get(pk=provider_service_id, provider=user)
+                initial_data = self.get_initial_data(provider_service)
+                context['initial_data'] = initial_data
+                form = self.form_class(initial=initial_data)
+            else:
+                print("No provider_service_id provided")
+                form = self.form_class()
+            context['form'] = form
+            context['category'] = ServiceCategory.objects.all()
+            if request.GET.get('error', None) is not None:
+                context['alert'] = request.GET.get('error')
+            if request.GET.get('updated', None) is not None:
+                context['alert'] = "Updated Service Successfully."
+            return render(request, self.template_name, context=context)
+        except Exception as e:
+            print("187----", e)
+            print("Exception:", e)  # Print any exceptions for debugging
+            return redirect('user:user_signin')
+
+    def post(self, request, *args, **kwargs):
+        provider_service_id = request.GET.get('provider_service_id', None)
+        context = {"base_template": self.base_template, "active_header": self.active_header}
+        form = self.form_class(request.POST, request.FILES)
+        context['form'] = form
+        provider_service_id = request.GET.get('provider_service_id', None)
+        if provider_service_id is not None:
+            provider_service = ProviderService.objects.get(pk=provider_service_id)
+        else:
+            provider_service = None
+        user = User.objects.get(pk=request.user_id)
         if form.is_valid():
-            form.save()
-            return redirect('success_url')  # Redirect to a success page
-    else:
-        form = ServicePostForm()
-    return render(request, 'create_service.html', {'form': form})
+            title = form.cleaned_data['title']
+            category = form.cleaned_data['category']
+            price = form.cleaned_data['price']
+            description = form.cleaned_data['description']
+            monday_from_time = form.cleaned_data['monday_from_time']
+            monday_to_time = form.cleaned_data['monday_to_time']
+            tuesday_from_time = form.cleaned_data['tuesday_from_time']
+            tuesday_to_time = form.cleaned_data['tuesday_to_time']
+            wednesday_from_time = form.cleaned_data['wednesday_from_time']
+            wednesday_to_time = form.cleaned_data['wednesday_to_time']
+            thursday_from_time = form.cleaned_data['thursday_from_time']
+            thursday_to_time = form.cleaned_data['thursday_to_time']
+            friday_from_time = form.cleaned_data['friday_from_time']
+            friday_to_time = form.cleaned_data['friday_to_time']
+            saturday_from_time = form.cleaned_data['saturday_from_time']
+            saturday_to_time = form.cleaned_data['saturday_to_time']
+            sunday_from_time = form.cleaned_data['sunday_from_time']
+            sunday_to_time = form.cleaned_data['sunday_to_time']
+            add1 = form.cleaned_data['add1']
+            add2 = form.cleaned_data['add2']
+            country = form.cleaned_data['country']
+            city = form.cleaned_data['city']
+            provision = form.cleaned_data['provision']
+            pincode = form.cleaned_data['pincode']
+            image = request.FILES.get('image')
+            if provider_service:
+                pass
+            else:
+                provider_service, created = ProviderService.objects.get_or_create(title=title, provider=user)
+            if provider_service.address:
+                address = provider_service.address
+            else:
+                address = Address.objects.create(address_type='serviceprovider')
+            category = ServiceCategory.objects.get(name=category)
+            provider_service.category = category
+            provider_service.title = title
+            provider_service.price = price
+            provider_service.active = True
+            provider_service.desc = description
+            provider_service.address = address
+            if image:
+                provider_service.picture = image
+            provider_service.save()
+            monday_avail, created = create_or_update_availability(provider_service, "Monday", True, monday_from_time,
+                                                                  monday_to_time)
+            tuesday_avail, created = create_or_update_availability(provider_service, "Tuesday", True, tuesday_from_time,
+                                                                   tuesday_to_time)
+            wed_avail, created = create_or_update_availability(provider_service, "Wednesday", True, wednesday_from_time,
+                                                               wednesday_to_time)
+            thurs_avail, created = create_or_update_availability(provider_service, "Thursday", True, thursday_from_time,
+                                                                 thursday_to_time)
+            friday_avail, created = create_or_update_availability(provider_service, "Friday", True, friday_from_time,
+                                                                  friday_to_time)
+            saturday_avail, created = create_or_update_availability(provider_service, "Saturday", True,
+                                                                    saturday_from_time, saturday_to_time)
+            sunday_avail, created = create_or_update_availability(provider_service, "Sunday", True, sunday_from_time,
+                                                                  sunday_to_time)
+
+            address.add1 = add1
+            address.add2 = add2
+            address.city = city
+            address.provision = provision
+            address.country = country
+            address.postal_code = pincode
+            address.save()
+        else:
+            print("Form is not valid")
+            print("Errors:", form.errors)
+            return HttpResponseRedirect(
+                reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
+
+        # Process POST request data here
+        return HttpResponseRedirect(
+            reverse('service:service_create') + f'?provider_service_id={provider_service.id}&updated=true')
+
+

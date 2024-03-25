@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+{% include 'provider/provider-sidebar.html' %}
+{% load custom_filters %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="provider-subtitle">
+                        <h6>Booking List</h6>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                {% for provider_booking in provider_bookings %}
+                <div class="booking-list">
+                    <div class="booking-widget">
+                        <div class="booking-img">
+                            <a href="{% url 'service:service_detail' provider_booking.service.id %}">
+                                <img src="{{provider_booking.service.picture.url}}" alt="User Image">
+                            </a>
+
+                        </div>
+                        <div class="booking-det-info">
+                            <h3>
+                                <a
+                                    href="{% url 'service:service_detail' provider_booking.service.id %}">{{provider_booking.service.title|capfirst}}</a>
+                                {% if provider_booking.status == 'completed' %}
+                                    <span class="badge badge-success">{{provider_booking.status|capfirst}}</span>
+                                {% elif provider_booking.status == 'pending' %}
+                                    <span class="badge badge-warning">{{provider_booking.status|capfirst}}</span>
+                                {% elif provider_booking.status == 'cancelledbyprovider' %}
+                                    <span class="badge badge-danger">Cancelled by Provider</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Cancelled by User</span>
+                                {% endif %}
+                            </h3>
+                            <ul class="booking-details">
+                                <li>
+                                    <span class="book-item">Booking Date</span> : {{provider_booking.appointment_time}}
+                                </li>
+                                <li>
+                                    <span class="book-item">Amount</span> : ${{provider_booking.price}} <span
+                                        class="badge-grey">COD</span>
+                                </li>
+                                <li>
+                                    <span class="book-item">Location</span> : {{provider_booking.address.add1}}
+                                    {{provider_booking.address.add2}}, {{provider_booking.address.city}},
+                                    {{provider_booking.address.provision}}, {{provider_booking.address.country}},
+                                    {{provider_booking.address.postal_code}}
+                                </li>
+                                <li>
+                                    <span class="book-item">Customer</span> :
+                                    <div class="user-book">
+                                        <div class="avatar avatar-xs">
+                                            {% if provider_booking.user.avatar and provider_booking.user.avatar.url %}
+                                            <img class="avatar-img rounded-circle"
+                                                src="{{ provider_booking.user.avatar.url }}" alt="Avatar">
+                                            {% else %}
+                                            <img class="avatar-img rounded-circle"
+                                                src="{% static 'assets/img/profiles/avatar-02.jpg' %}"
+                                                alt="Default Avatar">
+                                            {% endif %}
+                                        </div>
+                                        {{provider_booking.user.first_name}} {{provider_booking.user.last_name}}
+                                    </div>
+                                    <p>{{provider_booking.user.phone_number}}</p>
+                                    </p>
+                                    <p>{{provider_booking.user.email}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% if provider_booking.status == 'completed' %}
+                    <div class="rating text-center">
+                        {% for rating in service_ratings|get_by_key:provider_booking.id %}
+                            {% for star in rating %}
+                                <i class="fas fa-star filled" style="color: gold;"></i>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

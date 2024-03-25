@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+{% include 'provider/provider-sidebar.html' %}
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="provider-subtitle">
+                            <h6>My Services</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-center justify-content-md-end flex-wrap">
+                        <div class="review-sort me-2">
+                            <p>Sort</p>
+                            <select class="select">
+                                <option>A -> Z</option>
+                                <option>Most Helpful</option>
+                            </select>
+                        </div>
+                        <div class="grid-listview me-2">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);">
+                                        <i class="feather-filter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://127.0.0.1:8000/service/service-detail" class="active">
+                                        <i class="feather-grid"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://127.0.0.1:8000/service/service-detail">
+                                        <i class="feather-list"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="create-service.html" class="btn btn-primary add-set"><i
+                                class="feather-plus me-2"></i>Add
+                            Service</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-list">
+                        <ul class="nav">
+                            <li>
+                                <a href="#" class="active" data-bs-toggle="tab" data-bs-target="#active-service">Actice
+                                    Services</a>
+                            </li>
+                            <li>
+                                <a href="#" data-bs-toggle="tab" data-bs-target="#inactive-service">Inactive
+                                    Services</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content pt-0">
+                <div class="tab-pane active" id="active-service">
+                    <div class="row">
+                        {% for num in '0123456789' %}
+                        <div class="col-xl-4 col-md-6">
+                            <div class="service-widget pro-service">
+                                <div class="service-img">
+                                    <a href="http://127.0.0.1:8000/service/service-detail">
+                                        <img class="img-fluid serv-img" alt="Service Image"
+                                            src="{% static 'assets/img/services/service-04.jpg' %}" a>
+                                    </a>
+                                    <div class="fav-item">
+                                        <div class="item-info">
+                                            <a href="categories.html"><span class="item-cat">Car Wash</span></a>
+                                        </div>
+                                        <span class="serv-rating"><i class="fa-solid fa-star"></i>4.9</span>
+                                    </div>
+                                </div>
+                                <div class="service-content">
+                                    <h3 class="title">
+                                        <a href="http://127.0.0.1:8000/service/service-detail">Car Repair Services</a>
+                                    </h3>
+                                    <div class="addrs-item">
+                                        <p><i class="feather-map-pin"></i>Maryland City, MD, USA</p>
+                                        <h6 class="price">$20.00<span class="old-price">$35.00</span><span
+                                                class="price-hr">/hr</span></h6>
+                                    </div>
+                                    <div class="serv-info">
+                                        <div>
+                                            <a href="provider-edit-service.html" class="serv-edit"><i
+                                                    class="feather-edit"></i> Edit</a>
+                                            <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                data-bs-target="#in-active"><span><i class="feather-alert-circle"></i>
+                                                    Active</span></a>
+                                        </div>
+                                        <a href="provider-offers.html" class="btn btn-book">Apply Offer</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="inactive-service">
+                    <div class="row">
+
+                        <div class="col-xl-4 col-md-6">
+                            <div class="service-widget pro-service">
+                                <div class="service-img">
+                                    <a href="http://127.0.0.1:8000/service/service-detail">
+                                        <img class="img-fluid serv-img" alt="Service Image"
+                                            src="{% static 'assets/img/services/service-02.jpg' %}">
+                                    </a>
+                                    <div class="fav-item">
+                                        <div class="item-info">
+                                            <a href="categories.html"><span class="item-cat">Construction</span></a>
+                                        </div>
+                                        <span class="serv-rating"><i class="fa-solid fa-star"></i>4.9</span>
+                                    </div>
+                                </div>
+                                <div class="service-content">
+                                    <h3 class="title">
+                                        <a href="http://127.0.0.1:8000/service/service-detail">Toughened Glass Fitting Services</a>
+                                    </h3>
+                                    <div class="addrs-item">
+                                        <p><i class="feather-map-pin"></i>New Jersey, USA</p>
+                                        <h6 class="price">$20.00<span class="old-price">$35.00</span><span
+                                                class="price-hr">/hr</span></h6>
+                                    </div>
+                                    <div class="serv-info">
+                                        <div>
+                                            <a href="#" class="serv-edit" data-bs-toggle="modal"
+                                                data-bs-target="#del-service"><i class="feather-trash-2"></i>Delete</a>
+                                            <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                data-bs-target="#active"><span><i class="feather-alert-circle"></i>
+                                                    Inactive</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% for num in '0123456789' %}
+                        {{num}}
+                        <div class="col-xl-4 col-md-6">
+                            <div class="service-widget pro-service">
+                                <div class="service-img">
+                                    <a href="http://127.0.0.1:8000/service/service-detail">
+                                        <img class="img-fluid serv-img" alt="Service Image"
+                                            src="{% static 'assets/img/services/service-04.jpg' %}">
+                                    </a>
+                                    <div class="fav-item">
+                                        <div class="item-info">
+                                            <a href="categories.html"><span class="item-cat">Car Wash</span></a>
+                                        </div>
+                                        <span class="serv-rating"><i class="fa-solid fa-star"></i>4.9</span>
+                                    </div>
+                                </div>
+                                <div class="service-content">
+                                    <h3 class="title">
+                                        <a href="http://127.0.0.1:8000/service/service-detail">Car Repair Services</a>
+                                    </h3>
+                                    <div class="addrs-item">
+                                        <p><i class="feather-map-pin"></i>Maryland, USA</p>
+                                        <h6 class="price">$20.00<span class="old-price">$35.00</span><span
+                                                class="price-hr">/hr</span></h6>
+                                    </div>
+                                    <div class="serv-info">
+                                        <div>
+                                            <a href="#" class="serv-edit" data-bs-toggle="modal"
+                                                data-bs-target="#del-service"><i class="feather-trash-2"></i>Delete</a>
+                                            <a href="javascript:void(0);" data-bs-toggle="modal"
+                                                data-bs-target="#active"><span><i class="feather-alert-circle"></i>
+                                                    Inactive</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="review-entries">
+                        <span>Show</span>
+                        <select>
+                            <option>07</option>
+                            <option>08</option>
+                        </select>
+                        <span>entries</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="review-pagination">
+                        <p>1 - 09 of 09</p>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);">1</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="javascript:void(0);">2 <span
+                                        class="visually-hidden">(current)</span></a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);">3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade custom-modal" id="in-active">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 justify-content-between">
+                    <h5 class="modal-title">Inactive Service</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="feather-x"></i></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="write-review">
+                        <form action="https://truelysell.dreamstechnologies.com/html/template/provider-services.html">
+                            <p>Are you sure want to inactive this service?</p>
+                            <div class="modal-submit text-end">
+                                <a href="#" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade custom-modal" id="active">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 justify-content-between">
+                    <h5 class="modal-title">Active Service</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="feather-x"></i></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="write-review">
+                        <form action="https://truelysell.dreamstechnologies.com/html/template/provider-services.html">
+                            <p>Are you sure want to active this service?</p>
+                            <div class="modal-submit text-end">
+                                <a href="#" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade custom-modal" id="del-service">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 justify-content-between">
+                    <h5 class="modal-title">Delete Service</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="feather-x"></i></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="write-review">
+                        <form action="https://truelysell.dreamstechnologies.com/html/template/provider-services.html">
+                            <p>Are you sure want to Delete this service?</p>
+                            <div class="modal-submit text-end">
+                                <a href="#" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Yes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade custom-modal" id="del-account">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 justify-content-between">
+                    <h5 class="modal-title">Delete Account</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i
+                            class="feather-x"></i></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="write-review">
+                        <form action="https://truelysell.dreamstechnologies.com/html/template/login.html">
+                            <p>Are you sure you want to delete this account? To delete your account, Type your
+                                password.</p>
+                            <div class="form-group">
+                                <label class="col-form-label">Password</label>
+                                <div class="pass-group">
+                                    <input type="password" class="form-control pass-input" placeholder="*************">
+                                    <span class="toggle-password feather-eye-off"></span>
+                                </div>
+                            </div>
+                            <div class="modal-submit text-end">
+                                <a href="#" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</a>
+                                <button type="submit" class="btn btn-danger">Delete Account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

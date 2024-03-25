@@ -12,7 +12,7 @@ from math import sin, cos, sqrt, atan2, radians
 import string
 import uuid
 from django.utils import timezone
-from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 
 
 def avatar_path(instance, filename):
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             username=self.normalize_email(username),
         )
-
+        user.phone_number = "1234567890"
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -47,6 +47,7 @@ class UserManager(BaseUserManager):
             username=username,
             password=password,
         )
+        user.phone_number = "1234567890"
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
@@ -134,6 +135,7 @@ class User(AbstractBaseUser):
     updated_at = models.DateTimeField(auto_now=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
     bio = models.TextField(blank = True)
+    experience = models.FloatField(default=0, validators=[MinValueValidator(0)])
     gender = models.CharField(choices=GENDER_CHOICES, default='male', max_length=50, null=False, blank=False)
     currency_code = models.CharField(choices=CURRENCY_CHOICES, default='cad', max_length=50, null=False, blank=False)
     groups = models.ManyToManyField('auth.Group', blank=True, related_name="cutom_user_group")
@@ -172,7 +174,7 @@ class User(AbstractBaseUser):
         characters = string.ascii_letters + string.digits  # include both letters and digits
         random_string = ''.join(random.choice(characters) for _ in range(length))
         return random_string
-    
+
 class EmailVerification(models.Model):
     email_to = models.ForeignKey(User, on_delete=models.CASCADE, null = False, blank = False)
     verification_token = models.CharField(max_length=255, blank=False, null=False, )
