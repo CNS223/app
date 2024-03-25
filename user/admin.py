@@ -7,7 +7,6 @@ from django.contrib.auth.models import Permission
 from user.models import *
 
 
-
 # Register your models here.
 class UserTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_type', 'created_at', 'updated_at')  # Fields to display in the list view
@@ -38,13 +37,16 @@ class UserTypeAdmin(admin.ModelAdmin):
 
     mark_as_customer.short_description = 'Mark selected as Customer'
 
+
 admin.site.register(UserType, UserTypeAdmin)
+
 
 @admin.register(Permission)
 class PermissionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.select_related('content_type')
+
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
@@ -72,6 +74,7 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
+
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
@@ -97,12 +100,12 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_admin', 'email_verified',  'last_login')
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_admin', 'email_verified', 'last_login')
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', 'email_verified')}),
         ('Profile Picture', {'fields': ('avatar',)}),
-        ('Additional Info', {'fields': ('first_name', 'last_name','bio')}),
+        ('Additional Info', {'fields': ('first_name', 'last_name', 'bio')}),
         ('Permissions', {'fields': ('is_staff', 'is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -123,8 +126,10 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 
+
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'add1', 'city', 'address_type', 'provision', 'country', 'postal_code','created_at', 'updated_at')
+    list_display = (
+    'id', 'add1', 'city', 'address_type', 'provision', 'country', 'postal_code', 'created_at', 'updated_at')
     list_filter = ('address_type', 'provision', 'country', 'created_at', 'updated_at')
     search_fields = ('add1', 'city', 'postal_code',)
     readonly_fields = ('id', 'created_at', 'updated_at')
@@ -138,12 +143,15 @@ class AddressAdmin(admin.ModelAdmin):
         }),
     )
 
+
 admin.site.register(Address, AddressAdmin)
+
 
 class EmailVerificationAdmin(admin.ModelAdmin):
     list_display = ('id', 'email_to', 'verification_token', 'validity')  # Fields to display in the list view
     list_filter = ('validity',)  # Add filter for the validity field
-    search_fields = ('email_to__username', 'verification_token')  # Enable search by user username and verification token
+    search_fields = (
+    'email_to__username', 'verification_token')  # Enable search by user username and verification token
     readonly_fields = ('id', 'validity')  # Make certain fields read-only
     fieldsets = (
         (None, {
@@ -156,9 +164,17 @@ class EmailVerificationAdmin(admin.ModelAdmin):
     )
 
     def has_delete_permission(self, request, obj=None):
-        return False 
+        return False
+
+
 admin.site.register(EmailVerification, EmailVerificationAdmin)
 
 
+class UserSystemVisitAdmin(admin.ModelAdmin):
+    list_display = ('created_at', 'daily_count', 'total_count')
+    readonly_fields = ('created_at', 'daily_count', 'total_count')
+    search_fields = ('created_at',)
+    date_hierarchy = 'created_at'
 
 
+admin.site.register(UserSystemVisit, UserSystemVisitAdmin)

@@ -190,4 +190,11 @@ class EmailVerification(models.Model):
 
         return valid
 
+class UserSystemVisit(models.Model):
+    created_at = models.DateTimeField(timezone.now)
+    daily_count = models.IntegerField(default=0)
+    total_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.created_at)
 

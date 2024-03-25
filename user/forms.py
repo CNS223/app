@@ -4,41 +4,75 @@ from django.contrib.auth.forms import PasswordResetForm
 from service.models import *
 from user.models import *
 
+
 class ProviderSignupForm(forms.Form):
-    first_name = forms.CharField(max_length=100, label='First Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(max_length=100, label='Last Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
-    phone = forms.CharField(max_length=15, label='Phone Number', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'required': True}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field', 'required': True}))
+    first_name = forms.CharField(max_length=100, label='First Name', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
+    last_name = forms.CharField(max_length=100, label='Last Name', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
+    phone = forms.CharField(max_length=15, label='Phone Number', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'required': True}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field',
+               'required': True}))
+
 
 class UserSignupForm(forms.Form):
-    first_name = forms.CharField(label='First Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
-    phone = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control form-control-lg group_formcontrol', 'placeholder': '(256) 789-6253', 'required': True}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'required': True}))
+    first_name = forms.CharField(label='First Name', max_length=100, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
+    last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
+    phone = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-lg group_formcontrol', 'placeholder': '(256) 789-6253',
+               'required': True}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'required': True}))
+
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '*************'}))
-    remember_me = forms.BooleanField(label='Remember Me', required=False, widget=forms.CheckboxInput(attrs={'class': 'rememberme'}))
+    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': '*************'}))
+    remember_me = forms.BooleanField(label='Remember Me', required=False,
+                                     widget=forms.CheckboxInput(attrs={'class': 'rememberme'}))
+
 
 class AccountSettingsForm(forms.Form):
-    first_name = forms.CharField(label='First Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    username = forms.CharField(label='User Name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
-    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}))
-    gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], required=False, widget=forms.Select(attrs={'class': 'form-select'}))
-    bio = forms.CharField(label='Bio', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your shor bio', 'rows': 5}), required=False)
-    add1 = forms.CharField(label='Address 1', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}))
-    add2 = forms.CharField(label='Address 2', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2'}))
-    country = forms.CharField(label='Country', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Country'}))
-    provision = forms.CharField(label='Provision', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Provision'}))
-    city = forms.CharField(label='City', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'City'}))
-    postal_code = forms.CharField(label='Postal Code', max_length=10, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'N9A 5E3'}))
-    currency_code = forms.ChoiceField(label='Currency Code', choices=[('cad', 'CAD'), ('usd', 'USD')], required=False, widget=forms.Select(attrs={'class': 'form-select'}))
-    profile_picture_upload = forms.FileField(label='Profile Picture', required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}))
+    first_name = forms.CharField(label='First Name', max_length=255, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
+    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    username = forms.CharField(label='User Name', max_length=255, required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(
+        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
+    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}))
+    gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
+                               required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    bio = forms.CharField(label='Bio', widget=forms.Textarea(
+        attrs={'class': 'form-control', 'placeholder': 'Enter your shor bio', 'rows': 5}), required=False)
+    add1 = forms.CharField(label='Address 1', max_length=255,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}))
+    add2 = forms.CharField(label='Address 2', max_length=255,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2'}))
+    country = forms.CharField(label='Country', max_length=255,
+                              widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}))
+    provision = forms.CharField(label='Provision', max_length=255,
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Provision'}))
+    city = forms.CharField(label='City', max_length=255,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}))
+    postal_code = forms.CharField(label='Postal Code', max_length=10,
+                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'N9A 5E3'}))
+    currency_code = forms.ChoiceField(label='Currency Code', choices=[('cad', 'CAD'), ('usd', 'USD')], required=False,
+                                      widget=forms.Select(attrs={'class': 'form-select'}))
+    profile_picture_upload = forms.FileField(label='Profile Picture', required=False, widget=forms.ClearableFileInput(
+        attrs={'class': 'form-control', 'accept': 'image/*'}))
 
     def clean_mobile_number(self):
         mobile_number = self.cleaned_data.get('mobile_number')
@@ -61,9 +95,19 @@ class AccountSettingsForm(forms.Form):
 
         return cleaned_data
 
+
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(label='Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
+        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}), required=True)
+
+
+class ReSetPasswordForm(forms.Form):
+    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control pass-input', 'id': 'password-1', 'placeholder': '*************',
+               'required': True}))
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control pass-input', 'id': 'password-2', 'placeholder': '*************',
+               'required': True}))
 
 
 class UserProfileForm(forms.ModelForm):
@@ -99,6 +143,7 @@ class AddressForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': f'Enter {field_name.capitalize()}'})
             for field_name in fields
         }
+
 
 class FeedbackForm(forms.ModelForm):
     class Meta:

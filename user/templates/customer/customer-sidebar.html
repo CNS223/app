@@ -3,7 +3,15 @@
     <div class="settings-widget">
         <div class="settings-header">
             <div class="settings-img">
-                <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                {% if user %}
+                    {% if user.avatar %}
+                        <img src="{{user.avatar.url}}" alt="user">
+                    {% else %}
+                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                    {% endif %}
+                {% else %}
+                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                {% endif %}
             </div>
             <h6>{{ user_name }}</h6>
             <p>Member Since {{ member_since }}</p>
@@ -20,18 +28,18 @@
                     <a href="http://127.0.0.1:8000/user/provider-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
                         <i class="feather-settings"></i> <span>Account Settings</span>
                     </a>
-                    
+
                 </li>
                 {% else %}
                 <li>
                     <a href="http://127.0.0.1:8000/user/customer-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
                         <i class="feather-settings"></i> <span>Account Settings</span>
                     </a>
-                    
+
                 </li>
                 {% endif %}
                 <li>
-                    <a href="http://127.0.0.1:8000/user/" {% if active_menu == 'logout' %}class="active"{% endif %}>
+                    <a href="http://127.0.0.1:8000/?action=logout" {% if active_menu == 'logout' %}class="active"{% endif %}>
                         <i class="feather-log-out"></i> <span>Logout</span>
                     </a>
                 </li>
