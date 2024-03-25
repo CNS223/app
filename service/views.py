@@ -265,3 +265,20 @@ class ServiceCreateView(View):
             reverse('service:service_create') + f'?provider_service_id={provider_service.id}&updated=true')
 
 
+class FeedbackCreateView(View):
+    template_name = 'services/feedback.html'
+
+    def get(self, request, *args, **kwargs):
+        form = FeedbackForm()
+        context = {'form': form, 'base_template': 'base.html'}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            user = request.user_id
+            feedback = form.cleaned_data['feedback']
+            Feedback.objects.create(feedback=feedback)
+            return HttpResponseRedirect(reverse('service:feedback'))
+        context = {'form': form, 'base_template': 'base.html'}
+        return render(request, self.template_name, context=context)

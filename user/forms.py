@@ -110,17 +110,6 @@ class ReSetPasswordForm(forms.Form):
                'required': True}))
 
 
-class RatingForm(forms.Form):
-    RATING_CHOICES = (
-        ('5', '😊 Highest'),
-        ('4', '😐 Good'),
-        ('3', '😃 Moderate'),
-        ('2', '😄 Limited'),
-        ('1', '😠 Lowest'),
-    )
-    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'hidden-radio'}))
-    comment = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Please write your review'}))
 
 
 class ProviderContactForm(forms.Form):
@@ -177,3 +166,4 @@ class FeedbackForm(forms.ModelForm):
             'user': forms.HiddenInput(attrs={'value': 8}),  # Set user_id to 8
             'service': forms.HiddenInput(attrs={'value': 2}),  # Set service_id to 2
         }
+

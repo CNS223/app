@@ -11,6 +11,7 @@ urlpatterns = [
     path('provider_signup', views.provider_signup, name='provider_signup'),
     path('service-detail/<int:provider_service>', ServiceDetailView.as_view(), name='service_detail'),
     path('service-list', ServiceListView.as_view(), name='service_list'),
+    path('feedback', FeedbackCreateView.as_view(), name='feedback'),
 
     # path('generate_otp', views.GenerateOTP.as_view(), name='generate-otp'),
 ]

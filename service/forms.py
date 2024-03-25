@@ -30,3 +30,6 @@ class ServiceCreateForm(forms.Form):
     provision = forms.CharField(label='Provision', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your State'}))
     pincode = forms.CharField(label='Pincode', max_length=10, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
     image = forms.ImageField(label='Image', required=False, widget=forms.FileInput(attrs={'accept': 'image/*'}))
+
+class FeedbackForm(forms.Form):
+    feedback = forms.CharField(label='Add Feedback', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Feedback'}))

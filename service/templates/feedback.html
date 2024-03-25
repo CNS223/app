@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<div class="bg-img">
+    <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg1">
+    <img src="{% static 'assets/img/bg/work-bg-03.png' %}" alt="img" class="bgimg2">
+    <img src="{% static 'assets/img/bg/feature-bg-03.png' %}" alt="img" class="bgimg3">
+</div>
+
+<div class="breadcrumb-bar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-12">
+                <h2 class="breadcrumb-title">Feedback</h2>
+                <nav aria-label="breadcrumb" class="page-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Feedback</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-img">
+                    <img src="{% static 'assets/img/contact.jpg' %}" class="img-fluid" alt="img">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="contact-queries">
+                    <h2>Feedback message</h2>
+                    <p>Get In Touch</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}<br>
+                        <button class="btn btn-primary" type="submit">Send Feedback <i class="feather-arrow-right-circle ms-2"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
