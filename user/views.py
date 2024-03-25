@@ -526,7 +526,7 @@ class ResetPasswordView(View):
             confirm_password = form.cleaned_data['password2']
             if password!=confirm_password:
                 context['alert'] = "Password Does not Match."
-                return redirect('http://127.0.0.1:8000/user/reset-password?alert=password_does_not_match&token='+verification_token)
+                return redirect('https://urbenservicehub.onrender.com/user/reset-password?alert=password_does_not_match&token='+verification_token)
             email_verification = get_object_or_404(EmailVerification, verification_token=verification_token)
             user = email_verification.email_to
             if user and email_verification.validate_email(user, verification_token):

@@ -19,27 +19,27 @@
         <div class="settings-menu">
             <ul>
                 <li>
-                    <a href="http://127.0.0.1:8000/user/customer-booking" {% if active_menu == 'bookings' %}class="active"{% endif %}>
+                    <a href="https://urbenservicehub.onrender.com/user/customer-booking" {% if active_menu == 'bookings' %}class="active"{% endif %}>
                         <i class="feather-smartphone"></i> <span>Bookings</span>
                     </a>
                 </li>
                 {% if active_header == 'providers' %}
                 <li>
-                    <a href="http://127.0.0.1:8000/user/provider-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
+                    <a href="https://urbenservicehub.onrender.com/user/provider-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
                         <i class="feather-settings"></i> <span>Account Settings</span>
                     </a>
                     
                 </li>
                 {% else %}
                 <li>
-                    <a href="http://127.0.0.1:8000/user/customer-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
+                    <a href="https://urbenservicehub.onrender.com/user/customer-profile" {% if active_menu == 'settings' %}class="active"{% endif %}>
                         <i class="feather-settings"></i> <span>Account Settings</span>
                     </a>
                     
                 </li>
                 {% endif %}
                 <li>
-                    <a href="http://127.0.0.1:8000/?action=logout" {% if active_menu == 'logout' %}class="active"{% endif %}>
+                    <a href="https://urbenservicehub.onrender.com/?action=logout" {% if active_menu == 'logout' %}class="active"{% endif %}>
                         <i class="feather-log-out"></i> <span>Logout</span>
                     </a>
                 </li>
