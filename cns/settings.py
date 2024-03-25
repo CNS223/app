@@ -16,6 +16,7 @@ import os
 import environ
 import configparser
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.VisitCountMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -112,8 +114,12 @@ WSGI_APPLICATION = 'cns.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = { 'default': env.db('DATABASE_URL', default='postgresql://postgres:adminpasspword@localhost:5432/cns'), }
+# DATABASES = { 'default': env.db('DATABASE_URL', default='postgresql://postgres:adminpasspword@localhost:5432/cns'), }
 
+# Replace the SQLite DATABASES configuration with PostgreSQL:
+DATABASES = {
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+}
 
 
 
@@ -182,8 +188,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-
-
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AWS_DEFAULT_ACL = None
 
