@@ -1,9 +1,13 @@
-from django.db import connection
-
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render
+from django.views import View
+from user.models import User
+from info_pages.models import *
 from info_pages.forms import *
-
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password, check_password
+from django.urls import reverse_lazy, reverse
+from pyexpat.errors import messages
 
 # Create your views here.
 def about_us(request):
@@ -18,24 +22,23 @@ def terms_n_conditions(request):
     context = {"base_template":"base.html"}
     return render(request, 'termsncondition/terms-and-condition.html', context=context)
 
-# def contact_us(request):
-#     context = {"base_template":"base.html"}
-#     return render(request, 'contactus/contact-us.html', context=context)
 
-def contact_us(request):
-    if request.method == 'POST':
-        form = contactForm(request.POST)
+class ContactUsView(View):
+    template_name = 'contactus/contact-us.html'
+    base_template = 'base.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {"base_template":self.base_template, "active_header":"about"}
+        form = ContactUsForm()
+        context['form'] = form
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+        context = {"base_template":self.base_template, "active_header":"about"}
+        form = ContactUsForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('info_pages:contact_success')
-    else:
-        form = contactForm()
-    context = {'form': form, "base_template": "base.html"}
-    return render(request, 'contactus/contact-us.html', context)
-
-def contact_success(request):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(id) FROM info_pages_contactus")
-        feedback_count = cursor.fetchone()[0]
-    # feedback_count = Feedback.objects.count()
-    return render(request, 'contactus/contact-success.html',  {'feedback_count': feedback_count, "base_template": "base.html"})
+            return redirect('info_pages:contact_us')
+        context['form'] = form
+        context['alert'] = "Submitted Successfully."
+        return render(request, self.template_name, context=context)

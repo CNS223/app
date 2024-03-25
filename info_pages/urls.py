@@ -9,6 +9,6 @@ urlpatterns = [
     path('about-us', about_us, name='about_us'),
     path('privacy-policy', privacy_policy, name='privacy_policy'),
     path('terms-and-conditions', terms_n_conditions, name='terms_n_conditions'),
-    path('contact-us', contact_us, name='contact_us'),
-    path('contact/success/', contact_success, name='contact_success'),
+    path('contact-us', ContactUsView.as_view(), name='contact_us'),
+    
 ]
