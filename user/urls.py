@@ -25,7 +25,9 @@ urlpatterns = [
     # Provider Routes
     path('provider-services', ProviderServicesView.as_view(), name='provider_services'),
     path('provider-booking', ProviderBookingView.as_view(), name='provider_booking'),
-
+    path('provider-list', ProviderListView.as_view(), name='provider_list'),
+    path('provider-details/<int:provider_id>', ProviderDetailsView.as_view(), name='provider_details'),
+    path('customer-booking', CustomerBookingView.as_view(), name='customer_booking'),
     # path('feedback', feedback, name='feedback'),
     path('feedback/', FeedbackCreateView.as_view(), name='feedback'),
     path('feedback/success/', feedback_success, name='feedback_success'),

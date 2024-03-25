@@ -1,353 +1,153 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body_block %}
+{% load custom_filters %}
 <div class="row">
-               {% include 'customer/customer-sidebar.html' %}     
+               {% include 'customer/customer-sidebar.html' %}
                     <div class="col-lg-9">
-
+                        <br>
                         <div class="row align-items-center">
                             <div class="col-md-4">
                                 <div class="widget-title">
                                     <h4>Booking List</h4>
                                 </div>
                             </div>
-                            <div class="col-md-8 d-flex align-items-center justify-content-md-end flex-wrap">
-                                <div class="review-sort me-2">
-                                    <p>Sort</p>
-                                    <select class="select">
-                                        <option>Recent</option>
-                                        <option>Older</option>
-                                        <option>A to Z</option>
-                                        <option>Z to A</option>
-                                    </select>
-                                </div>
-                                <div class="grid-listview">
-                                    <ul>
-                                        <li>
-                                            <a href="customer-booking-calendar.html">
-                                                <i class="feather-calendar"></i>
+                        </div>
+
+
+                        {% for customer_booking in customer_bookings %}
+
+                            <div class="booking-list">
+                                <div class="booking-widget">
+                                    <div class="booking-img">
+                                        <a href="{% url 'service:service_detail' customer_booking.service.id %}">
+                                            <img src="{{customer_booking.service.picture.url}}" alt="User Image">
+                                        </a>
+
+                                    </div>
+                                    <div class="booking-det-info">
+                                        <h3>
+                                            <a
+                                                href="{% url 'service:service_detail' customer_booking.service.id %}">{{customer_booking.service.title|capfirst}}
                                             </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0);">
-                                                <i class="feather-filter"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="feather-grid"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="http://127.0.0.1:8000/service/service-booking" class="active">
-                                                <i class="feather-list"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="booking-list">
-                            <div class="booking-widget">
-                                <div class="booking-img">
-                                    <a href="booking-details.html">
-                                        <img src="{% static 'assets/img/services/service-08.jpg' %}" alt="User Image">
-                                    </a>
-                                    <div class="fav-item">
-                                        <a href="javascript:void(0)" class="fav-icon">
-                                            <i class="feather-heart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="booking-det-info">
-                                    <h3>
-                                        <a href="booking-details.html">Computer Services1 </a><span
-                                            class="badge badge-danger">Cancelled by User</span>
-                                    </h3>
-                                    <ul class="booking-details">
-                                        <li>
-                                            <span class="book-item">Booking Date</span> : 27 Sep, 17:00-18:00
-                                        </li>
-                                        <li>
-                                            <span class="book-item">Amount</span> : $100.00 <span
-                                                class="badge-grey badge-new">Paypal</span>
-                                        </li>
-                                        <li>
-                                            <span class="book-item">Location</span> : Newyork, USA
-                                        </li>
-                                        <li>
-                                            <span class="book-item">Customer</span> :
-                                            <div class="user-book">
-                                                <div class="avatar avatar-xs">
-                                                    <img class="avatar-img rounded-circle" alt="User Image"
-                                                        src="{% static 'assets/img/profiles/avatar-02.jpg' %}">
+                                            {% if customer_booking.status == 'completed' %}
+                                                <span class="badge badge-success">{{customer_booking.status|capfirst}}</span>
+                                            {% elif customer_booking.status == 'pending' %}
+                                                <span class="badge badge-warning">{{customer_booking.status|capfirst}}</span>
+                                            {% elif customer_booking.status == 'cancelledbyprovider' %}
+                                                <span class="badge badge-danger">Cancelled by Provider</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Cancelled by User</span>
+                                            {% endif %}
+                                        </h3>
+                                        <ul class="booking-details">
+                                            <li>
+                                                <span class="book-item">Booking Date</span> : {{customer_booking.appointment_time}}
+                                            </li>
+                                            <li>
+                                                <span class="book-item">Amount</span> : ${{customer_booking.price}} <span
+                                                    class="badge-grey">COD</span>
+                                            </li>
+                                            <li>
+                                                <span class="book-item">Location</span> : {{customer_booking.address.add1}}
+                                                {{customer_booking.address.add2}}, {{customer_booking.address.city}},
+                                                {{customer_booking.address.provision}}, {{customer_booking.address.country}},
+                                                {{customer_booking.address.postal_code}}
+                                            </li>
+                                            <li>
+                                                <span class="book-item">Customer</span> :
+                                                <div class="user-book">
+                                                    <div class="avatar avatar-xs">
+                                                        {% if customer_booking.user.avatar and customer_booking.user.avatar.url %}
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{{ customer_booking.user.avatar.url }}" alt="Avatar">
+                                                        {% else %}
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{% static 'assets/img/profiles/avatar-02.jpg' %}"
+                                                            alt="Default Avatar">
+                                                        {% endif %}
+                                                    </div>
+                                                    {{customer_booking.user.first_name}}
                                                 </div>
-                                                John Doe
-                                            </div>
-                                            <p><a href="https://truelysell.dreamstechnologies.com/cdn-cgi/l/email-protection"
-                                                    class="__cf_email__"
-                                                    data-cfemail="2d44434b426d47424543494248034e4240">[email&#160;protected]</a>
-                                            </p>
-                                            <p>+1 888 888 8888</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="booking-action action-popup-btn">
-                                <a href="javascript:void(0);" class="btn btn-secondary"><i
-                                        class="fa-solid fa-circle-info"></i>Reason</a>
-                                <a href="http://127.0.0.1:8000/service/service-booking" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#reschedule"><i
-                                        class="fa-regular fa-calendar-days"></i>Reschedule</a>
-                            </div>
-                        </div>
-
-
-                        <div class="booking-list">
-                            <div class="booking-widget">
-                                <div class="booking-img">
-                                    <a href="booking-details.html">
-                                        <img src="{% static 'assets/img/services/service-18.jpg' %}" alt="User Image">
-                                    </a>
-                                    <div class="fav-item">
-                                        <a href="javascript:void(0)" class="fav-icon">
-                                            <i class="feather-heart"></i>
-                                        </a>
+                                                <p>{{customer_booking.user.phone_number}}</p>
+                                                </p>
+                                                <p>{{customer_booking.user.email}}</p>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="booking-det-info">
-                                    <h3>
-                                        <a href="booking-details.html">Car Repair Services</a> <span
-                                            class="badge badge-success">Completed</span>
-                                    </h3>
-                                    <ul class="booking-details">
-                                        <li>
-                                            <span class="book-item">Booking Date</span> : 23 Sep, 10:00-11:00
-                                        </li>
-                                        <li><span class="book-item">Amount</span> : $50.00 <span
-                                                class="badge-grey">COD</span></li>
-                                        <li><span class="book-item">Location</span> : Alabama, USA</li>
-                                        <li>
-                                            <span class="book-item">Customer</span> :
-                                            <div class="user-book">
-                                                <div class="avatar avatar-xs">
-                                                    <img class="avatar-img rounded-circle" alt="User Image"
-                                                        src="{% static 'assets/img/profiles/avatar-03.jpg' %}">
+                                {% if customer_booking.status == 'completed' %}
+                                    {% if service_ratings|get_by_key:customer_booking.id %}
+                                        {% for star in service_ratings|get_by_key:customer_booking.id %}
+                                            <i class="fas fa-star filled" style="color: gold;"></i>
+                                        {% endfor %}
+                                    {% else %}
+                                    <div class="booking-action action-popup-btn">
+                                        <label for="modal-toggle" class="btn btn-primary"><i class="fa-solid fa-star"></i>Add
+                                            Review</label>
+                                    </div>
+                                    <input type="checkbox" id="modal-toggle" class="modal-toggle">
+                            <div class="modal-overlay">
+                                <div class="modal">
+                                    <label for="modal-toggle" class="close-btn">×</label>
+                                    <div class="modal-content">
+                                        <h2>Write A Review</h2>
+
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="customer_booking_id" name="customer_booking_id" value="{{ customer_booking.id }}">
+                                            <div class="write-review">
+                                                <div class="review-add">
+                                                    <div class="rev-img">
+                                                        <img src="{{customer_booking.service.picture.url}}" alt="image">
+                                                    </div>
+                                                    <div class="rev-info">
+                                                        <h6>{{customer_booking.service.title|capfirst}}</h6>
+                                                        <p>{{customer_booking.id}} {{customer_booking.address.add2}},
+                                                            {{customer_booking.address.city}},
+                                                            {{customer_booking.address.provision}},
+                                                            {{customer_booking.address.country}},
+                                                            {{customer_booking.address.postal_code}}</p>
+                                                    </div>
                                                 </div>
-                                                John Smith
-                                            </div>
-                                            <p><a href="https://truelysell.dreamstechnologies.com/cdn-cgi/l/email-protection"
-                                                    class="__cf_email__"
-                                                    data-cfemail="a8c1c6cec7e8c2c7c0c6ccc7cd86cbc7c5">[email&#160;protected]</a>
-                                            </p>
-                                            <p>+1 607-276-5393</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="booking-action action-popup-btn">
-                                <a href="http://127.0.0.1:8000/service/service-booking" class="btn btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#reschedule"><i class="fa-regular fa-calendar-days"></i>Rebook</a>
-                                <a href class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-review"><i
-                                        class="fa-solid fa-star"></i>Add Review</a>
-                            </div>
-                        </div>
-
-
-                        <div class="booking-list">
-                            <div class="booking-widget">
-                                <div class="booking-img">
-                                    <a href="booking-details.html">
-                                        <img src="{% static 'assets/img/services/service-10.jpg' %}" alt="User Image">
-                                    </a>
-                                    <div class="fav-item">
-                                        <a href="javascript:void(0)" class="fav-icon">
-                                            <i class="feather-heart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="booking-det-info">
-                                    <h3>
-                                        <a href="booking-details.html">Car Repair Services</a> <span
-                                            class="badge badge-success">Completed</span>
-                                    </h3>
-                                    <ul class="booking-details">
-                                        <li>
-                                            <span class="book-item">Booking Date</span> : 23 Sep, 10:00-11:00
-                                        </li>
-                                        <li><span class="book-item">Amount</span> : $50.00 <span
-                                                class="badge-grey">COD</span></li>
-                                        <li><span class="book-item">Location</span> : Alabama, USA</li>
-                                        <li>
-                                            <span class="book-item">Customer</span> :
-                                            <div class="user-book">
-                                                <div class="avatar avatar-xs">
-                                                    <img class="avatar-img rounded-circle" alt="User Image"
-                                                        src="{% static 'assets/img/profiles/avatar-03.jpg' %}">
+                                                <div class="emoji-rating">
+                                                    <input type="radio" id="id_emoji_5" name="rating" value="5" style="display: none;">
+                                                    <label for="id_emoji_5" title="5" data-tooltip="Highest"
+                                                        style="color: #FFD700;">😊</label>
+                                                    <input type="radio" id="id_emoji_4" name="rating" value="4" style="display: none;">
+                                                    <label for="id_emoji_4" title="4" data-tooltip="Good"
+                                                        style="color: #FFA500;">😐</label>
+                                                    <input type="radio" id="id_emoji_3" name="rating" value="3" style="display: none;">
+                                                    <label for="id_emoji_3" title="3" data-tooltip="Moderate"
+                                                        style="color: #FF7F50;">😃</label>
+                                                    <input type="radio" id="id_emoji_2" name="rating" value="2" style="display: none;">
+                                                    <label for="id_emoji_2" title="2" data-tooltip="Limited"
+                                                        style="color: #FF6347;">😄</label>
+                                                    <input type="radio" id="id_emoji_1" name="rating" value="1" style="display: none;">
+                                                    <label for="id_emoji_1" title="1" data-tooltip="Lowest"
+                                                        style="color: #FF4500;">😠</label>
                                                 </div>
-                                                John Smith
-                                            </div>
-                                            <p><a href="https://truelysell.dreamstechnologies.com/cdn-cgi/l/email-protection"
-                                                    class="__cf_email__"
-                                                    data-cfemail="7f161119103f151017111b101a511c1012">[email&#160;protected]</a>
-                                            </p>
-                                            <p>+1 607-276-5393</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="booking-action action-popup-btn">
-                                <a href="http://127.0.0.1:8000/service/service-booking" class="btn btn-secondary" data-bs-toggle="modal"
-                                    data-bs-target="#reschedule"><i class="fa-regular fa-calendar-days"></i>Rebook</a>
-                                <div class="view-action mt-3 mb-0 me-0 ms-0">
-                                    <div class="rating text-center">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                    </div>
-                                    <a href="booking-details.html" class="view-btn p-0">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="booking-list">
-                            <div class="booking-widget">
-                                <div class="booking-img">
-                                    <a href="booking-details.html">
-                                        <img src="{% static 'assets/img/services/service-07.jpg' %}" alt="User Image">
-                                    </a>
-                                    <div class="fav-item">
-                                        <a href="javascript:void(0)" class="fav-icon">
-                                            <i class="feather-heart"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="booking-det-info">
-                                    <h3>
-                                        <a href="booking-details.html">Interior Designing</a> <span
-                                            class="badge badge-info">Inprogress</span>
-                                    </h3>
-                                    <ul class="booking-details">
-                                        <li>
-                                            <span class="book-item">Booking Date</span> : 27 Sep, 17:00-18:00
-                                        </li>
-                                        <li><span class="book-item">Amount</span> : $50.00 <span
-                                                class="badge-grey">COD</span></li>
-                                        <li><span class="book-item">Location</span> : Washington, DC, USA</li>
-                                        <li>
-                                            <span class="book-item">Customer</span> :
-                                            <div class="user-book">
-                                                <div class="avatar avatar-xs">
-                                                    <img class="avatar-img rounded-circle" alt="User Image"
-                                                        src="{% static 'assets/img/profiles/avatar-06.jpg' %}">
+                                                <div class="form-group form-info">
+                                                    <label class="col-form-label">Write your Comment</label>
+                                                    <textarea class="form-control" id="id_comment" name="comment" rows="4"
+                                                        placeholder="Please write your review"></textarea>
                                                 </div>
-                                                Quentin
+                                                <div class="modal-submit text-end">
+                                                    <label for="modal-toggle" class="btn btn-primary">Close</label>
+                                                    <button type="submit" class="btn btn-primary">Send</button>
+                                                </div>
                                             </div>
-                                            <p><a href="https://truelysell.dreamstechnologies.com/cdn-cgi/l/email-protection"
-                                                    class="__cf_email__"
-                                                    data-cfemail="c8a1a6aea788b9bdada6bca1a6e6aba7a5">[email&#160;protected]</a>
-                                            </p>
-                                            <p>+1 601-810-9218</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="booking-action action-popup-btn">
-                                <a href="customer-chat.html" class="btn btn-secondary"><i
-                                        class="fa-brands fa-rocketchat"></i> Chat</a>
-                                <a href="javascript:void(0);" class="btn btn-primary"><i
-                                        class="fa-solid fa-circle-xmark"></i>Cancel</a>
-                            </div>
-                        </div>
-
-
-                        <div class="booking-list">
-                            <div class="booking-widget">
-                                <div class="booking-img">
-                                    <a href="booking-details.html">
-                                        <img src="{% static 'assets/img/services/service-13.jpg' %}" alt="User Image">
-                                    </a>
-                                    <div class="fav-item">
-                                        <a href="javascript:void(0)" class="fav-icon">
-                                            <i class="feather-heart"></i>
-                                        </a>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="booking-det-info">
-                                    <h3>
-                                        <a href="booking-details.html">House Cleaning Services</a> <span
-                                            class="badge badge-warning">Pending</span>
-                                    </h3>
-                                    <ul class="booking-details">
-                                        <li>
-                                            <span class="book-item">Booking Date</span> : 27 Sep, 17:00-18:00
-                                        </li>
-                                        <li><span class="book-item">Amount</span> : $375.00 <span
-                                                class="badge-grey">COD</span></li>
-                                        <li><span class="book-item">Location</span> : Virginia, USA</li>
-                                        <li>
-                                            <span class="book-item">Customer</span> :
-                                            <div class="user-book">
-                                                <div class="avatar avatar-xs">
-                                                    <img class="avatar-img rounded-circle" alt="User Image"
-                                                        src="{% static 'assets/img/profiles/avatar-02.jpg' %}">
-                                                </div>
-                                                Johnson
-                                            </div>
-                                            <p><a href="https://truelysell.dreamstechnologies.com/cdn-cgi/l/email-protection"
-                                                    class="__cf_email__"
-                                                    data-cfemail="5c35323a331c363334322f3332723f3331">[email&#160;protected]</a>
-                                            </p>
-                                            <p>+1 312-328-3970</p>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
-                            <div class="booking-action action-popup-btn">
-                                <a href="customer-chat.html" class="btn btn-secondary"><i
-                                        class="fa-brands fa-rocketchat"></i> Chat</a>
-                                <a href="javascript:void(0);" class="btn btn-primary"><i
-                                        class="fa-solid fa-circle-xmark"></i>Cancel</a>
+                                    {% endif %}
+                                {% endif %}
                             </div>
-                        </div>
+                        {% endfor %}
 
 
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="review-entries">
-                                    <span>Show</span>
-                                    <select>
-                                        <option>10</option>
-                                        <option>25</option>
-                                        <option>50</option>
-                                        <option>100</option>
-                                    </select>
-                                    <span>entries</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="review-pagination">
-                                    <p>1 - 5 of 10</p>
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:void(0);">1</a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <a class="page-link" href="javascript:void(0);">2 <span
-                                                    class="visually-hidden">(current)</span></a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:void(0);">3</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
 
                     </div>
                 </div>
