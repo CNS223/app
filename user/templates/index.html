@@ -76,105 +76,42 @@
           </div>
         </div>
         <div class="row aos" data-aos="fade-up">
-          <div class="col-lg-3 col-sm-6">
-            <div class="providerset">
-              <div class="providerset-img">
-                <a href="http://127.0.0.1:8000/user/user_signin">
-                  <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
-                </a>
-              </div>
-              <div class="providerset-content">
-                <div class="providerset-price">
-                  <div class="providerset-name">
-                    <h4><a href="http://127.0.0.1:8000/user/user_signin">John Smith</a><i class="fa fa-check-circle"
-                        aria-hidden="true"></i></h4>
-                    <span>Electrician</span>
+          {% if providers %}
+            {% for provider in providers %}
+              <div class="col-lg-3 col-sm-6">
+                <div class="providerset">
+                  <div class="providerset-img">
+                    <a href="http://127.0.0.1:8000/user/user_signin">
+                      {% if provider.avatar %}
+                        <img src="{{provider.avatar.url}}" alt="img">
+                      {% else %}
+                        <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
+                      {% endif %}
+                    </a>
                   </div>
-                  <div class="providerset-prices">
-                    <h6>$20.00<span>/hr</span></h6>
-                  </div>
-                </div>
-                <div class="provider-rating">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-6">
-            <div class="providerset">
-              <div class="providerset-img">
-                <a href="http://127.0.0.1:8000/user/user_signin">
-                  <img src="{% static 'assets/img/provider/provider-12.jpg' %}" alt="img">
-                </a>
-              </div>
-              <div class="providerset-content">
-                <div class="providerset-price">
-                  <div class="providerset-name">
-                    <h4><a href="http://127.0.0.1:8000/user/user_signin">Michael</a><i class="fa fa-check-circle"
-                        aria-hidden="true"></i></h4>
-                    <span>Carpenter</span>
-                  </div>
-                  <div class="providerset-prices">
-                    <h6>$50.00<span>/hr</span></h6>
+                  <div class="providerset-content">
+                    <div class="providerset-price">
+                      <div class="providerset-name">
+                        <h4><a href="http://127.0.0.1:8000/user/user_signin">{{provider.first_name}} {{provider.last_name}}</a><i class="fa fa-check-circle"
+                            aria-hidden="true"></i></h4>
+
+                      </div>
+
+                    </div>
+                    <div class="provider-rating">
+                    </div>
                   </div>
                 </div>
-                <div class="provider-rating">
-                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-6">
-            <div class="providerset">
-              <div class="providerset-img">
-                <a href="http://127.0.0.1:8000/user/user_signin">
-                  <img src="{% static 'assets/img/provider/provider-13.jpg' %}" alt="img">
-                </a>
-              </div>
-              <div class="providerset-content">
-                <div class="providerset-price">
-                  <div class="providerset-name">
-                    <h4><a href="http://127.0.0.1:8000/user/user_signin">Antoinette</a><i class="fa fa-check-circle"
-                        aria-hidden="true"></i></h4>
-                    <span>Cleaner</span>
-                  </div>
-                  <div class="providerset-prices">
-                    <h6>$25.00<span>/hr</span></h6>
-                  </div>
-                </div>
-                <div class="provider-rating">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-6">
-            <div class="providerset">
-              <div class="providerset-img">
-                <a href="http://127.0.0.1:8000/user/user_signin">
-                  <img src="{% static 'assets/img/provider/provider-14.jpg' %}" alt="img">
-                </a>
-              </div>
-              <div class="providerset-content">
-                <div class="providerset-price">
-                  <div class="providerset-name">
-                    <h4><a href="http://127.0.0.1:8000/user/user_signin">Thompson</a><i class="fa fa-check-circle"
-                        aria-hidden="true"></i></h4>
-                    <span>Mechanic</span>
-                  </div>
-                  <div class="providerset-prices">
-                    <h6>$25.00<span>/hr</span></h6>
-                  </div>
-                </div>
-                <div class="provider-rating">
-                </div>
-              </div>
-            </div>
-          </div>
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
       <br><br>
     </section>
 
 
-    {#How it works section#}
+
     <section class="work-section pt-0">
       <div class="container">
         <div class="row aos" data-aos="fade-up">
@@ -236,7 +173,6 @@
     </section>
 
 
-    {#Most popular services section#}
     <section class="service-section">
       <div class="container">
         <div class="section-heading">
@@ -254,30 +190,38 @@
           <div class="col-md-12">
             <div class="owl-carousel popular-slider">
               {% for service in services %}
-              <div class="service-widget aos" data-aos="fade-up">
-                <div class="service-img">
-                  <a href="http://127.0.0.1:8000/user/user_signin">
-                    <img class="img-fluid serv-img" alt="Service Image" src="{{ service.image }}">
-                  </a>
-                  <div class="fav-item">
-                    <a href="http://127.0.0.1:8000/user/user_signin"><span class="item-cat">{{ service.category }}</span></a>
-                    <a href="http://127.0.0.1:8000/user/user_signin"><i class="feather-heart"></i></a>
+                <div class="service-widget aos" data-aos="fade-up">
+                  <div class="service-img">
+                    <a href="http://127.0.0.1:8000/user/user_signin">
+                      {% if service.picture %}
+                        <img class="img-fluid serv-img" alt="Service Image" src="{{ service.picture.url }}">
+                      {% else %}
+                        <img src="{% static 'assets/img/provider/provider-11.jpg' %}" alt="img">
+                      {% endif %}
+                    </a>
+                    <div class="fav-item">
+                      <a href="http://127.0.0.1:8000/user/user_signin"><span class="item-cat">{{ service.category }}</span></a>
+                      <a href="http://127.0.0.1:8000/user/user_signin"><i class="feather-heart"></i></a>
+                    </div>
+                    <div class="item-info">
+                      {% if service.provider.avatar %}
+                        <a href="http://127.0.0.1:8000/user/user_signin"><span class="item-img"><img src="{{ service.provider.avatr.url }}" class="avatar"
+                              alt="User"></span></a>
+
+                      {% else %}
+                      <a href="http://127.0.0.1:8000/user/user_signin"><span class="item-img"><img src="{% static 'assets/img/provider/provider-11.jpg' %}" class="avatar"
+                              alt="User"></span></a>
+                      {% endif %}
+                    </div>
                   </div>
-                  <div class="item-info">
-                    <a href="http://127.0.0.1:8000/user/user_signin"><span class="item-img"><img src="{{ service.provider_image }}" class="avatar"
-                          alt="User"></span></a>
+                  <div class="service-content">
+                    <h3 class="title"><a href="http://127.0.0.1:8000/user/user_signin">{{ service.title }}</a></h3>
+                    <p><i class="feather-map-pin"></i>{{ service.address.add1 }} {{ service.address.add2 }}, {{ service.address.city }}, {{ service.address.provision }}, {{ service.address.country }}
+                      <h6>${{ service.price }}</h6>
+                      <a href="http://127.0.0.1:8000/user/user_signin" class="btn btn-book">Book Now</a>
+                    </div>
                   </div>
                 </div>
-                <div class="service-content">
-                  <h3 class="title"><a href="http://127.0.0.1:8000/user/user_signin">{{ service.title }}</a></h3>
-                  <p><i class="feather-map-pin"></i>{{ service.location }}<span class="rate"><i
-                        class="fas fa-star filled"></i>{{ service.rating }}</span></p>
-                  <div class="serv-info">
-                    <h6>{{ service.price }}<span class="old-price">{{ service.old_price }}</span></h6>
-                    <a href="http://127.0.0.1:8000/user/user_signin" class="btn btn-book">Book Now</a>
-                  </div>
-                </div>
-              </div>
               {% endfor %}
             </div>
           </div>
@@ -311,6 +255,4 @@
   <script src="{% static 'assets/plugins/aos/aos.js' %}" type="text/javascript"></script>
   <script src="{% static 'assets/js/backToTop.js' %}" type="text/javascript"></script>
   <script src="{% static 'assets/js/script.js' %}" type="text/javascript"></script>
-<!--   <script src="{% static 'assets/cdn-cgi/scripts/rocket-loader.min.js' %"
-    data-cf-settings="8276d1f090056ab6049771ba-|49" defer></script> -->
-  {% endblock %}
+{%endblock%}

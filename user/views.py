@@ -74,15 +74,21 @@ class DashboardView(View):
                 user = User.objects.get(pk=request.user_id)
                 context['user_type'] = user.user_type.user_type
                 context['user'] = user
+
                 if user.user_type.user_type=="provider":
                     return HttpResponseRedirect(reverse('user:provider_booking'))
                 return HttpResponseRedirect(reverse('user:customer_booking'))
             except Exception as e:
                 pass
+            providers = User.objects.filter(user_type__user_type='provider')
+            services = ProviderService.objects.all().order_by("-id")
+            context['providers'] = providers
+            context['services'] = services
             return render(request, self.template_name, context=context)
         except Exception as e:
             context = {'base_template': self.base_template}
             return render(request, self.template_name, context=context)
+
 
 class ChooseRegisterView(View):
     template_name = 'register/choose_signup.html'
