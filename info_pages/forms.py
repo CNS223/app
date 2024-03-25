@@ -6,7 +6,7 @@ from service.models import *
 from user.models import *
 from info_pages.models import *
 
-class contactForm(forms.ModelForm):
+class ContactUsForm(forms.ModelForm):
     class Meta:
         model = ContactUs
         fields = ['name', 'email', 'phone', 'message']

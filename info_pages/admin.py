@@ -15,11 +15,11 @@ class ContactUsAdmin(admin.ModelAdmin):
         }),
         ('Additional Information', {
             'fields': ('created_at',),
-            'classes': ('collapse',)  # Makes this fieldset collapsible
+            'classes': ('collapse',)
         })
     )
 
     def has_delete_permission(self, request, obj=None):
-        return False  # Disable delete permission for ContactUs objects
-
+        return False
+    
 admin.site.register(ContactUs, ContactUsAdmin)
