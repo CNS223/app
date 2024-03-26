@@ -24,7 +24,7 @@ from django.urls import path, include
 from user.views import DashboardView
 
 urlpatterns = [
-    path('admin', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('service/', include('service.urls')),
     path('info/', include('info_pages.urls')),
