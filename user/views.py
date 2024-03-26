@@ -19,7 +19,7 @@ from notifications.scripts import *
 from user.utils import *
 from django.views.generic import TemplateView
 from service.models import *
-
+from django.db import IntegrityError
 
 class DashboardView(View):
     template_name = 'index.html'
@@ -140,7 +140,12 @@ class ProviderSignupView(View):
                     messages.error(request, "Please verify your email.")
                     return HttpResponseRedirect(reverse('user:verify_email'))
             user_type = UserType.objects.get(user_type = 'provider')
-            user = User.objects.create(email = email, user_type = user_type, first_name = first_name, last_name = last_name, phone_number=phone)
+            try:
+                user = User.objects.create(email = email, user_type = user_type, first_name = first_name, last_name = last_name, phone_number=phone)
+            except IntegrityError:
+                form.add_error(None, "This phone number or Email is already registered.")
+                context['alert'] = "This phone number or Email is already registered."
+                return render(request, self.template_name, context=context)
             user.set_password(password)
             user.email_verified = False
             user.save()
@@ -150,7 +155,7 @@ class ProviderSignupView(View):
             send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
             context['success_message'] = "Signup successful!"
             context['user'] = user
-            return HttpResponseRedirect(reverse('user:verify_email'))  # Redirect to the index page
+            return HttpResponseRedirect(reverse('user:verify_email'))
 
         
         return render(request, self.template_name, context=context)
@@ -228,11 +233,18 @@ class UserSignupView(View):
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
             user = User.objects.filter(email = email)
+            user_type = UserType.objects.get(user_type = 'customer')
             if user:
                 if not user.last().email_verified:
-                    messages.error(request, "Please verify your email.")
-                    return HttpResponseRedirect(reverse('user:verify_email'))
-            user = User.objects.create(email = email, first_name = first_name, last_name = last_name, phone_number=phone)
+                    context['alert'] = "Email Already Exist."
+                    return render(request, self.template_name, context=context)
+            try:
+                user = User.objects.create(email = email, first_name = first_name, user_type=user_type, last_name = last_name, phone_number=phone)
+            except IntegrityError:
+                form.add_error(None, "This phone number or Email is already registered.")
+                context = {"base_template": "base.html", "form": form}
+                context['alert'] = "This phone number or Email is already registered."
+                return render(request, self.template_name, context=context)
             user.set_password(password)
             user.email_verified = False
             user.save()
@@ -286,6 +298,7 @@ class UserSigninView(View):
                 store_in_session(request, 'access_token', token['access'])
                 context['success_message'] = "SignIn successful!"
                 context['user'] = user
+                context['alert'] = f"Signin as a {user.user_type.user_type}"
                 if user.user_type.user_type=="provider":
                     return HttpResponseRedirect(reverse('user:provider_booking'))
                 return HttpResponseRedirect(reverse('user:customer_booking'))

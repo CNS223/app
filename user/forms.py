@@ -1,78 +1,70 @@
 from django import forms
 from django.contrib.auth.forms import PasswordResetForm
-
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MaxLengthValidator
 from service.models import *
 from user.models import *
 
 
+def validate_password(value):
+    if not any(char.isupper() for char in value):
+        raise ValidationError('Password must contain at least one uppercase letter.')
+    if not any(char.isdigit() for char in value):
+        raise ValidationError('Password must contain at least one digit.')
+    if not any(char in '!@#$%^&*()_+-=[]{}|;:,.<>?/~`' for char in value):
+        raise ValidationError('Password must contain at least one special character.')
+    if len(value) < 8:
+        raise ValidationError('Password must be at least 8 characters long.')
+
+def validate_first_name(value):
+    if not value.isalpha():
+        raise ValidationError('First name should only contain alphabetic characters.')
+
+def validate_phone_number(value):
+    if not value.isdigit():
+        raise ValidationError('Phone number should contain digits only.')
+    if len(value) != 10:
+        raise ValidationError('Phone number must have exactly 10 digits.')
+
 class ProviderSignupForm(forms.Form):
-    first_name = forms.CharField(max_length=100, label='First Name', widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(max_length=100, label='Last Name', widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
-    phone = forms.CharField(max_length=15, label='Phone Number', widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'required': True}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field',
-               'required': True}))
+    first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
+    last_name = forms.CharField(max_length=100, label='Last Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
+    phone = forms.CharField(max_length=15, label='Phone Number', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'required': True}),validators=[validate_phone_number],)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field','required': True}),validators=[validate_password],error_messages={'required': 'Please enter your password.'})
 
 
 class UserSignupForm(forms.Form):
-    first_name = forms.CharField(label='First Name', max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
-    phone = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
-        attrs={'class': 'form-control form-control-lg group_formcontrol', 'placeholder': '(256) 789-6253',
-               'required': True}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'required': True}))
+    first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
+    last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
+    phone = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control form-control-lg group_formcontrol', 'placeholder': '(256) 789-6253','required': True}), validators=[validate_phone_number],)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'id':"password-field", 'placeholder': '*************', 'required': True}), validators=[validate_password],error_messages={'required': 'Please enter your password.'})
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': '*************'}))
+    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field','required': True}),error_messages={'required': 'Please enter your password.'})
     remember_me = forms.BooleanField(label='Remember Me', required=False,
                                      widget=forms.CheckboxInput(attrs={'class': 'rememberme'}))
 
 
 class AccountSettingsForm(forms.Form):
-    first_name = forms.CharField(label='First Name', max_length=255, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}))
-    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
-    username = forms.CharField(label='User Name', max_length=255, required=False, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
-    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}))
-    gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
-                               required=False, widget=forms.Select(attrs={'class': 'form-select'}))
-    bio = forms.CharField(label='Bio', widget=forms.Textarea(
-        attrs={'class': 'form-control', 'placeholder': 'Enter your shor bio', 'rows': 5}), required=False)
-    add1 = forms.CharField(label='Address 1', max_length=255,
-                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}))
-    add2 = forms.CharField(label='Address 2', max_length=255,
-                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2'}))
-    country = forms.CharField(label='Country', max_length=255,
-                              widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}))
-    provision = forms.CharField(label='Provision', max_length=255,
-                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Provision'}))
-    city = forms.CharField(label='City', max_length=255,
-                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}))
-    postal_code = forms.CharField(label='Postal Code', max_length=10,
-                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'N9A 5E3'}))
-    currency_code = forms.ChoiceField(label='Currency Code', choices=[('cad', 'CAD'), ('usd', 'USD')], required=False,
-                                      widget=forms.Select(attrs={'class': 'form-select'}))
-    profile_picture_upload = forms.FileField(label='Profile Picture', required=False, widget=forms.ClearableFileInput(
-        attrs={'class': 'form-control', 'accept': 'image/*'}))
+    first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
+    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    username = forms.CharField(label='User Name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
+    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}),validators=[validate_phone_number],)
+    gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    bio = forms.CharField(label='Bio', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your shor bio', 'rows': 5}), required=False)
+    add1 = forms.CharField(label='Address 1', max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}))
+    add2 = forms.CharField(label='Address 2', max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2'}))
+    country = forms.CharField(label='Country', max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}))
+    provision = forms.CharField(label='Provision', max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Provision'}))
+    city = forms.CharField(label='City', max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}))
+    postal_code = forms.CharField(label='Postal Code', max_length=10,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'N9A 5E3'}))
+    currency_code = forms.ChoiceField(label='Currency Code', choices=[('cad', 'CAD'), ('usd', 'USD')], required=False,widget=forms.Select(attrs={'class': 'form-select'}))
+    profile_picture_upload = forms.FileField(label='Profile Picture', required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}))
 
     def clean_mobile_number(self):
         mobile_number = self.cleaned_data.get('mobile_number')
@@ -97,17 +89,13 @@ class AccountSettingsForm(forms.Form):
 
 
 class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}), required=True)
+    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}), required=True)
 
 
 class ReSetPasswordForm(forms.Form):
-    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control pass-input', 'id': 'password-1', 'placeholder': '*************',
-               'required': True}))
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control pass-input', 'id': 'password-2', 'placeholder': '*************',
-               'required': True}))
+    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-1','required': True}),validators=[validate_password],error_messages={'required': 'Please enter your new password.'})
+    password2 = forms.CharField(label='onfirm Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-2','required': True}),validators=[validate_password],error_messages={'required': 'Please re-enter your new password.'})
+    
 
 class RatingForm(forms.Form):
     RATING_CHOICES = (
@@ -122,14 +110,10 @@ class RatingForm(forms.Form):
 
 
 class ProviderContactForm(forms.Form):
-    name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Your Full Name'}))
-    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Email Address'}))
-    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Phone Number'}))
-    message = forms.CharField(label='Message', widget=forms.Textarea(
-        attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter your Comments'}))
+    name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Full Name'}))
+    email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email Address'}))
+    phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Phone Number'}),validators=[validate_phone_number],)
+    message = forms.CharField(label='Message', widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter your Comments'}))
 
 
 class UserProfileForm(forms.ModelForm):
@@ -140,20 +124,13 @@ class UserProfileForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=GENDER_CHOICES)
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     currency_code = forms.ChoiceField(choices=[('USD', 'USD'), ('EUR', 'EUR'), ('GBP', 'GBP')])  # Add currency dropdown
-    language = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter Language...'}))  # Use TextInput for language input
+    language = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Language...'}))  # Use TextInput for language input
     profile_picture = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ['first_name', 'username', 'email', 'gender', 'phone_number', 'date_of_birth', 'currency_code',
-                  'language']
-        widgets = {
-            field_name: forms.TextInput(
-                attrs={'class': 'form-control form-group col-md-6 col-form-label"',
-                       'placeholder': f'Enter {field_name.capitalize()}'})
-            for field_name in fields
-        }
+        fields = ['first_name', 'username', 'email', 'gender', 'phone_number', 'date_of_birth', 'currency_code','language']
+        widgets = {field_name: forms.TextInput(attrs={'class': 'form-control form-group col-md-6 col-form-label"','placeholder': f'Enter {field_name.capitalize()}'})for field_name in fields}
 
 
 class AddressForm(forms.ModelForm):

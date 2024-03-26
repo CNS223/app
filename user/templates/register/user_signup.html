@@ -13,37 +13,49 @@
 
                     <form method="post" action="{% url 'user:user_signup' %}">
                         {% csrf_token %}
-                        {{ form.non_field_errors }}
+                        <!-- {{ form.non_field_errors }} -->
                         <div class="form-group">
                             {{ form.first_name.label_tag }}
                             {{ form.first_name }}
-                            {{ form.first_name.errors }}
+                             {% if form.errors.password %}
+                                        <small class="text-danger">{{ form.first_name.errors}}</small>
+                                    {% endif %}
+                     
                         </div>
                         <div class="form-group">
                             {{ form.last_name.label_tag }}
                             {{ form.last_name }}
-                            {{ form.last_name.errors }}
+                            {% if form.errors.last_name %}
+                                        <small class="text-danger">{{ form.last_name.errors}}</small>
+                                    {% endif %}
                         </div>
                         <div class="form-group">
                             {{ form.email.label_tag }}
                             {{ form.email }}
-                            {{ form.email.errors }}
+                            {% if form.errors.email %}
+                                        <small class="text-danger">{{ form.email.errors}}</small>
+                                    {% endif %}
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 {{ form.phone.label_tag }}
                                 <div class="form-group">
                                     {{ form.phone }}
-                                    {{ form.phone.errors }}
+                                    {% if form.errors.phone %}
+                                        <small class="text-danger">{{ form.phone.errors}}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             {{ form.password.label_tag }}
-                            <div class="pass-group">
+                            <div class="password-wrapper">
                                 {{ form.password }}
-                                {{ form.password.errors }}
-                                <span class="toggle-password feather-eye-off"></span>
+                                
+                                <span class="eye-icon" onclick="togglePasswordVisibility(this)">&#x1F441;</span>
+                                {% if form.errors.password %}
+                                        <small class="text-danger">{{ form.errors.password }}</small>
+                                    {% endif %}
                             </div>
                         </div>
                         <button class="btn btn-primary w-100 login-btn" type="submit">Signup</button>
