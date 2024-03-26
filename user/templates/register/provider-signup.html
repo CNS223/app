@@ -10,25 +10,36 @@
                             <div class="login-header">
                                 <h3>Provider Signup</h3>
                             </div>
-
+                            
                            <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary w-100 login-btn">Signup</button>
-                    </form>
-                    <div class="login-or">
-                                    <span class="or-line"></span>
-                                    <span class="span-or">Or, log in with your email</span>
-                                </div>
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        Please correct the errors below.
+                                    </div>
+                                {% endif %}
                                 
-                                <p class="no-acc">Already have an account ? <a href="http://127.0.0.1:8000/user/user_signin"> Sign In</a></p>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                {% endfor %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary w-100 login-btn">Signup</button>
+                            </form>
 
+                            <div class="login-or">
+                                <span class="or-line"></span>
+                                <span class="span-or">Or, log in with your email</span>
+                            </div>
+                                        
+                            <p class="no-acc">Already have an account ? <a href="http://127.0.0.1:8000/user/user_signin"> Sign In</a></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+            
         
 
 {% endblock %}

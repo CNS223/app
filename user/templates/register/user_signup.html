@@ -13,37 +13,39 @@
 
                     <form method="post" action="{% url 'user:user_signup' %}">
                         {% csrf_token %}
-                        <!-- {{ form.non_field_errors }} -->
+                         {% if form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                Please correct the errors below.
+                            </div>
+                            {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% endif %}
+                        
                         <div class="form-group">
                             {{ form.first_name.label_tag }}
                             {{ form.first_name }}
-                             {% if form.errors.password %}
-                                        <small class="text-danger">{{ form.first_name.errors}}</small>
-                                    {% endif %}
+                            
                      
                         </div>
                         <div class="form-group">
                             {{ form.last_name.label_tag }}
                             {{ form.last_name }}
-                            {% if form.errors.last_name %}
-                                        <small class="text-danger">{{ form.last_name.errors}}</small>
-                                    {% endif %}
+                           
                         </div>
                         <div class="form-group">
                             {{ form.email.label_tag }}
                             {{ form.email }}
-                            {% if form.errors.email %}
-                                        <small class="text-danger">{{ form.email.errors}}</small>
-                                    {% endif %}
+                           
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 {{ form.phone.label_tag }}
                                 <div class="form-group">
                                     {{ form.phone }}
-                                    {% if form.errors.phone %}
-                                        <small class="text-danger">{{ form.phone.errors}}</small>
-                                    {% endif %}
+                                   
                                 </div>
                             </div>
                         </div>
@@ -53,9 +55,7 @@
                                 {{ form.password }}
                                 
                                 <span class="eye-icon" onclick="togglePasswordVisibility(this)">&#x1F441;</span>
-                                {% if form.errors.password %}
-                                        <small class="text-danger">{{ form.errors.password }}</small>
-                                    {% endif %}
+                                
                             </div>
                         </div>
                         <button class="btn btn-primary w-100 login-btn" type="submit">Signup</button>

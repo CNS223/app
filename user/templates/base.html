@@ -10,27 +10,23 @@
 {% endif %}
     
     <div class="main-wrapper">
-
-
         {% include 'header.html' %}
         {% if alert %}
-        <div id="toastContainer">
-     <div class="toast" id="myToast">
+            <div id="toastContainer">
+                <div class="toast" id="myToast">
+                    <div class="toast-body">
 
-        <div class="toast-body">
-
-            {{alert}}
-        </div>
-    </div>
-    </div>
-        {% endif %}
+                            {{alert}}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
         {% block body_block %}
-       
+        
         {% endblock %}
         {% include 'footer.html' %}
     </div>
-    
     <div class="mouse-cursor cursor-outer"></div>
     <div class="mouse-cursor cursor-inner"></div>
   </div>

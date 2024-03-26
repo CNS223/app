@@ -26,9 +26,10 @@ def validate_phone_number(value):
     if len(value) != 10:
         raise ValidationError('Phone number must have exactly 10 digits.')
 
+
 class ProviderSignupForm(forms.Form):
-    first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
-    last_name = forms.CharField(max_length=100, label='Last Name', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[RegexValidator(r'^[a-zA-Z]*$'),validate_first_name,])
+    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='Last name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your Last Name.','max_length': 'Last Name should not exceed 100 characters.',})
     email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
     phone = forms.CharField(max_length=15, label='Phone Number', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'required': True}),validators=[validate_phone_number],)
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field','required': True}),validators=[validate_password],error_messages={'required': 'Please enter your password.'})
@@ -36,7 +37,7 @@ class ProviderSignupForm(forms.Form):
 
 class UserSignupForm(forms.Form):
     first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
-    last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='Last name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your Last Name.','max_length': 'Last Name should not exceed 100 characters.',})
     email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'required': True}))
     phone = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control form-control-lg group_formcontrol', 'placeholder': '(256) 789-6253','required': True}), validators=[validate_phone_number],)
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'id':"password-field", 'placeholder': '*************', 'required': True}), validators=[validate_password],error_messages={'required': 'Please enter your password.'})
@@ -45,13 +46,12 @@ class UserSignupForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.EmailField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control pass-input', 'placeholder': '*************', 'id': 'password-field','required': True}),error_messages={'required': 'Please enter your password.'})
-    remember_me = forms.BooleanField(label='Remember Me', required=False,
-                                     widget=forms.CheckboxInput(attrs={'class': 'rememberme'}))
+
 
 
 class AccountSettingsForm(forms.Form):
     first_name = forms.CharField(max_length=100,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
-    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}))
+    last_name = forms.CharField(label='Last Name', max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='Last name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your Last Name.','max_length': 'Last Name should not exceed 100 characters.',})
     username = forms.CharField(label='User Name', max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
     email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
     phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}),validators=[validate_phone_number],)

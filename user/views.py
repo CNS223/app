@@ -135,24 +135,30 @@ class ProviderSignupView(View):
             phone = form.cleaned_data['phone']
             password = form.cleaned_data['password']
             user = User.objects.filter(email = email)
+            print("138----", email)
             if user:
                 if not user.last().email_verified:
-                    messages.error(request, "Please verify your email.")
-                    return HttpResponseRedirect(reverse('user:verify_email'))
+                    context['alert'] = "This phone number or Email is already registered, Please Verify Your Email"
+                else:
+                    context['alert'] = "This phone number or Email is already registered."
+                return render(request, self.template_name, context=context)
             user_type = UserType.objects.get(user_type = 'provider')
             try:
                 user = User.objects.create(email = email, user_type = user_type, first_name = first_name, last_name = last_name, phone_number=phone)
-            except IntegrityError:
-                form.add_error(None, "This phone number or Email is already registered.")
+            except IntegrityError as e:
+                print("146----",e)
                 context['alert'] = "This phone number or Email is already registered."
                 return render(request, self.template_name, context=context)
             user.set_password(password)
             user.email_verified = False
             user.save()
-            verification_token = generate_verification_token()
-            verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
-            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
-            send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
+            try:
+                verification_token = generate_verification_token()
+                verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
+                EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+                send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
+            except Exception as e:
+                print("158-----",e)
             context['success_message'] = "Signup successful!"
             context['user'] = user
             return HttpResponseRedirect(reverse('user:verify_email'))
@@ -163,6 +169,7 @@ class ProviderSignupView(View):
 class VerifyEmailView(View):
     template_name = 'register/verify_email.html'
     base_template = 'base.html'
+    form = LoginForm
 
     def get(self, request, *args, **kwargs):
         try:
@@ -179,6 +186,7 @@ class VerifyEmailView(View):
 class VerifyEmailSuccessView(View):
     template_name = 'login/login.html'
     base_template = 'base.html'
+    form_class = LoginForm
 
     def get(self, request, *args, **kwargs):
         try:
@@ -188,7 +196,7 @@ class VerifyEmailSuccessView(View):
                 return HttpResponseRedirect(reverse('user:provider_booking'))
             return HttpResponseRedirect(reverse('user:customer_booking'))
         except Exception as e:
-            context = {"base_template": self.base_template}
+            context = {"base_template": self.base_template, "form":self.form_class}
             verification_token = request.GET.get('token', None)
             if not verification_token:
                 context['verification_token'] = False
@@ -234,24 +242,31 @@ class UserSignupView(View):
             password = form.cleaned_data['password']
             user = User.objects.filter(email = email)
             user_type = UserType.objects.get(user_type = 'customer')
+            print("245---", user)
             if user:
                 if not user.last().email_verified:
                     context['alert'] = "Email Already Exist."
                     return render(request, self.template_name, context=context)
+                context['alert'] = "Email is in use."
+                return render(request, self.template_name, context=context)
             try:
                 user = User.objects.create(email = email, first_name = first_name, user_type=user_type, last_name = last_name, phone_number=phone)
-            except IntegrityError:
-                form.add_error(None, "This phone number or Email is already registered.")
+            except IntegrityError as e:
+                print("252----",e)
                 context = {"base_template": "base.html", "form": form}
                 context['alert'] = "This phone number or Email is already registered."
                 return render(request, self.template_name, context=context)
             user.set_password(password)
             user.email_verified = False
             user.save()
-            verification_token = generate_verification_token()
-            verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
-            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
-            send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
+            print("259----", user)
+            try:
+                verification_token = generate_verification_token()
+                verification_link = generate_user_account_verification_link(verification_token, "user/verify-mail?token=")
+                EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+                send_account_verification_mail("Verify your email to create your USH Account",first_name, verification_link, email)
+            except Exception as e:
+                print("260---",e)
             context['success_message'] = "Signup successful!"
             context['user'] = user
             return HttpResponseRedirect(reverse('user:verify_email'))
@@ -367,8 +382,8 @@ class CustomerProfileView(View):
         context = {
             "base_template": "base.html",
             "active_menu": "settings",
-            "user_name": "John Smith1",
-            "member_since": "Sep 2021",
+            "user_name": user.username,
+            "member_since": user.created_at,
             "user_type": user.user_type.user_type,
             "active_header": "customers",
             "form": form,
@@ -505,11 +520,14 @@ class ForgotPasswordView(View):
         context = {"base_template": "base.html", "form": form}
         if form.is_valid():
             email = form.cleaned_data['email']
-            verification_token = generate_verification_token()
-            verification_link = generate_user_account_verification_link(verification_token, "user/reset-password?token=")
-            user = User.objects.get(email = email)
-            EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
-            send_account_verification_mail("Reset your password to login in your USH Account", user.first_name, verification_link, email)
+            try:
+                verification_token = generate_verification_token()
+                verification_link = generate_user_account_verification_link(verification_token, "user/reset-password?token=")
+                user = User.objects.get(email = email)
+                EmailVerification.objects.get_or_create(email_to = user, verification_token = verification_token)
+                send_account_verification_mail("Reset your password to login in your USH Account", user.first_name, verification_link, email)
+            except Exception as e:
+                print(e)
             # Redirect to a success page or return a success message
             context['success_message'] = "Verify your Email to Reset the Passowrd!"
             context["alert"] = "Verify your Email to Reset the Passowrd!"
