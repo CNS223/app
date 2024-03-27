@@ -80,8 +80,13 @@ class ServiceDetailView(View):
             context['user'] = user
             provider_service = ProviderService.objects.get(pk = provider_service)
             service_availability = ProviderAvailability.objects.filter(service = provider_service)
+            is_available = False
+            for avail in service_availability:
+                if avail.start_time and avail.end_time:
+                    is_available = True
             context['provider_service'] = provider_service
             context['service_availability'] = service_availability
+            context['is_available'] = is_available
         except Exception as e:
             pass
         return render(request, self.template_name, context=context)

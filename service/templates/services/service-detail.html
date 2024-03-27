@@ -146,8 +146,9 @@
                   {% if user.user_type.user_type == "provider" %}
                     <a href="http://127.0.0.1:8000/service/service-create?provider_service_id={{provider_service.id}}" class="btn btn-primary">Edit Service<i class="feather-arrow-right-circle ms-1"></i></a>
                   {% else %}
-
-                    <a href="{% url 'service:service_booking'  provider_service=provider_service.id %}" class="btn btn-primary">Book Service<i class="feather-arrow-right-circle ms-1"></i></a>
+                    {% if is_available %}
+                      <a href="{% url 'service:service_booking'  provider_service=provider_service.id %}" class="btn btn-primary">Book Service<i class="feather-arrow-right-circle ms-1"></i></a>
+                    {% endif %}
                   {% endif %}
                 </div>
               </div>
