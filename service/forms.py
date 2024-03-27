@@ -84,14 +84,13 @@ class ServiceBookingForm(forms.Form):
     provision = forms.ChoiceField(label='Province*', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
     city = forms.ChoiceField(label='City*', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
     pincode = forms.CharField(label='Pincode', max_length=7, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
-    # appointment = forms.CharField(label='Category', widget=forms.Select(attrs={'class': 'form-select'}))
-    appointment = forms.ChoiceField(label='Appointment*', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
+    appointment = forms.CharField(label='Category', widget=forms.Select(attrs={'class': 'form-select'}))
+    # appointment = forms.ChoiceField(label='Appointment*', widget=forms.Select(attrs={'class': 'form-select'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.load_provision_choices()
         self.load_city_choices()
-        # self.load_appointment()
 
     def load_provision_choices(self):
         try:
@@ -120,9 +119,7 @@ class ServiceBookingForm(forms.Form):
         except Exception as e:
             print("Error loading city choices:", e)
 
-    # def load_appointment(self):
-    #     try:
-
+  
    
 class FeedbackForm(forms.Form):
     feedback = forms.CharField(label='Add Feedback', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Feedback'}))

@@ -213,14 +213,14 @@
 
                                  <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <select name="appointment" class="form-select">
+                                                        <select name="appointment" id="appointment" class="form-select">
                                                             {% for service_availability in service_availabilities %}
                                                                 <option>{{ service_availability.day }} - From {{service_availability.start_time}} To {{service_availability.end_time}}</option>
                                                             {% endfor %}
                                                         </select>
-                                                        {% if form.category.errors %}
+                                                        {% if form.appointment.errors %}
                                                             <div class="text-danger">
-                                                                {% for error in form.category.errors %}
+                                                                {% for error in form.appointment.errors %}
                                                                     {{ error }}
                                                                 {% endfor %}
                                                             </div>

@@ -51,6 +51,7 @@ class ServiceBookingView(View):
         service_availability = ProviderAvailability.objects.filter(service = provider_service)
         context['service_availabilities'] = service_availability
         form = ServiceBookingForm(request.POST)  # Pass POST data and service_availabilities to the form
+        print("54-----", form)
         if form.is_valid():
             add1 = form.cleaned_data['add1']
             add2 = form.cleaned_data['add2']
@@ -59,12 +60,11 @@ class ServiceBookingView(View):
             country = form.cleaned_data['country']
             pincode = form.cleaned_data['pincode']
             appointment = form.cleaned_data['appointment']
+
             address = Address.objects.create(add1=add1, add2=add2, city=city, provision=provision, country=country, postal_code=pincode)
             service_booking = ServiceBooking.objects.create(user = context['user'], service=provider_service, address=address, appointment_time=appointment)
             return HttpResponseRedirect(reverse('service:service_boooking_done'))
-        else:
-            print("Form is not valid")
-            print("Errors:", form.errors)
+
         context['form'] = form  # Include the form in the context
         return render(request, self.template_name, context=context)
 
