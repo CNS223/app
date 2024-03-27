@@ -30,11 +30,7 @@ class ServiceCreateForm(forms.Form):
     country = forms.ChoiceField(label='Country', choices=[('Canada', 'Canada')], widget=forms.Select(attrs={'class': 'form-select'}))
     provision = forms.ChoiceField(label='Provision', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
     city = forms.ChoiceField(label='City', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
-
-    # country = forms.CharField(label='Country', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Country'}))
-    # city = forms.CharField(label='City', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your City'}))
-    # provision = forms.CharField(label='Provision', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your State'}))
-    pincode = forms.CharField(label='Pincode', max_length=10, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
+    pincode = forms.CharField(label='Pincode', max_length=7, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
     image = forms.ImageField(label='Image', required=False, widget=forms.FileInput(attrs={'accept': 'image/*'}))
 
     def __init__(self, *args, **kwargs):
@@ -70,13 +66,51 @@ class ServiceCreateForm(forms.Form):
             print("Error loading city choices:", e)
 
 class ServiceBookingForm(forms.Form):
-    add1 = forms.CharField(label='Address 1', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 1'}))
-    add2 = forms.CharField(label='Address 2', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 2'}))
-    city = forms.CharField(label='City', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your City'}))
-    provision = forms.CharField(label='Provision', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your State'}))
-    country = forms.CharField(label='Country', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Country'}))
-    pincode = forms.CharField(label='Pincode', max_length=10, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
-    appointment = forms.CharField(label='Category', widget=forms.Select(attrs={'class': 'select'}))
+    add1 = forms.CharField(label='Address 1', required=True, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 1'}))
+    add2 = forms.CharField(label='Address 2', required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 2'}))
+    country = forms.ChoiceField(label='Country', choices=[('Canada', 'Canada')], widget=forms.Select(attrs={'class': 'form-select'}))
+    provision = forms.ChoiceField(label='Provision', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
+    city = forms.ChoiceField(label='City', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
+    pincode = forms.CharField(label='Pincode', max_length=7, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
+    # appointment = forms.CharField(label='Category', widget=forms.Select(attrs={'class': 'form-select'}))
+    appointment = forms.ChoiceField(label='Appointment', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.load_provision_choices()
+        self.load_city_choices()
+        # self.load_appointment()
+
+    def load_provision_choices(self):
+        try:
+            # Load provision choices from JSON file
+            with open('constants/cities.json') as f:
+                provisions_data = json.load(f)
+                provision_choices = [(key, key) for key in provisions_data.keys()]
+                self.fields['provision'].choices = provision_choices
+        except Exception as e:
+            print("Error loading provision choices:", e)
+
+    def load_city_choices(self, selected_provision=None):
+        try:
+            with open('constants/cities.json') as f:
+                cities_data = json.load(f)
+                if selected_provision:
+                    cities = cities_data.get(selected_provision, [])
+                else:
+                    cities = [city for cities_list in cities_data.values() for city in cities_list]
+                
+                # Sort the cities by name
+                sorted_cities = sorted(cities)
+                
+                city_choices = [(city, city) for city in sorted_cities]
+                self.fields['city'].choices = city_choices
+        except Exception as e:
+            print("Error loading city choices:", e)
+
+    # def load_appointment(self):
+    #     try:
+            
    
 class FeedbackForm(forms.Form):
     feedback = forms.CharField(label='Add Feedback', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Feedback'}))

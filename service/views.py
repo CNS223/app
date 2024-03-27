@@ -45,7 +45,11 @@ class ServiceBookingView(View):
         context = self.get_context_data()
         provider_service_id = kwargs.get('provider_service')
         appointment_time = request.POST.get('appointment')
+        
         provider_service = ProviderService.objects.get(pk = provider_service_id)
+        context['provider_service'] = provider_service
+        service_availability = ProviderAvailability.objects.filter(service = provider_service)
+        context['service_availabilities'] = service_availability
         form = ServiceBookingForm(request.POST)  # Pass POST data and service_availabilities to the form
         if form.is_valid():
             add1 = form.cleaned_data['add1']

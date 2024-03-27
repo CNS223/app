@@ -124,9 +124,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label">Address 2</label>
-                                                <input type="text" class="form-control" name="add2"
-                                                    placeholder="Enter Your Address 2">
+                                                {{ form.add2.label_tag }}
+                                                    {{ form.add2 }}
                                                 {% if form.add2.errors %}
                                                 <div class="text-danger">
                                                     {% for error in form.add2.errors %}
@@ -139,9 +138,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label">City</label>
-                                                <input type="text" class="form-control" name="city"
-                                                    placeholder="Enter Your City">
+                                                {{ form.city.label_tag }}
+                                                {{ form.city }}
                                                 {% if form.city.errors %}
                                                 <div class="text-danger">
                                                     {% for error in form.city.errors %}
@@ -154,9 +152,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label">Provision</label>
-                                                <input type="text" class="form-control" name="provision"
-                                                    placeholder="Enter Your State">
+                                                {{ form.provision.label_tag }}
+                                                {{ form.provision }}
                                                 {% if form.provision.errors %}
                                                 <div class="text-danger">
                                                     {% for error in form.provision.errors %}
@@ -169,9 +166,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label">Country</label>
-                                                <input type="text" class="form-control" name="country"
-                                                    placeholder="Enter Country">
+                                                {{ form.country.label_tag }}
+                                                {{ form.country }}
                                                 {% if form.country.errors %}
                                                 <div class="text-danger">
                                                     {% for error in form.country.errors %}
@@ -217,7 +213,7 @@
 
                                  <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <select name="appointment" class="select">
+                                                        <select name="appointment" class="form-select">
                                                             {% for service_availability in service_availabilities %}
                                                                 <option>{{ service_availability.day }} - From {{service_availability.start_time}} To {{service_availability.end_time}}</option>
                                                             {% endfor %}
