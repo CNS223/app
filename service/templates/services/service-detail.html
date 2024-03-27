@@ -119,8 +119,8 @@
                       
                     </div>
                     <div class="serv-proimg">
-                        {% if user.avatar %}
-                                                                <img src="{{user.avatar.url}}"
+                        {% if provider_service.provider.avatar %}
+                                                                <img src="{{provider_service.provider.avatar.url}}"
                                                                     alt="user">
                                                                 {% else %}
                                                                 <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
