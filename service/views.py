@@ -254,6 +254,7 @@ class ServiceCreateView(View):
         context = {"base_template": self.base_template, "active_header": self.active_header}
         form = self.form_class(request.POST, request.FILES)
         context['form'] = form
+        context['category'] = ServiceCategory.objects.all()
         provider_service_id = request.GET.get('provider_service_id', None)
         if provider_service_id is not None:
             provider_service = ProviderService.objects.get(pk = provider_service_id)
@@ -325,9 +326,9 @@ class ServiceCreateView(View):
             print("Form is not valid")
             print("Errors:", form.errors)
             try:
-                initial_data = self.get_initial_data(provider_service)
-                form = self.form_class(initial=initial_data)
-                context['form'] = form
+                # initial_data = self.get_initial_data(provider_service)
+                # form = self.form_class(initial=initial_data)
+                # # context['form'] = form
                 return render(request, self.template_name, context=context)
                 # return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
             except Exception as e:
