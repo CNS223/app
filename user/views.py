@@ -777,7 +777,16 @@ class CustomerBookingView(View):
             rating = form.cleaned_data['rating']
             comment = form.cleaned_data['comment']
             context['provider_id'] = ""
-            rating = ServiceRating.objects.get_or_create(user=user, service = service_booking, rate=float(rating), comment=comment)
+            service_rating = None
+            if rating:
+                service_rating = ServiceRating.objects.get_or_create(user=user, service = service_booking, rate=(rating))
+            if comment:
+                if service_rating is not None:
+                    service_rating.comment = comment
+                    service_rating.save()
+                else:
+                    pass
+                    # service_rating = ServiceRating.objects.get_or_create(user=user, service = service_booking, comment=(comment))
             return HttpResponseRedirect(reverse('user:customer_booking'))
         context['review_form'] = form 
         return render(request, self.template_name, context=context)

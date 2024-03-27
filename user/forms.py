@@ -138,8 +138,8 @@ class RatingForm(forms.Form):
         ('2', '😄 Limited'),
         ('1', '😠 Lowest'),
     )
-    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'hidden-radio'}))
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Please write your review'}))
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect(attrs={'class': 'hidden-radio'}), required=False)
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Please write your review'}), required=False)
 
 
 class ProviderContactForm(forms.Form):
