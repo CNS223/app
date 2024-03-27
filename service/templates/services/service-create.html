@@ -106,7 +106,7 @@
                                                         <h6>Service Information</h6>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-form-label">Service Title</label>
+                                                        <label class="col-form-label">Service Title*</label>
                                                         <input type="text" id="title" name="title" class="form-control"
                                                             placeholder="Enter Service Name" value="{{initial_data.title}}">
                                                             {% if form.title.errors %}
@@ -120,7 +120,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="col-form-label">Category</label>
+                                                        <label class="col-form-label">Category*</label>
                                                         <select name="category" class="form-select" required>
                                                             {% for cat in category %}
                                                                 <option {% if cat.name == initial_data.category %} selected {% endif %}>{{ cat.name }}</option>
@@ -139,7 +139,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <div class=from-icon> 
-                                                                <label class="col-form-label d-block">Price (Per Hour) $<span
+                                                                <label class="col-form-label d-block">Price* (Per Hour) $<span
                                                                 class="brief-bio float-end">Set 0$ for free</span></label>
                                                             <input type="number" name="price" class="form-control" min="0.0" step="1" value="{{ initial_data.price }}">
                                                             {% if form.price.errors %}
@@ -156,7 +156,7 @@
                                                 
                                                 <div class="col-md-12">
                                                     <div class="form-group mb-0">
-                                                        <label class="col-form-label">Description</label>
+                                                        <label class="col-form-label">Description*</label>
                                                         <textarea class="form-control ck-editor" name="description">{{ initial_data.description }}</textarea>
                                                         {% if form.description.errors %}
                                                                 <div class="text-danger">
@@ -176,7 +176,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="sub-title">
-                                                        <h6>Availability</h6>
+                                                        <h6>Availability*</h6>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
@@ -483,7 +483,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="col-form-label">Address 1</label>
+                                                        <label class="col-form-label">Address 1*</label>
                                                         <input type="text" class="form-control"
                                                             name="add1" placeholder="Enter Your Address 1" value="{{initial_data.add1}}">
                                                             {% if form.add1.errors %}
@@ -513,7 +513,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="col-form-label">Pincode</label>
+                                                        <label class="col-form-label">Pincode*</label>
                                                         <input type="text" class="form-control"
                                                             name="pincode" placeholder="Enter Your Pincode" value="{{initial_data.pincode}}">
                                                             {% if form.pincode.errors %}
