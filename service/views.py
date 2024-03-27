@@ -214,11 +214,10 @@ class ServiceCreateView(View):
                 'image': provider_service.picture
             }
             initial_data = set_availability_initial_data(initial_data, provider_service)
-
-
         return initial_data
 
     def get(self, request, *args, **kwargs):
+        print("222-----")
         context = {"base_template": self.base_template, "active_header": self.active_header}
         provider_service_id = request.GET.get('provider_service_id', None)
         try:
@@ -258,6 +257,7 @@ class ServiceCreateView(View):
             provider_service = None
         user = User.objects.get(pk=request.user_id)
         if form.is_valid():
+            initial_data = {}
             title = form.cleaned_data['title']
             category = form.cleaned_data['category']
             price = form.cleaned_data['price']
@@ -283,6 +283,7 @@ class ServiceCreateView(View):
             provision = form.cleaned_data['provision']
             pincode = form.cleaned_data['pincode']
             image = request.FILES.get('image')
+            initial_data['title'] = title
             if provider_service:
                 pass
             else:
@@ -319,7 +320,16 @@ class ServiceCreateView(View):
         else:
             print("Form is not valid")
             print("Errors:", form.errors)
-            return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
+            try:
+                initial_data = self.get_initial_data(provider_service)
+                form = self.form_class(initial=initial_data)
+                context['form'] = form
+                return render(request, self.template_name, context=context)
+                # return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}')
+            except Exception as e:
+                return render(request, self.template_name, context=context)
+                # return HttpResponseRedirect(reverse('service:service_create'))
+
 
         # Process POST request data here
         return HttpResponseRedirect(reverse('service:service_create') + f'?provider_service_id={provider_service.id}&updated=true')

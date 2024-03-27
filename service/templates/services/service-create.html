@@ -92,6 +92,12 @@
                             <div class="service-inform-fieldset">
                                 <form method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
+                                    {% if form.errors %}
+                                        <div class="alert alert-danger" role="alert">
+                                            Please correct the errors below.
+                                        </div>
+                                    {% endif %}
+                                    
                                     <fieldset id="first-field">
                                         <div class="card add-service">
                                             <div class="row">
@@ -115,8 +121,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="col-form-label">Category</label>
-                                                        <select name="category" class="select">
-                                                            <option>Select Category</option>
+                                                        <select name="category" class="form-select" required>
                                                             {% for cat in category %}
                                                                 <option {% if cat.name == initial_data.category %} selected {% endif %}>{{ cat.name }}</option>
                                                             {% endfor %}
@@ -136,7 +141,7 @@
                                                         <div class=from-icon> 
                                                                 <label class="col-form-label d-block">Price (Per Hour) $<span
                                                                 class="brief-bio float-end">Set 0$ for free</span></label>
-                                                            <input type="number" name="price" class="form-control" min="0.0" step="1.10" value="{{ initial_data.price }}">
+                                                            <input type="number" name="price" class="form-control" min="0.0" step="1" value="{{ initial_data.price }}">
                                                             {% if form.price.errors %}
                                                                 <div class="text-danger">
                                                                     {% for error in form.price.errors %}
@@ -220,7 +225,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_tuesday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Tuesday</h4>
                                                                     <div class="row hours-cont">
@@ -260,7 +265,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_wednesday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Wednesday</h4>
                                                                     <div class="row hours-cont">
@@ -300,7 +305,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_thursday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Thursday</h4>
                                                                     <div class="row hours-cont">
@@ -342,7 +347,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_friday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Friday</h4>
                                                                     <div class="row hours-cont">
@@ -382,7 +387,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_saturday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Saturday</h4>
                                                                     <div class="row hours-cont">
@@ -422,7 +427,7 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                            <div class="tab-pane active" id="slot_monday">
+                                                            <div class="tab-pane active" id="slot_sunday">
                                                                 <div class="hours-info">
                                                                     <h4 class="nameof-day">Sunday</h4>
                                                                     <div class="row hours-cont">
@@ -491,63 +496,20 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">Address 2</label>
-                                                        <input type="text" class="form-control"
-                                                            name="add2" placeholder="Enter Your Address 2" value="{{initial_data.add2}}">
-                                                            {% if form.add2.errors %}
-                                                                <div class="text-danger">
-                                                                    {% for error in form.add2.errors %}
-                                                                        {{ error }}
-                                                                    {% endfor %}
-                                                                </div>
-                                                            {% endif %}
-
-                                                    </div>
+                                                    {{ form.add2.label_tag }}
+                                                    {{ form.add2 }}
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">City</label>
-                                                        <input type="text" class="form-control"
-                                                            name="city" placeholder="Enter Your City" value="{{initial_data.city}}">
-                                                            {% if form.city.errors %}
-                                                                <div class="text-danger">
-                                                                    {% for error in form.city.errors %}
-                                                                        {{ error }}
-                                                                    {% endfor %}
-                                                                </div>
-                                                            {% endif %}
-
-                                                    </div>
+                                                    {{ form.city.label_tag }}
+                                                    {{ form.city }}
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">Provision</label>
-                                                        <input type="text" class="form-control"
-                                                            name="provision" placeholder="Enter Your State" value="{{initial_data.provision}}">
-                                                            {% if form.provision.errors %}
-                                                                <div class="text-danger">
-                                                                    {% for error in form.provision.errors %}
-                                                                        {{ error }}
-                                                                    {% endfor %}
-                                                                </div>
-                                                            {% endif %}
-
-                                                    </div>
+                                                    {{ form.provision.label_tag }}
+                                                    {{ form.provision }}
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label">Country</label>
-                                                        <input type="text" class="form-control" name="country" placeholder="Enter Country" value="{{initial_data.country}}">
-                                                        {% if form.country.errors %}
-                                                                <div class="text-danger">
-                                                                    {% for error in form.country.errors %}
-                                                                        {{ error }}
-                                                                    {% endfor %}
-                                                                </div>
-                                                            {% endif %}
-
-                                                    </div>
+                                                    {{ form.country.label_tag }}
+                                                    {{ form.country }}
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
