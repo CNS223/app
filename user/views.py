@@ -374,6 +374,7 @@ class CustomerProfileView(View):
             context['today_visits'] = visits.daily_count
             return render(request, self.template_name, context=context)
         except Exception as e:
+            print("387----", e)
             return HttpResponseRedirect(reverse('user:user_signin'))
 
     def post(self, request, *args, **kwargs):
@@ -420,6 +421,9 @@ class CustomerProfileView(View):
             address.save()
             context['message'] = 'Information Updated Successfully.'
             context['user'] = user
+            context['user_name'] = user.username
+            context['member_since'] = user.created_at
+            context['user_type'] = user.user_type.user_type
             return render(request, self.template_name, context=context)
         return render(request, self.template_name, context=context)
 
@@ -458,8 +462,11 @@ class ProviderProfileView(View):
             user_id = request.user_id
             user = User.objects.get(pk = user_id)
             form = self.form_class(initial=self.get_initial_data())
-            context = {"base_template":"base.html",  "active_menu": "settings","user_name": "John Smith1","member_since": "Sep 2021",'user_type':user.user_type.user_type, "active_header":"customers", "form":form}
+            context = {"base_template":"base.html",  "active_menu": "settings", "active_header":"customers", "form":form}
             context['user'] = user
+            context['user_name'] = user.username
+            context['member_since'] = user.created_at
+            context['user_type'] = user.user_type.user_type
             return render(request, self.template_name, context=context)
         except Exception as e:
             context = {"base_template": "base.html", "form": LoginForm}
@@ -503,6 +510,9 @@ class ProviderProfileView(View):
             address.save()
             context['message'] = 'Information Updated Successfully.'
             context['user'] = user
+            context['user_name'] = user.username
+            context['member_since'] = user.created_at
+            context['user_type'] = user.user_type.user_type
             return render(request, self.template_name, context=context)
         return render(request, self.template_name, context=context)
 
@@ -765,3 +775,20 @@ class CustomerBookingView(View):
             return HttpResponseRedirect(reverse('user:customer_booking'))
         context['review_form'] = form 
         return render(request, self.template_name, context=context)
+
+class GetCitiesView(View):
+    def get(self, request):
+        provision = request.GET.get('provision')
+        with open('constants/cities.json', 'r') as json_file:
+            data = json.load(json_file)
+        cities = data.get(provision, [])
+        return JsonResponse({'cities': cities})
+
+
+
+
+
+
+
+
+

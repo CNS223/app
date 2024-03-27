@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from user.views import DashboardView
+from user.views import DashboardView, GetCitiesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('service/', include('service.urls')),
     path('info/', include('info_pages.urls')),
     path('', DashboardView.as_view(), name='dashboard'),
+    path('get-cities/', GetCitiesView.as_view(), name='get_cities'),
 
     
 ]

@@ -151,4 +151,31 @@
             imagePreview.src = '{% static "assets/img/icons/upload-icon.svg" %}';
         }
     }
+    function updateCitiesOnProvisionChange() {
+    $('#id_provision').change(function() {
+        var selectedProvision = $(this).val();
+        $.ajax({
+            url: '/get-cities/',
+            type: 'GET',
+            data: {
+                'provision': selectedProvision
+            },
+            dataType: 'json',
+            success: function(data) {
+                var citiesSelect = $('#id_city');
+                citiesSelect.empty();
+                $.each(data.cities, function(index, city) {
+                    citiesSelect.append($('<option></option>').attr('value', city).text(city));
+                });
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+    });
+}
+
+$(document).ready(function() {
+    updateCitiesOnProvisionChange();
+});
 </script>

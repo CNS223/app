@@ -13,18 +13,31 @@
         {% endif %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+             {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    Please correct the errors below.
+                </div>
+            {% endif %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    {% if forloop.first %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
             <h6 class="user-title">Profile Picture</h6>
             <div class="pro-picture">
                 <div class="pro-img">
                      {% if user %}
-                    {% if user.avatar %}
-                        <img src="{{user.avatar.url}}" alt="user">
+                        {% if user.avatar %}
+                            <img src="{{user.avatar.url}}" alt="user">
+                        {% else %}
+                            <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                        {% endif %}
+    
                     {% else %}
-                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
+                            <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
                     {% endif %}
-                {% else %}
-                        <img src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="user">
-                {% endif %}
                 </div>
                 <div class="pro-info">
                     <div class="d-flex">
@@ -43,6 +56,8 @@
                     <div class="col-md-6">
                         {{ form.first_name.label_tag }}
                         {{ form.first_name }}
+                      
+
                     </div>
                     <div class="col-md-6">
                         {{ form.last_name.label_tag }}
@@ -92,9 +107,10 @@
                     {{ form.provision.label_tag }}
                     {{ form.provision }}
                 </div>
-                <div class="col-md-6">
+               <div class="col-md-6">
                     {{ form.city.label_tag }}
                     {{ form.city }}
+                    </select>
                 </div>
                 <div class="col-md-6">
                     {{ form.postal_code.label_tag }}
@@ -114,4 +130,5 @@
         <br>
     </div>
 </div>
+
 {% endblock %}
