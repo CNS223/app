@@ -69,7 +69,7 @@ generate_dummy_service_categories(5)
 def generate_dummy_provider_services(num_services=10):
     categories = ServiceCategory.objects.all()
     providers = User.objects.filter(user_type__user_type='provider')
-    address = Address.objects.all()
+    addresses = Address.objects.all()
     titles = ['Yoga Classes','House Cleaning','Personal Chef Services','Haircut and Styling','Math Tutoring','Car Wash and Detailing','Mental Health Counseling']
     for title in titles:
         title = title  # Generate a random title for the service
@@ -77,7 +77,7 @@ def generate_dummy_provider_services(num_services=10):
         provider = random.choice(providers)
         price = random.uniform(10, 100)
         desc = generate_random_string(50)
-        address = random.choice(address)
+        address = random.choice(addresses)
         service = ProviderService.objects.create(
             title=title,
             category=category,
@@ -85,6 +85,7 @@ def generate_dummy_provider_services(num_services=10):
             price=price,
             active=True,
             desc=desc,
+            address=address
         )
         print(f"Created service: {service}")
 
