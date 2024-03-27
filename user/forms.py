@@ -52,7 +52,7 @@ class LoginForm(forms.Form):
 class AccountSettingsForm(forms.Form):
     first_name = forms.CharField(max_length=20,label='First Name',widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your First Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='First name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your First Name.','max_length': 'First Name should not exceed 100 characters.',})
     last_name = forms.CharField(label='Last Name', max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Last Name', 'required': True}),validators=[MaxLengthValidator(100),RegexValidator(r'^[a-zA-Z]*$', message='Last name should only contain alphabetic characters.'),validate_first_name,],error_messages={'required': 'Please enter your Last Name.','max_length': 'Last Name should not exceed 100 characters.',})
-    username = forms.CharField(label='User Name', required=False, max_length=12, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'required': True}))
+    username = forms.CharField(label='User Name', required=False, max_length=12, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username', 'readonly': True}))
     email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'johndoe@example.com', 'readonly': True}))
     phone_number = forms.CharField(label='Phone Number', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(256) 789-6253', 'readonly': True, 'required': True}),validators=[validate_phone_number],)
     gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],required=False, widget=forms.Select(attrs={'class': 'form-select'}))
@@ -60,7 +60,7 @@ class AccountSettingsForm(forms.Form):
     add1 = forms.CharField(label='Address 1', required=True, max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 1'}))
     add2 = forms.CharField(label='Address 2', required=False, max_length=255,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address Line 2', "values":""}))
     country = forms.ChoiceField(label='Country', choices=[('Canada', 'Canada')], widget=forms.Select(attrs={'class': 'form-select'}))
-    provision = forms.ChoiceField(label='Provision', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
+    provision = forms.ChoiceField(label='Province', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
     city = forms.ChoiceField(label='City', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
     postal_code = forms.CharField(label='Postal Code', max_length=7,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'N9A 5E3'}))
     currency_code = forms.ChoiceField(label='Currency Code', choices=[('cad', 'CAD'), ('usd', 'USD')], required=False,widget=forms.Select(attrs={'class': 'form-select'}))

@@ -136,6 +136,7 @@ class ServiceListView(View):
             else:
                 provider_services = ProviderService.objects.all()
             service_ratings_data = {}
+            is_service_available = {}
             for service in provider_services:
                 service_ratings_data[service.id] = 0
                 bookings = ServiceBooking.objects.filter(service = service)
@@ -148,7 +149,14 @@ class ServiceListView(View):
                         total_ratings = total_ratings+service_rate.rate
                 if total_ratings != 0 or total_ratings != 0.0:
                     service_ratings_data[service.id] = round(total_ratings/service_ratings_length,1)
+
+                provider_availabilty = ProviderAvailability.objects.filter(service = service)
+                is_avail = False
+                for avail in provider_availabilty:
+                    if avail.start_time and avail.end_time:
+                        is_service_available[service.id] = "available"
             context['provider_services'] = provider_services
+            context['is_service_available'] = is_service_available
             context['user'] = user
             context['user'] = user
             context['service_ratings'] = service_ratings_data
@@ -241,7 +249,7 @@ class ServiceCreateView(View):
             if request.GET.get('error', None) is not None:
                 context['alert'] = request.GET.get('error')
             if request.GET.get('updated', None) is not None:
-                context['alert'] = "Updated Service Successfully."
+                context['alert'] = "Created/Updated Service Successfully."
             return render(request, self.template_name, context=context)
         except Exception as e:
             print("187----",e)

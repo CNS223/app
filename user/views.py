@@ -389,6 +389,8 @@ class CustomerProfileView(View):
             "active_header": "customers",
             "form": form,
         }
+        visits = UserSystemVisit.objects.last()
+        context['today_visits'] = visits.daily_count
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
@@ -467,6 +469,8 @@ class ProviderProfileView(View):
             context['user_name'] = user.username
             context['member_since'] = user.created_at
             context['user_type'] = user.user_type.user_type
+            visits = UserSystemVisit.objects.last()
+            context['today_visits'] = visits.daily_count
             return render(request, self.template_name, context=context)
         except Exception as e:
             context = {"base_template": "base.html", "form": LoginForm}
@@ -475,6 +479,8 @@ class ProviderProfileView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         context = {"base_template":"base.html",  "active_menu": "settings","user_name": "John Smith1","member_since": "Sep 2021",'user_type':user.user_type.user_type, "active_header":"customers", "form":form}
+        visits = UserSystemVisit.objects.last()
+        context['today_visits'] = visits.daily_count
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]

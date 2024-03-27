@@ -102,8 +102,14 @@
                                                         <h6>${{provider_service.price}}</h6>
                                                         {% if user %}
                                                             {% if user.user_type.user_type == "customer" %}
-                                                                <a href="{% url 'service:service_booking'  provider_service=provider_service_id %}"
-                                                                    class="btn btn-secondary">Book Now</a>
+                                                                {% if is_service_available %}
+                                                                    {% if is_service_available|get_by_key:provider_service.id %}
+                                                                        <a href="{% url 'service:service_booking'  provider_service=provider_service_id %}"
+                                                                            class="btn btn-secondary">Book Now</a>
+                                                                    {% else %}
+                                                                        <a class="btn btn-primary">Not Available</a>
+                                                                    {% endif %}
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>

@@ -3,7 +3,7 @@ from .models import *
 import json
 
 class SearchForm(forms.Form):
-    search_input = forms.CharField(label='What are you looking for?', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car Repair Services'}), max_length=255)
+    search_input = forms.CharField(label='What are you looking for?', required = False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car Repair Services'}), max_length=255)
 
 
 class ServiceCreateForm(forms.Form):
@@ -28,7 +28,7 @@ class ServiceCreateForm(forms.Form):
     add1 = forms.CharField(label='Address 1', required=True, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 1'}))
     add2 = forms.CharField(label='Address 2', required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 2'}))
     country = forms.ChoiceField(label='Country', choices=[('Canada', 'Canada')], widget=forms.Select(attrs={'class': 'form-select'}))
-    provision = forms.ChoiceField(label='Provision', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
+    provision = forms.ChoiceField(label='Province', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
     city = forms.ChoiceField(label='City', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
     pincode = forms.CharField(label='Pincode', max_length=7, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
     image = forms.ImageField(label='Image', required=False, widget=forms.FileInput(attrs={'accept': 'image/*'}))
@@ -69,7 +69,7 @@ class ServiceBookingForm(forms.Form):
     add1 = forms.CharField(label='Address 1', required=True, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 1'}))
     add2 = forms.CharField(label='Address 2', required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Address 2'}))
     country = forms.ChoiceField(label='Country', choices=[('Canada', 'Canada')], widget=forms.Select(attrs={'class': 'form-select'}))
-    provision = forms.ChoiceField(label='Provision', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
+    provision = forms.ChoiceField(label='Province', choices=[], widget=forms.Select(attrs={'class': 'form-select', 'id':"provison-id"}))
     city = forms.ChoiceField(label='City', choices=[], widget=forms.Select(attrs={'class': 'form-select'}))
     pincode = forms.CharField(label='Pincode', max_length=7, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Pincode'}))
     # appointment = forms.CharField(label='Category', widget=forms.Select(attrs={'class': 'form-select'}))
@@ -110,7 +110,7 @@ class ServiceBookingForm(forms.Form):
 
     # def load_appointment(self):
     #     try:
-            
+
    
 class FeedbackForm(forms.Form):
     feedback = forms.CharField(label='Add Feedback', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Your Feedback'}))
