@@ -1,13 +1,25 @@
 from django import forms
 from .models import *
 import json
+from django.core.validators import RegexValidator
+
 
 class SearchForm(forms.Form):
     search_input = forms.CharField(label='What are you looking for?', required = False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car Repair Services'}), max_length=255)
 
 
 class ServiceCreateForm(forms.Form):
-    title = forms.CharField(label='Service Title', required=True, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Service Name'}))
+    title = forms.CharField(
+        label='Service Title',
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Service Name'}),
+        validators=[RegexValidator(r'^[a-zA-Z\s]+$', message='Title should contain only letters and spaces.')],
+        error_messages={
+            'required': 'Please enter a service title.',
+            'max_length': 'Service title should not exceed 255 characters.'
+        }
+    )
     category = forms.CharField(label='Category', required=True, widget=forms.Select(attrs={'class': 'select'}))
     price = forms.DecimalField(label='Price', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Set 0 for free'}))
     description = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'form-control ck-editor'}))
