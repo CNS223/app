@@ -24,7 +24,12 @@
                     <div class="booking-widget">
                         <div class="booking-img">
                             <a href="{% url 'service:service_detail' provider_booking.service.id %}">
-                                <img src="{{provider_booking.service.picture.url}}" alt="User Image">
+                                {% if provider_booking.service.picture %}
+                                    <img src="{{provider_booking.service.picture.url}}" alt="User Image">
+                                {% else %}
+                                    <img src="{% static 'assets/img/services/service-04.jpg' %}" alt="image">
+                                {% endif %}
+
                             </a>
 
                         </div>

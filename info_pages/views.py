@@ -46,11 +46,15 @@ class ContactUsView(View):
     def post(self, request, *args, **kwargs):
         context = {"base_template":self.base_template, "active_header":"contactus"}
         form = ContactUsForm(request.POST)
+        print("49-------", form.is_valid())
         if form.is_valid():
+            context['form'] = form
+            context['alert'] = "Submitted Successfully."
             form.save()
             return redirect('info_pages:contact_us')
-        context['form'] = form
-        context['alert'] = "Submitted Successfully."
+        else:
+            print("56----",form.errors)
+        
         return render(request, self.template_name, context=context)
 
 class PrivacyPolicyView(View):
